@@ -12,6 +12,10 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <div class="container-fluid text-center row ">
+            <div class="col" style="min-height: 500px">
+                <jsp:include page="/WEB-INF/view/${controller}/${action}.jsp"/>
+            </div>
+        </div>
     </body>
 </html>
