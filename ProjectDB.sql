@@ -14,19 +14,29 @@ CREATE TABLE [Role]
 	[role_name] NVARCHAR(10) NOT NULL
 )
 GO
-/*
+
 INSERT INTO [Role]
 VALUES
 (N'Admin'),(N'HR Staff'),(N'Interviewer'), (N'Member')
 GO
-*/
+
 -- 2
 CREATE TABLE [User]
 (
 	[email] NVARCHAR(30) PRIMARY KEY NOT NULL,
 	[name] NVARCHAR(30) NOT NULL,
-	[role_id] int FOREIGN KEY REFERENCES dbo.[Role] DEFAULT(4),
-	[phone] varchar(11)
+	[role_id] int FOREIGN KEY REFERENCES dbo.[Role] DEFAULT(4) not null,
+	[phone] varchar(11),
+	[address] nvarchar(100)
+)
+GO
+
+CREATE TABLE [Notify]
+(
+	[email] NVARCHAR(30) FOREIGN KEY REFERENCES dbo.[User] not null,
+	[title] NVARCHAR(100) not null,
+	[content] text,
+	[link] NVARCHAR(100)
 )
 GO
 
@@ -42,16 +52,17 @@ CREATE TABLE [Major]
 (
 	[major_id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[major_name] NVARCHAR(20) NOT NULL,
-	[major_description] text
 )
 GO
 
-/*
+
 INSERT INTO [Major]
 VALUES
-(),
+('Marketing'),('Logistic'),('Data Science and Analytics'),('Information Technology'),('Graphic Design'),
+('Engineering'),('Risk Manager'),('Economic Finance'),('Business Intelligence and Development'),
+('Operations')
 GO
-*/
+
 
 -- 4
 CREATE TABLE [Interviewer]
@@ -84,6 +95,18 @@ VALUES
 (),
 GO
 */
+
+CREATE TABLE [Level]
+(
+	[level_id] IDENTITY(1,1) int PRIMARY KEY NOT NULL,
+	[level_name] NVARCHAR(30) FOREIGN KEY REFERENCES dbo.[User] NOT NULL
+)
+GO
+
+INSERT INTO [Level]
+VALUES
+('Intern'),('Fresher'),('Junior'),('Seninor'),('Manager'),('Leader')
+
 
 -- 6
 CREATE TABLE [Jobs]
@@ -127,7 +150,7 @@ CREATE TABLE [Candidates]
 	[can_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
 	[email] NVARCHAR(30) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
-	[can_cv] NVARCHAR(20) NOT NULL,
+	[can_cv] NVARCHAR(20) NOT NULL,-- comment 
 	[isStatus] int DEFAULT (0) NOT NULL,
 	/*	Note: 
 		0 : HR hasn't accepted
@@ -157,12 +180,14 @@ CREATE TABLE [Skills]
 )
 GO
 
-/*
-INSERT INTO [Skills]
+
+INSERT INTO [Skills] ([skill_name])
 VALUES
-(),
+('JavaSript'),('Java'),('Python'),('C++'),('C#'),('UI/UX'),('HTML'),('Testing'),('React Native'),('Angular'),('Mobile Develope'),('Ruby'),('Rust'),('Golang'),('TypeScript'),('BrainFuck'),
+('PHP'),('Unity'),('Unreal Engine'),
+('Data Visualization'),('Data Cleaning'),('MATLAB'),('SQL and NoSQL'),('Machine Learning'),('Linear Algebra and Calculus'),('Microsoft Excel'),('Critical Thinking')
 GO
-*/
+
 
 -- 10
 CREATE TABLE [Job_skills]
@@ -284,9 +309,10 @@ GO
 -- 17
 CREATE TABLE [Interviewing]
 (
-	[date_id] DATE PRIMARY KEY NOT NULL,
+	[id] DATE PRIMARY KEY NOT NULL,
 	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewer] NOT NULL,
 	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
+	[date] date not null,
 	[inter_score] FLOAT ,
 	UNIQUE ([inter_id],[can_id])
 )
