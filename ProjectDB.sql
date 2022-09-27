@@ -98,7 +98,7 @@ GO
 
 CREATE TABLE [Level]
 (
-	[level_id] IDENTITY(1,1) int PRIMARY KEY NOT NULL,
+	[level_id]  int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[level_name] NVARCHAR(30)  NOT NULL
 )
 GO
