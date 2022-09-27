@@ -7,6 +7,7 @@ package daos;
 
 import dtos.MajorDTO;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,5 +35,19 @@ public class MajorDAO {
         }
         con.close();
         return list;
+    }
+    public MajorDTO selectOne(String id) throws SQLException, ClassNotFoundException {
+        MajorDTO major = new MajorDTO();
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select * from [Major] where [major_id] = ?");
+        stm.setString(1, id);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            major.setMajor_id(rs.getInt("major_id"));
+            major.setMajor_name(rs.getString("major_name"));
+            major.setMajor_description(rs.getString("major_description"));
+        }
+        con.close();
+        return major;
     }
 }
