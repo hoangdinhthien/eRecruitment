@@ -48,6 +48,10 @@ public class ExamController extends HttpServlet {
                 questionBank(request, response);
                 break;
             }
+            case "Update": {
+                update(request, response);
+                break;
+            }
         }
     }
                             
@@ -73,6 +77,30 @@ public class ExamController extends HttpServlet {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    protected void update(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String controller = (String) request.getAttribute("controller");
+            String q_id = (String) request.getAttribute("q_id");
+            String major_id = (String) request.getAttribute("major_id");
+            MajorDAO majorDao = new MajorDAO();
+            MajorDTO major = majorDao.selectOne(major_id);
+            QuestionDAO qDao = new QuestionDAO();
+            QuestionDTO q = qDao.selectOne(q_id);
+            OptionDAO opDao = new OptionDAO();
+            List<OptionDTO> listOption = opDao.listOneQuestion(q_id);
+            request.setAttribute("major", major);
+            request.setAttribute("q", q);
+            request.setAttribute("listOption", listOption);
+            request.getRequestDispatcher(controller).forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+            
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
