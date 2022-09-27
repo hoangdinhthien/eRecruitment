@@ -11,7 +11,7 @@ go
 CREATE TABLE [Role]
 (
 	[role_id] int Identity(1,1) PRIMARY KEY NOT NULL,
-	[role_name] NVARCHAR(10) NOT NULL
+	[role_name] NVARCHAR(100) NOT NULL
 )
 GO
 
@@ -51,7 +51,7 @@ GO
 CREATE TABLE [Major]
 (
 	[major_id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	[major_name] NVARCHAR(20) NOT NULL,
+	[major_name] NVARCHAR(100) NOT NULL,
 )
 GO
 
@@ -99,7 +99,7 @@ GO
 CREATE TABLE [Level]
 (
 	[level_id] IDENTITY(1,1) int PRIMARY KEY NOT NULL,
-	[level_name] NVARCHAR(30) FOREIGN KEY REFERENCES dbo.[User] NOT NULL
+	[level_name] NVARCHAR(30)  NOT NULL
 )
 GO
 
@@ -175,7 +175,7 @@ GO
 CREATE TABLE [Skills]
 (
 	[skill_id] int Identity(1,1) PRIMARY KEY NOT NULL,
-	[skill_name] NVARCHAR(20) UNIQUE NOT NULL,
+	[skill_name] NVARCHAR(100) UNIQUE NOT NULL,
 	[skill_description] text
 )
 GO
@@ -313,6 +313,7 @@ CREATE TABLE [Interviewing]
 	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewer] NOT NULL,
 	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
 	[date] date not null,
+	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] FLOAT ,
 	UNIQUE ([inter_id],[can_id])
 )
