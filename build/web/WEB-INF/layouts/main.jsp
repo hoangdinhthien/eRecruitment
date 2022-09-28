@@ -1,6 +1,6 @@
 <%-- 
-    Document   : index
-    Created on : Sep 23, 2022, 9:34:05 AM
+    Document   : main
+    Created on : Sep 23, 2022, 9:34:15 AM
     Author     : Thien's
 --%>
 
@@ -13,7 +13,5 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <a href="questionBank.jsp">qBank</a>
-        <a href="test.jsp">test</a>
     </body>
 </html>

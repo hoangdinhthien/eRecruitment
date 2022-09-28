@@ -12,12 +12,12 @@ package dtos;
 public class QuestionDTO {
     private String q_id;
     private String questiontxt;
-    private MajorDTO major_id;
+    private int major_id;
 
     public QuestionDTO() {
     }
 
-    public QuestionDTO(String q_id, String questiontxt, MajorDTO major_id) {
+    public QuestionDTO(String q_id, String questiontxt, int major_id) {
         this.q_id = q_id;
         this.questiontxt = questiontxt;
         this.major_id = major_id;
