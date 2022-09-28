@@ -1,6 +1,9 @@
 USE MASTER 
 GO
 
+DROP DATABASE eRecruiment
+go 
+
 CREATE DATABASE eRecruiment
 go 
 
@@ -12,6 +15,7 @@ CREATE TABLE [Role]
 (
 	[role_id] int Identity(1,1) PRIMARY KEY NOT NULL,
 	[role_name] NVARCHAR(100) NOT NULL
+
 )
 GO
 
@@ -56,6 +60,7 @@ CREATE TABLE [Major]
 GO
 
 
+
 INSERT INTO [Major]
 VALUES
 ('Marketing'),('Logistic'),('Data Science and Analytics'),('Information Technology'),('Graphic Design'),
@@ -95,6 +100,7 @@ VALUES
 (),
 GO
 */
+
 
 CREATE TABLE [Level]
 (
@@ -307,6 +313,8 @@ GO
 */
 
 -- 17
+
+
 CREATE TABLE [Interviewing]
 (
 	[id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
@@ -315,6 +323,7 @@ CREATE TABLE [Interviewing]
 	[date] date not null,
 	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] FLOAT ,
+	[location] NVARCHAR(50) NOT NULL,
 	UNIQUE ([inter_id],[can_id])
 )
 GO

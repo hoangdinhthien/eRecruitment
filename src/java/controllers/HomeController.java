@@ -30,9 +30,10 @@ public class HomeController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String controller = (String) request.getAttribute("controller");
-        String action = (String) request.getAttribute("action");
-        switch (action) {
+        request.setAttribute("controller", "home");
+        String op =  request.getParameter("op");
+        request.setAttribute("action", op);
+        switch (op) {
             case "index":
                 request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
                 break;
