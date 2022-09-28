@@ -6,4 +6,4 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<jsp:forward page="/home/index.do"/>
+<jsp:forward page="/home?op=index"/>

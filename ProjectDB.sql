@@ -1,6 +1,9 @@
 USE MASTER 
 GO
 
+DROP DATABASE eRecruiment
+go 
+
 CREATE DATABASE eRecruiment
 go 
 
@@ -11,7 +14,7 @@ go
 CREATE TABLE [Role]
 (
 	[role_id] int Identity(1,1) PRIMARY KEY NOT NULL,
-	[role_name] NVARCHAR(10) NOT NULL
+	[role_name] NVARCHAR(11) NOT NULL
 )
 GO
 
@@ -51,9 +54,10 @@ GO
 CREATE TABLE [Major]
 (
 	[major_id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	[major_name] NVARCHAR(20) NOT NULL,
+	[major_name] NVARCHAR(100) NOT NULL,
 )
 GO
+
 
 
 INSERT INTO [Major]
@@ -96,10 +100,11 @@ VALUES
 GO
 */
 
+
 CREATE TABLE [Level]
 (
-	[level_id] IDENTITY(1,1) int PRIMARY KEY NOT NULL,
-	[level_name] NVARCHAR(30) FOREIGN KEY REFERENCES dbo.[User] NOT NULL
+	[level_id] int IDENTITY(1,1)  PRIMARY KEY NOT NULL,
+	[level_name] NVARCHAR(30)  NOT NULL
 )
 GO
 
@@ -175,7 +180,7 @@ GO
 CREATE TABLE [Skills]
 (
 	[skill_id] int Identity(1,1) PRIMARY KEY NOT NULL,
-	[skill_name] NVARCHAR(20) UNIQUE NOT NULL,
+	[skill_name] NVARCHAR(30) UNIQUE NOT NULL,
 	[skill_description] text
 )
 GO
@@ -307,6 +312,8 @@ GO
 */
 
 -- 17
+
+
 CREATE TABLE [Interviewing]
 (
 	[id] DATE PRIMARY KEY NOT NULL,
@@ -314,6 +321,7 @@ CREATE TABLE [Interviewing]
 	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
 	[date] date not null,
 	[inter_score] FLOAT ,
+	[location] NVARCHAR(50) NOT NULL,
 	UNIQUE ([inter_id],[can_id])
 )
 GO
