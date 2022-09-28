@@ -323,7 +323,6 @@ CREATE TABLE [Interviewing]
 	[date] date not null,
 	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] FLOAT ,
-	[location] NVARCHAR(50) NOT NULL,
 	UNIQUE ([inter_id],[can_id])
 )
 GO
