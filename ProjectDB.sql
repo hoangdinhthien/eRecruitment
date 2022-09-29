@@ -313,9 +313,9 @@ CREATE TABLE [Interviewing]
 	[id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewer] NOT NULL,
 	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
-	[date] date not null,
+	[date] datetime not null,
 	[location] NVARCHAR(100) NOT NULL,
-	[inter_score] FLOAT ,
+	[inter_score] int ,
 	UNIQUE ([inter_id],[can_id])
 )
 GO
