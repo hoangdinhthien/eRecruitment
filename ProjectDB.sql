@@ -116,6 +116,7 @@ CREATE TABLE [Jobs]
 	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
 	[job_vacancy] int NOT NULL,
 	[job_description] text,
+	[level_id] int FOREIGN KEY REFERENCES dbo.[Level] NOT NULL,
 	[salary] FLOAT not null,
 	[post_date] DATE not null
 )
