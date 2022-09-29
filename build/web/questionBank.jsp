@@ -14,9 +14,9 @@
         <body>
         <form id="mainform" onsubmit="return validateForm()">
             <div id = "main">
-                <input type="radio" value="1" class="radoOption" name="options" required="true"/><input type="text" placeholder="Name" class="someInput" name="1" required="true"/>
+                <input type="radio" value="1" class="radoOption" name="correctOptions" required="true"/><input type="text" placeholder="Name" class="someInput" name="option1" required="true"/>
                 <br>
-                <input type="radio" value="2" class="radoOption" name="options" required="true"/><input type="text" placeholder="Name" class="someInput" name="2" required="true"/>
+                <input type="radio" value="2" class="radoOption" name="correctOptions" required="true"/><input type="text" placeholder="Name" class="someInput" name="option2" required="true"/>
                 <br>
             </div>
             <input type="button" id="addButton" value="Add" onclick="add(2)" />
@@ -31,13 +31,13 @@
                 y.setAttribute("type", "radio");
                 y.setAttribute("value", i + 1);
                 y.setAttribute("class", "radoOption");
-                y.setAttribute("name", "options");
+                y.setAttribute("name", "correctOptions");
                 y.setAttribute("required",true);
                 var x = document.createElement("INPUT");
                 x.setAttribute("type", "text");
                 x.setAttribute("placeholder", "Name");
                 x.setAttribute("class", "someInput");
-                x.setAttribute("name", i + 1);
+                x.setAttribute("name", "option"+ (i + 1));
                 x.setAttribute("required",true);
                 var br = document.createElement("br");
                 br.setAttribute("class", "br");
