@@ -22,17 +22,23 @@ import utils.DBUtils;
 public class MajorDAO {
     public List<MajorDTO> listAll() throws SQLException, ClassNotFoundException{
         List<MajorDTO> list = null;
+        System.out.println("list 1");
         Connection con = DBUtils.makeConnection();
+        System.out.println("list 1.1");
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select * from [Major]");
+        System.out.println("list 1.2");
+        ResultSet rs = stm.executeQuery("select * from [Major] ");
+        System.out.println("list 2");
         list = new ArrayList();
         while (rs.next()) {
             MajorDTO major = new MajorDTO();
             major.setMajor_id(rs.getInt("major_id"));
             major.setMajor_name(rs.getString("major_name"));
-            major.setMajor_description(rs.getString("major_description"));
+//            major.setMajor_description(rs.getString("major_description"));
             list.add(major);
         }
+        
+        System.out.println("list 3");
         con.close();
         return list;
     }

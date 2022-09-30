@@ -41,8 +41,10 @@ public class ExamController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String controller = (String) request.getAttribute("controller");
-        String action = (String) request.getAttribute("action");
+//        String controller = (String) request.getAttribute("controller");
+//        String action = (String) request.getAttribute("action");
+        String action = request.getParameter("action");
+        System.out.println("Action : " + action);
         switch (action) {
             case "QuestionBank": {
                 questionBank(request, response);
@@ -52,9 +54,16 @@ public class ExamController extends HttpServlet {
                 update(request, response);
                 break;
             }
+            case "Create": {
+                create(request, response);
+                break;
+            }
+            case "CreateHandler": {
+                update(request, response);
+                break;
+            }
         }
     }
-                            
 
     protected void questionBank(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -77,11 +86,29 @@ public class ExamController extends HttpServlet {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    protected void add(HttpServletRequest request, HttpServletResponse response)
+
+    protected void create(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            System.out.println("Create function");
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor = majorDao.listAll();
+            System.out.println("Create function 1");
+            request.setAttribute("listMajor", listMajor);
+            request.getRequestDispatcher("/create.jsp").forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    protected void addHandler(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             String controller = (String) request.getAttribute("controller");
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor = majorDao.listAll();
             String question = request.getParameter("question");
             int major = Integer.parseInt(request.getParameter("major"));
             QuestionDAO qDao = new QuestionDAO();
@@ -91,25 +118,26 @@ public class ExamController extends HttpServlet {
             int correctOptions = Integer.parseInt(request.getParameter("correctOptions"));
             OptionDAO opDao = new OptionDAO();
             for (int i = 1; i <= count; i++) {
-                String option  = request.getParameter("option" + i);
-                if( i == correctOptions ){
+                String option = request.getParameter("option" + i);
+                if (i == correctOptions) {
                     opDao.add(newId, option, true);
-                }else {
+                } else {
                     opDao.add(newId, option, false);
                 }
             }
+            request.setAttribute("listMajor", listMajor);
             request.getRequestDispatcher(controller).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        }
-    
+    }
+
     protected void update(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String controller = (String) request.getAttribute("controller");
+//            String controller = (String) request.getAttribute("controller");
             String q_id = (String) request.getAttribute("q_id");
             String major_id = (String) request.getAttribute("major_id");
             MajorDAO majorDao = new MajorDAO();
@@ -121,14 +149,13 @@ public class ExamController extends HttpServlet {
             request.setAttribute("major", major);
             request.setAttribute("q", q);
             request.setAttribute("listOption", listOption);
-            request.getRequestDispatcher(controller).forward(request, response);
+//            request.getRequestDispatcher(controller).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-            
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
