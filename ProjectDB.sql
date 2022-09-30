@@ -122,6 +122,7 @@ CREATE TABLE [Jobs]
 	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
 	[job_vacancy] int NOT NULL,
 	[job_description] text,
+	[level_id] int FOREIGN KEY REFERENCES dbo.[Level] NOT NULL,
 	[salary] FLOAT not null,
 	[post_date] DATE not null
 )
@@ -320,9 +321,15 @@ CREATE TABLE [Interviewing]
 	[id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewer] NOT NULL,
 	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
+<<<<<<< HEAD
 	[date] DATETIME not null,
 	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] INT,
+=======
+	[date] datetime not null,
+	[location] NVARCHAR(100) NOT NULL,
+	[inter_score] int ,
+>>>>>>> origin/main
 	UNIQUE ([inter_id],[can_id])
 )
 GO
