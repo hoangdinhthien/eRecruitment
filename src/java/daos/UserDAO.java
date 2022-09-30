@@ -23,15 +23,21 @@ public class UserDAO {
         con.close();
         return result != 0;
     }
-    public static boolean searchUserByEmail(String email) throws ClassNotFoundException, SQLException {
+    public static UserDTO searchUserByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select role_id from [dbo].[User] where email=?");
+        PreparedStatement stm = con.prepareStatement("Select u.[name], u.[phone], u.[address], r.[role_name] from [dbo].[User] u"
+                + " join [dbo].[Role] r  on u.role_id = r.role_id where email=?");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
+        UserDTO u = null;
         if (rs.next()) {
-            return true;
+            u= new UserDTO();
+            u.setName(rs.getString("name"));
+            u.setRole(rs.getString("role_name"));
+            u.setPhone(rs.getString("phone"));
+            u.setAddress(rs.getString("address"));
         }
         con.close();
-        return false;
+        return u;
     }
 }

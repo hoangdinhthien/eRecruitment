@@ -1,18 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dtos;
 
 /**
  *
- * @author Thien's
+ * @author Thien
  */
 public class UserDTO {
     private String email;
     private String name;
     private int roleId;
+    private String role;
     private String phone;
     private String address;
 
@@ -25,13 +21,15 @@ public class UserDTO {
         this.roleId = roleId;
     }
 
-    public UserDTO(String email, String name, int roleId, String phone, String address) {
+    public UserDTO(String email, String name, int roleId, String role, String phone, String address) {
         this.email = email;
         this.name = name;
         this.roleId = roleId;
+        this.role = role;
         this.phone = phone;
         this.address = address;
     }
+
 
     public String getEmail() {
         return email;
@@ -55,6 +53,14 @@ public class UserDTO {
 
     public void setRoleId(int roleId) {
         this.roleId = roleId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getPhone() {

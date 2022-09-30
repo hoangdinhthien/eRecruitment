@@ -19,7 +19,7 @@ import utils.DBUtils;
  * @author ACER
  */
 public class MajorDAO {
-    public List<MajorDTO> listAll() throws SQLException, ClassNotFoundException{
+    public static List<MajorDTO> listAll() throws SQLException, ClassNotFoundException{
         List<MajorDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
@@ -29,7 +29,6 @@ public class MajorDAO {
             MajorDTO major = new MajorDTO();
             major.setMajor_id(rs.getInt("major_id"));
             major.setMajor_name(rs.getString("major_name"));
-            major.setMajor_description(rs.getString("major_description"));
             list.add(major);
         }
         con.close();

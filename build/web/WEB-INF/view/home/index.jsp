@@ -63,7 +63,7 @@
                 </div>
                 <div class="header__top__right__auth">
                     <div><i class="fa fa-user"></i> 
-                        
+
                     </div>
                 </div>
             </div>
@@ -130,9 +130,47 @@
                                     </ul>
                                 </div>
                                 <div class="header__top__right__auth">
-                                    <div class="popup" onclick="popUp()"><i class="fa fa-user"></i> 
-                                        <span class="popuptext" id="myPopup">A Simple Popup!</span>
-                                    </div>
+                                    <c:choose>
+                                        <c:when test="${not empty info && role == 'Member'}">
+                                            <ul class="login">
+                                                <li style="list-style-type:none">
+                                                    <img src="${info.picture}" alt="" class="avatar"/> 
+                                                    <ul>
+                                                        <li style="list-style-type:none">
+                                                            <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </c:when>
+                                        <c:when test="${not empty info && role == 'HR Staff'}">
+                                            <ul class="login">
+                                                <li style="list-style-type:none">
+                                                    <img src="${info.picture}" alt="" class="avatar"/> 
+                                                    <ul>
+                                                        <li style="list-style-type:none">
+                                                            <a class="link" href="<c:url value="/interview?op=set_schedule"/>">Set Interview Schedule</a>
+                                                        </li>
+                                                        <li style="list-style-type:none">
+                                                            <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
+                                                        </li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="popup" onclick="popUp()"><i class="fa fa-user"></i> 
+                                                <div class="popuptext" id="myPopup">
+                                                    <div style="width: 70%; margin: auto;">
+                                                        <a href="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force" class="google login_btn">
+                                                            <i class="fa fa-google fa-fw"></i> 
+                                                            Login with Google+
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </div>
@@ -786,10 +824,10 @@
         <script src="<c:url value='/js/main.js'/>"></script>
         <script src="<c:url value='/js/onclick.js'/>"></script>
         <script>
-            function popUp() {
-                var popup = document.getElementById("myPopup");
-                popup.classList.toggle("show");
-            }
+                                        function popUp() {
+                                            var popup = document.getElementById("myPopup");
+                                            popup.classList.toggle("show");
+                                        }
         </script>
 
     </body>

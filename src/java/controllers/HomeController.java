@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Thien's
+ * @author Thien
  */
 public class HomeController extends HttpServlet {
 
