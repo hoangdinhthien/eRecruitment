@@ -78,6 +78,34 @@ public class ExamController extends HttpServlet {
         }
     }
     
+    protected void add(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String controller = (String) request.getAttribute("controller");
+            String question = request.getParameter("question");
+            int major = Integer.parseInt(request.getParameter("major"));
+            QuestionDAO qDao = new QuestionDAO();
+            String newId = qDao.newId();
+            qDao.add(newId, question, major);
+            int count = Integer.parseInt(request.getParameter("count"));
+            int correctOptions = Integer.parseInt(request.getParameter("correctOptions"));
+            OptionDAO opDao = new OptionDAO();
+            for (int i = 1; i <= count; i++) {
+                String option  = request.getParameter("option" + i);
+                if( i == correctOptions ){
+                    opDao.add(newId, option, true);
+                }else {
+                    opDao.add(newId, option, false);
+                }
+            }
+            request.getRequestDispatcher(controller).forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+    
     protected void update(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {

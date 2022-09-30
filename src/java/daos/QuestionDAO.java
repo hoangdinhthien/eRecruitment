@@ -52,4 +52,42 @@ public class QuestionDAO {
         con.close();
         return q;
     }
+    
+        public String newId() throws SQLException, ClassNotFoundException{
+        Connection con = DBUtils.makeConnection();
+
+        Statement stm = con.createStatement();
+        ResultSet rs = stm.executeQuery("select * from [Questions] ");
+        int i = 0;
+        while (rs.next()) {
+            i++;
+        }
+        i++;
+        String newId = "Q00" + i;
+        rs = stm.executeQuery("select * from [Questions] where [q_id] = "+ newId);
+        while (rs.next()) {
+            i++;
+            if (i < 10){
+                newId = "Q00" + i;
+            } else if (i < 100){
+                newId = "Q0" + i;
+            } else {
+                newId = "Q" + i;
+            }
+            rs = stm.executeQuery("select * from [Questions] where [q_id] = "+ newId);
+        }
+        return newId;
+    }
+        
+        public void add(String id, String content, int major) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("insert into [Questions]] values ( ? , ? , ? )");
+        stm.setString(1, id);
+        stm.setString(2, content);
+        stm.setInt(3, major);
+        stm.executeQuery();
+        con.close();
+        
+        
+    }
 }

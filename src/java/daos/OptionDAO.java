@@ -57,4 +57,23 @@ public class OptionDAO {
         con.close();
         return list;
     }
+    
+    public void delete (String id) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("delete from [Options] where [q_id] = ?");
+        stm.setString(1, id);
+        stm.executeQuery();
+        con.close();
+    }
+    
+    public void add(String id, String content, boolean isCorrect) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("insert into [Options] ([q_id], [content], [isCorrect]) "
+                + " values ( ? , ? , ? )");
+        stm.setString(1, id);
+        stm.setString(2, content);
+        stm.setBoolean(3, isCorrect);
+        stm.executeQuery();
+        con.close();
+    }
 }
