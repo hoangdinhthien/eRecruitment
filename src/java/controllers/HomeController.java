@@ -7,8 +7,12 @@ package controllers;
 
 import config.Config;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Thien's
  */
+@WebServlet(name = "HomeController", urlPatterns = {"/home"})
 public class HomeController extends HttpServlet {
 
     /**
@@ -33,10 +38,26 @@ public class HomeController extends HttpServlet {
         String controller = (String) request.getAttribute("controller");
         String action = (String) request.getAttribute("action");
         switch (action) {
-            case "index":
-                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            case "index": // Hien trang chu
+                //code xu ly
+                index(request, response);
+                break;
+            case "about": // Hien trang chu
+                //code xu ly
+                aboutus(request, response);
                 break;
         }
+    }
+
+    protected void index(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
+    }
+
+    protected void aboutus(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
