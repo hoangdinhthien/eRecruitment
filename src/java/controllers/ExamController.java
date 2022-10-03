@@ -54,12 +54,16 @@ public class ExamController extends HttpServlet {
                 update(request, response);
                 break;
             }
-            case "Create": {
+            case "Add": {
                 create(request, response);
                 break;
             }
-            case "CreateHandler": {
-                update(request, response);
+            case "Create": {
+                createHandler(request, response);
+                break;
+            }
+            case "UpdateHandler": {
+                updateHandler(request, response);
                 break;
             }
         }
@@ -103,17 +107,18 @@ public class ExamController extends HttpServlet {
         }
     }
 
-    protected void addHandler(HttpServletRequest request, HttpServletResponse response)
+    protected void createHandler(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String controller = (String) request.getAttribute("controller");
-            MajorDAO majorDao = new MajorDAO();
-            List<MajorDTO> listMajor = majorDao.listAll();
+//            String controller = (String) request.getAttribute("controller");
+            System.out.println("Create Handler function");
             String question = request.getParameter("question");
             int major = Integer.parseInt(request.getParameter("major"));
             QuestionDAO qDao = new QuestionDAO();
             String newId = qDao.newId();
+            System.out.println("New Id : "+ newId + ", Question:" + question + ", Major: " + major);
             qDao.add(newId, question, major);
+            System.out.println("Added!");
             int count = Integer.parseInt(request.getParameter("count"));
             int correctOptions = Integer.parseInt(request.getParameter("correctOptions"));
             OptionDAO opDao = new OptionDAO();
@@ -124,9 +129,10 @@ public class ExamController extends HttpServlet {
                 } else {
                     opDao.add(newId, option, false);
                 }
+                System.out.println(i);
             }
-            request.setAttribute("listMajor", listMajor);
-            request.getRequestDispatcher(controller).forward(request, response);
+//            request.getRequestDispatcher(controller).forward(request, response);
+            request.getRequestDispatcher("/create.jsp").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -138,18 +144,19 @@ public class ExamController extends HttpServlet {
             throws ServletException, IOException {
         try {
 //            String controller = (String) request.getAttribute("controller");
-            String q_id = (String) request.getAttribute("q_id");
-            String major_id = (String) request.getAttribute("major_id");
+            String q_id = request.getParameter("q_id");
             MajorDAO majorDao = new MajorDAO();
-            MajorDTO major = majorDao.selectOne(major_id);
+            List<MajorDTO> listMajor = majorDao.listAll();
             QuestionDAO qDao = new QuestionDAO();
             QuestionDTO q = qDao.selectOne(q_id);
             OptionDAO opDao = new OptionDAO();
             List<OptionDTO> listOption = opDao.listOneQuestion(q_id);
-            request.setAttribute("major", major);
-            request.setAttribute("q", q);
+            System.out.println(q);
+            System.out.println(listOption);
+            request.setAttribute("question", q);
+            request.setAttribute("listMajor", listMajor);
             request.setAttribute("listOption", listOption);
-//            request.getRequestDispatcher(controller).forward(request, response);
+            request.getRequestDispatcher("/update.jsp").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -157,6 +164,41 @@ public class ExamController extends HttpServlet {
         }
     }
 
+    protected void updateHandler(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+//            String controller = (String) request.getAttribute("controller");
+            System.out.println("Update Handler function");
+            String question = request.getParameter("question");
+            String q_id = request.getParameter("q_id");
+            int major = Integer.parseInt(request.getParameter("major"));
+            QuestionDAO qDao = new QuestionDAO();
+            System.out.println("New Id : "+ q_id+ ", Question:" + question + ", Major: " + major);
+            qDao.update(q_id, question, major);
+            System.out.println("Added!");
+            int count = Integer.parseInt(request.getParameter("count"));
+            int correctOptions = Integer.parseInt(request.getParameter("correctOptions"));
+            OptionDAO opDao = new OptionDAO();
+            opDao.delete(q_id);
+            for (int i = 1; i <= count; i++) {
+                String option = request.getParameter("option" + i);
+                System.out.println("Option " + i + ": " + option);
+                if (i == correctOptions) {
+                    opDao.add(q_id, option, true);
+                } else {
+                    opDao.add(q_id, option, false);
+                }
+                System.out.println(i);
+            }
+//            request.getRequestDispatcher(controller).forward(request, response);
+            request.getRequestDispatcher("/index.jsp").forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

@@ -62,7 +62,7 @@ public class OptionDAO {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("delete from [Options] where [q_id] = ?");
         stm.setString(1, id);
-        stm.executeQuery();
+        stm.executeUpdate();
         con.close();
     }
     
@@ -73,7 +73,7 @@ public class OptionDAO {
         stm.setString(1, id);
         stm.setString(2, content);
         stm.setBoolean(3, isCorrect);
-        stm.executeQuery();
+        stm.executeUpdate();
         con.close();
     }
 }

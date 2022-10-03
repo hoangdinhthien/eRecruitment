@@ -14,7 +14,8 @@
     </head>
     <body>
         <h1>Hello World!</h1>
-        <a href="<c:url value="/ExamController?action=Create"/>">qBank</a>
+        <a href="<c:url value="/ExamController?action=Add"/>">qBank</a>
+        <a href="<c:url value="/ExamController?action=Update&q_id=Q001"/>">qBank</a>
         <a href="test.jsp">test</a>
     </body>
 </html>

@@ -34,7 +34,6 @@ public class MajorDAO {
             MajorDTO major = new MajorDTO();
             major.setMajor_id(rs.getInt("major_id"));
             major.setMajor_name(rs.getString("major_name"));
-//            major.setMajor_description(rs.getString("major_description"));
             list.add(major);
         }
         
@@ -51,7 +50,6 @@ public class MajorDAO {
         if (rs.next()) {
             major.setMajor_id(rs.getInt("major_id"));
             major.setMajor_name(rs.getString("major_name"));
-            major.setMajor_description(rs.getString("major_description"));
         }
         con.close();
         return major;

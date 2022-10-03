@@ -52,10 +52,9 @@ public class QuestionDAO {
         con.close();
         return q;
     }
-    
-        public String newId() throws SQLException, ClassNotFoundException{
-        Connection con = DBUtils.makeConnection();
 
+    public String newId() throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
         ResultSet rs = stm.executeQuery("select * from [Questions] ");
         int i = 0;
@@ -64,30 +63,42 @@ public class QuestionDAO {
         }
         i++;
         String newId = "Q00" + i;
-        rs = stm.executeQuery("select * from [Questions] where [q_id] = "+ newId);
+        PreparedStatement pstm = con.prepareStatement("select * from [Questions] where [q_id] = ?");
+        pstm.setString(1, newId);
+        rs = pstm.executeQuery();
         while (rs.next()) {
             i++;
-            if (i < 10){
+            if (i < 10) {
                 newId = "Q00" + i;
-            } else if (i < 100){
+            } else if (i < 100) {
                 newId = "Q0" + i;
             } else {
                 newId = "Q" + i;
             }
-            rs = stm.executeQuery("select * from [Questions] where [q_id] = "+ newId);
+            pstm.setString(1, newId);
+            rs = pstm.executeQuery();
         }
+        con.close();
         return newId;
     }
-        
-        public void add(String id, String content, int major) throws SQLException, ClassNotFoundException {
+
+    public void add(String id, String content, int major) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("insert into [Questions]] values ( ? , ? , ? )");
+        PreparedStatement stm = con.prepareStatement("insert into [Questions] values ( ? , ? , ? )");
         stm.setString(1, id);
         stm.setString(2, content);
         stm.setInt(3, major);
-        stm.executeQuery();
+        stm.executeUpdate();
         con.close();
-        
-        
+    }
+    
+    public void update(String id, String content, int major) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("update [Questions] set questiontxt = ? , major_id = ? where q_id = ? ");
+        stm.setString(1, content);
+        stm.setInt(2, major);
+        stm.setString(3, id);
+        stm.executeUpdate();
+        con.close();
     }
 }

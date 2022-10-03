@@ -48,6 +48,12 @@ public class QuestionDTO {
     public void setMajor_id(int major_id) {
         this.major_id = major_id;
     }
+
+    @Override
+    public String toString() {
+        return "QuestionDTO{" + "q_id=" + q_id + ", questiontxt=" + questiontxt + ", major_id=" + major_id + '}';
+    }
+    
     
     
 }
