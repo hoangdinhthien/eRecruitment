@@ -72,7 +72,6 @@ public class ExamController extends HttpServlet {
     protected void questionBank(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String controller = (String) request.getAttribute("controller");
             MajorDAO majorDao = new MajorDAO();
             List<MajorDTO> listMajor = majorDao.listAll();
             QuestionDAO qDao = new QuestionDAO();
@@ -82,7 +81,7 @@ public class ExamController extends HttpServlet {
             request.setAttribute("listMajor", listMajor);
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
-            request.getRequestDispatcher(controller).forward(request, response);
+            request.getRequestDispatcher("/questionBank.jsp").forward(request, response);
 
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
