@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -30,6 +31,7 @@
                         ${user.name}
                     </td>
                 </tr>
+            <c:if test="${user.role_id!=4}">
                 <tr>
                     <td>
                         Role :
@@ -38,23 +40,24 @@
                         ${user.role_id}
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        Phone Number :
-                    </td>
-                    <td>
-                        ${user.phone}
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        Address : 
-                    </td> 
-                    <td>
-                        ${user.address}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </body>
+            </c:if>
+            <tr>
+                <td>
+                    Phone Number :
+                </td>
+                <td>
+                    ${user.phone}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Address : 
+                </td> 
+                <td>
+                    ${user.address}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
 </html>
