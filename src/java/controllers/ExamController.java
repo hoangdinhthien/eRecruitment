@@ -82,7 +82,6 @@ public class ExamController extends HttpServlet {
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
             request.getRequestDispatcher("/questionBank.jsp").forward(request, response);
-
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

@@ -7,7 +7,9 @@ function add(i) {
     var main = document.getElementById("main");
     var row= document.createElement("tr");
     var td1 = document.createElement("td");
+    td1.setAttribute("class", "text-center");
     var td2 = document.createElement("td");
+    td2.setAttribute("class", "text-center");
     
     var y = document.createElement("INPUT");
     y.setAttribute("type", "radio");
@@ -18,6 +20,7 @@ function add(i) {
     var x = document.createElement("INPUT");
     x.setAttribute("type", "text");
     x.setAttribute("placeholder", "Option");
+    x.setAttribute("style", "width: 680px;");
     x.setAttribute("name", "option"+ (i + 1));
     x.setAttribute("required", true);
 

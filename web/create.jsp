@@ -20,11 +20,24 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <style>
+            .opbutton {
+                padding: 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 2px 2px;
+                cursor: pointer;
+                border-radius: 8px;
+            }
+        </style>
+
     </head>
     <body>
         <div class="container">
             <form action="<c:url value="/ExamController"/>" id="mainform" onsubmit="return validateForm()">
-                <textarea type="text" placeholder="Question" name="question" cols="200" rows="5" size ="1000" style="resize: none;" required="true"></textarea><br/>
+                <textarea type="text" placeholder="Question" name="question" cols="100" rows="5" size ="1000" style="resize: none;" required="true"></textarea><br/>
                 <select name="major">
                     <c:forEach var="major" items="${listMajor}">
                         <option value="${major.major_id}">${major.major_name}</option>
@@ -32,24 +45,36 @@
                 </select>
 
                 <hr/>
-                <table id = "main">
+                <table>
+                    <tbody id = "main">
+                        <tr>
+                            <td class="text-center" >
+                                <input type="radio" value="1"  name="correctOptions" required="true"/>
+                            </td>
+                            <td class="text-center" >
+                                <input type="text" placeholder="Option"  style="width: 680px;" name="option1" required="true"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center" >
+                                <input type="radio" value="2" class="radoOption" name="correctOptions" required="true"/>
+                            </td >
+                            <td>
+                                <input type="text" placeholder="Option" style="width: 680px;" class="someInput" name="option2" required="true"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <input type="hidden" id="countInput" name="count" value="2"/>
                     <tr>
-                        <td>
-                            <input type="radio" value="1"  name="correctOptions" required="true"/>
+                        <td class="text-center" >
+                            <input type="button" id="addButton" class="opbutton" value="+" onclick="add(2)" />
                         </td>
-                        <td>
-                            <input type="text" placeholder="Name"  name="option1" required="true"/>
+                        <td >
+                            <input type="button" id="removeButton"  value="-" onclick="remove(2)" hidden="true"/>
                         </td>
-                    </tr>
-                    <tr>
-                        <td><input type="radio" value="2" class="radoOption" name="correctOptions" required="true"/></td>
-                        <td><input type="text" placeholder="Name" class="someInput" name="option2" required="true"/></td>
                     </tr>
                 </table>
-                <input type="hidden" id="countInput" name="count" value="2"/>
-                <input type="button" id="addButton" value="Add" onclick="add(2)" />
-                <input type="button" id="removeButton" value="Remove" onclick="remove(2)" hidden="true"/>
-                <input type="submit" name="action" value="Create">Create new Question </input>
+                <input type="submit" name="action" value="Create">
             </form>
         </div>
 
