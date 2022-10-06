@@ -34,4 +34,14 @@ public class UserDAO {
         con.close();
         return user;
     }
+    
+    public void update(String email, String phone, String address) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("UPDATE [User] SET [phone] = ? , [address] = ?  WHERE [email] = ? ");
+        stm.setString(1, phone);
+        stm.setString(2, address);
+        stm.setString(3, email);
+        stm.executeUpdate();
+        con.close();
+    }
 }

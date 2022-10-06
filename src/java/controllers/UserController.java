@@ -38,12 +38,20 @@ public class UserController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String action = (String) request.getAttribute("action");
+        String action = ((String) request.getAttribute("action")).toLowerCase();
 //        String action = request.getParameter("action");
         System.out.println("Option : " + action);
         switch (action) {
             case "info": {
                 view(request, response);
+                break;
+            }
+            case "update": {
+                view(request, response);
+                break;
+            }
+            case "updatehandler": {
+                updateHandler(request, response);
                 break;
             }
         }
@@ -66,6 +74,45 @@ public class UserController extends HttpServlet {
         }
     }
 
+     public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+//            HttpSession session = request.getSession();
+//            String email = (String) session.getAttribute("email");
+            String email = request.getParameter("email");
+            UserDAO uDao = new UserDAO();
+            UserDTO user = uDao.find(email);
+            request.setAttribute("user", user);
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void updateHandler(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            System.out.println("Update Handler");
+//            HttpSession session = request.getSession();
+//            String email = (String) session.getAttribute("email");
+            String email = request.getParameter("email");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+            UserDAO uDao = new UserDAO();
+            uDao.update(email, phone, address);
+            UserDTO user = uDao.find(email);
+            System.out.println("");
+            request.setAttribute("user", user);
+            request.setAttribute("action", "info");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
