@@ -34,6 +34,7 @@
                         </tr>
                     </c:if>
                 </c:forEach>
+                <button><a href="<c:url value="/ExamController?action=Update&q_id=${question.q_id}"/>">Update</a></button>
             </table>
             <hr/>
         </c:forEach>
