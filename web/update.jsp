@@ -40,8 +40,8 @@
                                 <br>-->
             </table>
             <input type="hidden" id="countInput" name="count" value="2"/>
-            <input type="button" id="addButton" value="Add" onclick="add(${numOfOption})" <c:if test="${numOfOption == 10}"> hidden="true" </c:if>/>
-            <input type="button" id="removeButton" value="Remove" onclick="remove(${numOfOption})" <c:if test="${numOfOption <= 2}"> hidden="true" </c:if>/>
+            <input type="button" id="addButton" value="Add" onclick="add(${numOfOption})" <c:if test="${numOfOption == 10}"> disabled="true" </c:if>/>
+            <input type="button" id="removeButton" value="Remove" onclick="remove(${numOfOption})" <c:if test="${numOfOption <= 2}"> disabled="true" </c:if>/>
             <input type="hidden" name="action" value="UpdateHandler"/>
             <input type="submit"/>
         </form>

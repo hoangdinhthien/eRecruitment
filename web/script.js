@@ -19,7 +19,7 @@ function add(i) {
     
     var x = document.createElement("INPUT");
     x.setAttribute("type", "text");
-    x.setAttribute("placeholder", "Option");
+    x.setAttribute("placeholder", "Enter Option");
     x.setAttribute("style", "width: 680px;");
     x.setAttribute("name", "option"+ (i + 1));
     x.setAttribute("required", true);
@@ -33,7 +33,7 @@ function add(i) {
     var ad = "add(" + (i + 1) + ")";
     var addButton = document.getElementById("addButton");
     if (i == 9) {
-        addButton.hidden = true;
+        addButton.disabled = true;
     }
     addButton.setAttribute('onclick', ad);
 //                addButton.value = ad;
@@ -41,7 +41,7 @@ function add(i) {
     var rem = "remove(" + (i + 1) + ")";
     var removeButton = document.getElementById("removeButton");
     if (i == 2) {
-        removeButton.hidden = false;
+        removeButton.disabled = false;
     }
     removeButton.setAttribute('onclick', rem);
 //                removeButton.value = rem;
@@ -89,14 +89,14 @@ function remove(i) {
     var ad = "add(" + (i - 1) + ")";
     var addButton = document.getElementById("addButton");
     if (i == 10) {
-        addButton.hidden = false;
+        addButton.disabled = false;
     }
     addButton.setAttribute('onclick', ad);
 //                addButton.value = ad;
     var rem = "remove(" + (i - 1) + ")";
     var removeButton = document.getElementById("removeButton");
     if (i == 3) {
-        removeButton.hidden = true;
+        removeButton.disabled = true;
     }
     removeButton.setAttribute('onclick', rem);
 //                removeButton.value = rem;

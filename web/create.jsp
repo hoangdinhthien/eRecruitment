@@ -21,63 +21,83 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <style>
-            .opbutton {
-                padding: 20px;
+            h1{
                 text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                margin: 2px 2px;
-                cursor: pointer;
-                border-radius: 8px;
             }
+            hr{
+                height: 1px;
+                background-color: blue;
+                border: none;
+            }
+            .create-exam{
+                border: 1px solid red;
+                border-radius: 10px;
+                background:  #C7C7C7;
+                padding: 25px 30px;
+            }
+            .question-input{
+                border: 1px solid green;
+                border-radius: 10px;
+                background-color: #E3E3E3;
+                margin:  20px;
+                padding: 20px;
+            }
+            textarea, input{
+                border: none; 
+                margin:  10px 5px;
+            }
+     
         </style>
 
     </head>
     <body>
+
+        <h1>Add new question</h1>
         <div class="container">
-            <form action="<c:url value="/ExamController"/>" id="mainform" onsubmit="return validateForm()">
-                <textarea type="text" placeholder="Question" name="question" cols="100" rows="5" size ="1000" style="resize: none;" required="true"></textarea><br/>
-                <select name="major">
-                    <c:forEach var="major" items="${listMajor}">
-                        <option value="${major.major_id}">${major.major_name}</option>
-                    </c:forEach>
-                </select>
+            <div class="create-exam">
+                <form action="<c:url value="/ExamController"/>" id="mainform" onsubmit="return validateForm()">
+                    <div>
+                        <textarea type="text" placeholder="Enter Question" name="question" cols="100" rows="2" size ="1000" style="resize: none;" required="true"></textarea>
+                    </div>
+                    <select name="major">
+                        <c:forEach var="major" items="${listMajor}">
+                            <option value="${major.major_id}">${major.major_name}</option>
+                        </c:forEach>
+                    </select>
 
-                <hr/>
-                <table>
-                    <tbody id = "main">
-                        <tr>
-                            <td class="text-center" >
-                                <input type="radio" value="1"  name="correctOptions" required="true"/>
-                            </td>
-                            <td class="text-center" >
-                                <input type="text" placeholder="Option"  style="width: 680px;" name="option1" required="true"/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center" >
-                                <input type="radio" value="2" class="radoOption" name="correctOptions" required="true"/>
-                            </td >
-                            <td>
-                                <input type="text" placeholder="Option" style="width: 680px;" class="someInput" name="option2" required="true"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <input type="hidden" id="countInput" name="count" value="2"/>
-                    <tr>
-                        <td class="text-center" >
-                            <input type="button" id="addButton" class="opbutton" value="+" onclick="add(2)" />
-                        </td>
-                        <td >
-                            <input type="button" id="removeButton"  value="-" onclick="remove(2)" hidden="true"/>
-                        </td>
-                    </tr>
-                </table>
-                <input type="submit" name="action" value="Create">
-            </form>
-        </div>
+                    <hr>
 
-        <script src="script.js"></script> 
+                    <div class="question-input">
+                        <table>
+                            <tbody id = "main">
+                                <tr>
+                                    <td class="text-center" >
+                                        <input type="radio" value="1"  name="correctOptions" required="true"/>
+                                    </td>
+                                    <td class="text-center" >
+                                        <input type="text" placeholder="Enter Option"  style="width: 680px;" name="option1" required="true"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center" >
+                                        <input type="radio" value="2" class="radoOption" name="correctOptions" required="true"/>
+                                    </td >
+                                    <td>
+                                        <input type="text" placeholder="Enter Option" style="width: 680px;" class="someInput" name="option2" required="true"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <input type="hidden" id="countInput" name="count" value="2"/>
+                        </table>
+                        <div>
+                            <input type="button" id="addButton" class="opbutton" value="Add" onclick="add(2)"  style="width: 12%"/>
+                            <input type="button" id="removeButton"  value="Remove" onclick="remove(2)"  style="width: 12%" disabled="true"/>
+                        </div>
+                    </div>
+                    <input type="submit" name="action" value="Create">
+                </form>
+            </div>
+
+            <script src="script.js"></script> 
     </body>
 </html>
