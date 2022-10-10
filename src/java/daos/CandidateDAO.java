@@ -41,4 +41,13 @@ public class CandidateDAO {
         con.close();
         return list;
     }
+    
+        public static boolean updateCandidateStatus(String id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("update [dbo].[Candidates] set isStatus=3 where can_id=?");
+        stm.setString(1, id);
+        int rs = stm.executeUpdate();
+        con.close();
+        return rs != 0;
+    }
 }

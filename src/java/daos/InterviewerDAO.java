@@ -14,7 +14,7 @@ import utils.DBUtils;
  * @author Thien
  */
 public class InterviewerDAO {
-        public static List<InterviewerDTO> searchInterviewer(int major_id, boolean isAvailable) throws ClassNotFoundException, SQLException {
+    public static List<InterviewerDTO> searchInterviewer(int major_id, boolean isAvailable) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select i.[inter_id],i.[email],u.[name]  from [dbo].[Interviewer] i join [dbo].[User] u"
                 + " on i.[email] = u.[email] where major_id=? and isAvailable= ?");
@@ -31,5 +31,15 @@ public class InterviewerDAO {
         }
         con.close();
         return list;
+    }
+    
+    public static boolean updateInterviewerStatus(String id, boolean status) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("update [dbo].[Interviewer] set isStatus=? where can_id=?");
+        stm.setBoolean(1, status);
+        stm.setString(2, id);
+        int rs = stm.executeUpdate();
+        con.close();
+        return rs != 0;
     }
 }

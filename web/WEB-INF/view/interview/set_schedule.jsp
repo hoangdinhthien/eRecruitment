@@ -15,7 +15,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
         <%--css--%>
         <link rel="stylesheet" href="<c:url value='/css/thien.css'/>" type="text/css">
     </head>
@@ -34,7 +35,7 @@
                         </c:choose>
                     </c:forEach>
                 </select>
-                <button type="submit" name="op" value="set_schedule_handler">Filter</button>
+                <button type="submit" name="op" value="set_schedule_filtered">Filter</button>
             </form>
             <c:if test="${not empty sublist}">
                 <div class="container" style="margin: 10% 0% 5% 0%; ">
@@ -51,7 +52,7 @@
                                     Major: ${listOfMajor[choosenMajor-1].major_name} <br/>
                                 </p>
                                 <p>
-                                    Phone:${can.phone} <br/>
+                                    Phone: ${can.phone} <br/>
                                 </p>
                             </div>
                         </c:forEach>
@@ -60,17 +61,35 @@
                         <button class="open-button" onclick="openForm()" style="float: right">Set Schedule</button>
 
                         <div class="form-popup" id="myForm">
-                            <form action="/action_page.php" class="form-container">
-                                <h1>Login</h1>
-
-                                <label for="email"><b>Email</b></label>
-                                <input type="text" placeholder="Enter Email" name="email" required>
-
-                                <label for="psw"><b>Password</b></label>
-                                <input type="password" placeholder="Enter Password" name="psw" required>
-
+                            <form action="<c:url value="/interview"/>" class="form-container">
+                                <div style="padding: 3%;">
+                                    <div class="col-md-4">
+                                        <b style="float: left">Time:</b>
+                                        <select name="period">
+                                            <c:forEach var="p" items="${period}">
+                                                <option value="${p}">${p}</option>
+                                            </c:forEach>
+                                        </select><br/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b style="float: left">Date:</b><br/>
+                                        <input type="date" name="date" min="${minDate}" required><br/>
+                                        <br/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <b style="float:left">Interviewer:</b><br/>
+                                        <c:forEach var="inter" items="${interviewers}" varStatus="loop">
+                                            <input type='checkbox' name='iId' value='${inter.id}'>
+                                            <label for="iId">${inter.name}</label><br>
+                                        </c:forEach>
+                                        <i style="color:red; float: left">*Please choose 2 interviewers</i>
+                                    </div>
+                                </div>
+                                <c:forEach var="can" items="${sublist}">
+                                    <input type="hidden" name="cId" value="${can.id}"/>
+                                </c:forEach>
                                 <button type="button" class="btn cancel" onclick="closeForm()" style="float: right">Close</button><br/>
-                                <button type="submit" class="btn" style="">Login</button>
+                                <button title="Set" type="submit" class="btn" name="op" value="set_schedule_handler">Set</button>
                             </form>
                         </div>
                     </div>
@@ -78,7 +97,7 @@
                 <ul class="pagination">
                     <c:forEach var="p" items="${noOfPage}" varStatus="loop">
                         <li class="${page == loop.count?'active':''}">
-                            <a href="<c:url value="/interview?op=set_schedule_handler&major_id=${major_id}&page=${loop.count}"/>">${loop.count}</a>
+                            <a href="<c:url value="/interview?op=set_schedule_filtered&major_id=${choosenMajor}&page=${loop.count}"/>">${loop.count}</a>
                         </li>
                     </c:forEach>
                 </ul>
@@ -94,6 +113,24 @@
             function closeForm() {
                 document.getElementById("myForm").style.display = "none";
             }
+            $(document).ready(function () {
+                $("button[title|='Set']").prop('disabled', true);
+                $("input[type='checkbox']").change(function () {
+                    var max_allowed = 2;
+                    var checked = $("input[type='checkbox']:checked").length;
+                    count = checked;
+                    if (checked > max_allowed) {
+                        this.checked = false;
+                        alert("Please select" + max_allowed + " options.");
+                        --checked;
+                    }
+                    if (checked === max_allowed) {
+                        $("button[title|='Set']").prop('disabled', false);
+                    } else {
+                        $("button[title|='Set']").prop('disabled', true);
+                    }
+                });
+            });
         </script>
     </body>
 </html>
