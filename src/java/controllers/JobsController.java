@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import config.Config;
 import daos.JobsDAO;
 import dtos.JobsDTO;
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class JobsController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            request.setAttribute("controller", "interview");
+            request.setAttribute("controller", "job");
             String op = request.getParameter("op");
             request.setAttribute("action", op);
             switch (op) {
@@ -59,7 +60,8 @@ public class JobsController extends HttpServlet {
             try {
                 List<JobsDTO> list = JobsDAO.list_job();
                 request.setAttribute("list", list);
-                request.getRequestDispatcher("search.jsp").forward(request, response);
+                request.setAttribute("action", "search");
+                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -76,7 +78,7 @@ public class JobsController extends HttpServlet {
                 List<JobsDTO> list = JobsDAO.search_job(search);
                 request.setAttribute("list", list);
                 request.setAttribute("search", search);
-                request.getRequestDispatcher("search.jsp").forward(request, response);
+                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
