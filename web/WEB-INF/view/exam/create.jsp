@@ -11,11 +11,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-<!--        <link href="<c:url value="/site2.css"/>" rel="stylesheet" type="text/css">
+        <link href="<c:url value="/site2.css"/>" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -55,7 +55,7 @@
         <h1>Add new question</h1>
         <div class="container">
             <div class="create-exam">
-                <form action="<c:url value="/ExamController"/>" id="mainform" onsubmit="return validateForm()">
+                <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()">
                     <div>
                         <textarea type="text" placeholder="Enter Question" name="question" cols="100" rows="2" size ="1000" style="resize: none;" required="true"></textarea>
                     </div>
@@ -94,7 +94,7 @@
                             <input type="button" id="removeButton"  value="Remove" onclick="remove(2)"  style="width: 12%" disabled="true"/>
                         </div>
                     </div>
-                    <input type="submit" name="action" value="Create">
+                    <input type="submit" name="op" value="Create">
                 </form>
             </div>
 

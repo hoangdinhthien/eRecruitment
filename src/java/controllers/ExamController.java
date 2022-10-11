@@ -136,7 +136,7 @@ public class ExamController extends HttpServlet {
             }
 //            request.getRequestDispatcher(controller).forward(request, response);
                 request.setAttribute("action", "questionBank");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                questionBank(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -196,8 +196,7 @@ public class ExamController extends HttpServlet {
                 System.out.println(i);
             }
 //            request.getRequestDispatcher(controller).forward(request, response);
-                request.setAttribute("action", "questionBank");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                questionBank(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
