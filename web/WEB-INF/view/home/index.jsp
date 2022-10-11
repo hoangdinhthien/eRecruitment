@@ -223,6 +223,7 @@
                             </div>
                         </div>
                     </c:if>
+
                 </div>
                 <div style="border-radius: 10px;" class="hero__item set-bg col-lg-9"
                      data-setbg="img/banner/recruitment-banner-2.jpg">

@@ -70,6 +70,7 @@ public class InterviewController extends HttpServlet {
             case "set_schedule_filtered":
                 set_schedule_filtered(request, response);
                 break;
+            //Xu ly xep lich phong van
             case "set_schedule_handler":
                 set_schedule_handler(request, response);
                 break;
@@ -171,31 +172,37 @@ public class InterviewController extends HttpServlet {
             String date = request.getParameter("date");
             String[] iId = request.getParameterValues("iId");
             String[] cId = request.getParameterValues("cId");
+            //Lay thong tin de bao toan form
             int major_id = Integer.parseInt(request.getParameter("major_id"));
             String page = request.getParameter("page");
+            //parse time de check xem trong database co time do chua
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             time = period.get(time);
             if (!InterviewingDAO.searchInterviewByDate(sdf.parse(date + " " + time))) {
-                for (String i : iId) {
-                    for (String c : cId) {
+                for (String i : iId) { //Chay vong lap lay interviewer's id 
+                    for (String c : cId) { // Chay vong lay candidate's id
                         InterviewingDTO ig = new InterviewingDTO();
                         ig.setInter_id(i);
                         ig.setCan_id(c);
                         ig.setDate(sdf.parse(date + " " + time));
                         ig.setLocation("3HTD Company");
                         List<InterviewingDTO> listOfInterview = InterviewingDAO.searchInterviewByInterviewerId(i);
-                        System.out.println(listOfInterview.size());
+                        //Gioi han so interview cua 1 interviewer
                         if (listOfInterview.size() < 16) {
                             InterviewingDAO.addInterview(ig);
                             CandidateDAO.updateCandidateStatus(c);
                         } else {
                             InterviewerDAO.updateInterviewerStatus(i, false);
+                            request.setAttribute("message", "Interviewer is not available anymore. Please choose another one!");
+                            request.setAttribute("page", page);
+                            request.setAttribute("major_id", major_id);
+                            request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
                         }
                     }
                 }
                 request.setAttribute("major_id", major_id);
                 request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
-            }else{
+            } else {
                 request.setAttribute("message", "This date has been booked. Please choose another time");
                 request.setAttribute("page", page);
                 request.setAttribute("major_id", major_id);

@@ -54,8 +54,13 @@
                 </div>
                 <nav class="humberger__menu__nav mobile-menu">
                     <ul>
+<<<<<<< HEAD
                         <li class="active"><a href="<c:url value="/home/index"/>">Home</a></li>
                         <li><a href="./shop-grid.html">Jobs</a></li>
+=======
+                        <li class="active"><a href="./index.html">Home</a></li>
+                        <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
+>>>>>>> origin/origin/Hieu
                         <li><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
                                 <li><a href="./shop-details.html">Shop Details</a></li>
@@ -170,8 +175,9 @@
                         <div class="col-lg-6">
                             <nav class="header__menu">
                                 <ul>
-                                    <li class="active"><a href="<c:url value="/home?op=index"/>">Home</a></li>
-                                    <li><a href="./shop-grid.html">Jobs</a></li>
+
+                                    <li class="active"><a href="./index.html">Home</a></li>
+                                    <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
                                     <li><a href="#">Pages</a>
                                         <ul class="header__menu__dropdown">
                                             <li><a href="./shop-details.html">Shop Details</a></li>
@@ -229,9 +235,9 @@
                         <div class="col-lg-9">
                             <div class="hero__search">
                                 <div class="hero__search__form">
-                                    <form action="#">
-                                        <input type="text" placeholder="What do yo u need?">
-                                        <button type="submit" class="site-btn">SEARCH</button>
+                                    <form action="<c:url value="/job"/>">
+                                        <input type="text" name="search" placeholder="What do yo u need?">
+                                        <button type="submit" class="site-btn" name="op" value="search">SEARCH</button>
                                     </form>
                                 </div>
                                 <div class="hero__search__phone">

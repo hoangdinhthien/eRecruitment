@@ -22,7 +22,7 @@
     </head>
     <body>
         <div class="container">
-            <form action="<c:url value="/interview"/>" style="float: left; width: 100%;text-align: left;margin-top: 2%">
+            <form action="<c:url value="/interview"/>" style="float: left; width: 100%;text-align: left;">
                 <select name="major_id">
                     <c:forEach var="major" items="${listOfMajor}">
                         <c:choose>
