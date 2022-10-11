@@ -20,11 +20,12 @@ import utils.DBUtils;
  */
 public class CandidateDAO {
 
-    public static List<CandidateDTO> searchTestedCandidate(int major_id) throws ClassNotFoundException, SQLException {
+    public static List<CandidateDTO> searchCandidateById(int major_id, int status) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, c.isStatus, u.[name], u.[phone] FROM [dbo].[Candidates] c JOIN [dbo].[Jobs] j "
-                + " on j.[job_id] = c.[job_id] JOIN [dbo].[User] u on c.[email] = u.[email] WHERE major_id=? and isStatus=2");
+                + " on j.[job_id] = c.[job_id] JOIN [dbo].[User] u on c.[email] = u.[email] WHERE major_id=? and isStatus=?");
         stm.setInt(1, major_id);
+        stm.setInt(2, status);
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new LinkedList();
         while (rs.next()) {
@@ -42,7 +43,7 @@ public class CandidateDAO {
         return list;
     }
     
-        public static boolean updateCandidateStatus(String id) throws ClassNotFoundException, SQLException {
+    public static boolean updateCandidateStatus(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("update [dbo].[Candidates] set isStatus=3 where can_id=?");
         stm.setString(1, id);

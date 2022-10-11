@@ -3,7 +3,7 @@
     Created on : Sep 23, 2022, 9:35:34 AM
     Author     : Thien's
 --%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -199,28 +199,30 @@
                             Tax and Advisory services.
                         </h5>
                     </div>
-                    <div class="row">
-                        <div class="col login">
-                            <h3>Join Us</h3>
-                            <br>
-                            <div class="google-btn">
-                                <a href="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force">
-                                    <div class="google-icon-wrapper">
-                                        <img class="google-icon"
-                                             src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
-                                    </div>
-                                    <p class="btn-text"><b>Sign in with google</b></p>
-                                </a>
+                    <c:if test="${empty info}">
+                        <div class="row">
+                            <div class="col login">
+                                <h3>Join Us</h3>
+                                <br>
+                                <div class="google-btn">
+                                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force">
+                                        <div class="google-icon-wrapper">
+                                            <img class="google-icon"
+                                                 src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" />
+                                        </div>
+                                        <p class="btn-text"><b>Sign in with google</b></p>
+                                    </a>
+                                </div>
+                                <h5>-----------OR-----------</h5>
+                                <p>You are our staff ?</p>
+                                <button class="login-staff-btn">
+                                    <a href="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force">
+                                        STAFF
+                                    </a>
+                                </button>
                             </div>
-                            <h5>-----------OR-----------</h5>
-                            <p>You are our staff ?</p>
-                            <button class="login-staff-btn">
-                                <a href="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force">
-                                    STAFF
-                                </a>
-                            </button>
                         </div>
-                    </div>
+                    </c:if>
                 </div>
                 <div style="border-radius: 10px;" class="hero__item set-bg col-lg-9"
                      data-setbg="img/banner/recruitment-banner-2.jpg">

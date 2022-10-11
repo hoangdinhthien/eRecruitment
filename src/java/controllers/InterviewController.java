@@ -104,10 +104,10 @@ public class InterviewController extends HttpServlet {
                 intpage = Integer.parseInt(page);
             }
             //Lay candidate theo major
-            List<CandidateDTO> listOfCandidate = CandidateDAO.searchTestedCandidate(major_id);
+            List<CandidateDTO> listOfCandidate = CandidateDAO.searchCandidateById(major_id, 2);
 
             //Lay available interviewer theo major
-            List<InterviewerDTO> listOfInterviewer = InterviewerDAO.searchInterviewer(major_id, true);
+            List<InterviewerDTO> listOfInterviewer = InterviewerDAO.searchAvailableInterviewer(major_id, true);
 
             //
             //Tao list con de phan trang
@@ -141,7 +141,7 @@ public class InterviewController extends HttpServlet {
             //Lay lai Major va bao toan form
             List<MajorDTO> listOfMajor = MajorDAO.listAll();
             request.setAttribute("listOfMajor", listOfMajor);
-            request.setAttribute("choosenMajor", major_id);
+            request.setAttribute("chosenMajor", major_id);
 
             //Pagination
             request.setAttribute("sublist", sublist);
@@ -171,17 +171,35 @@ public class InterviewController extends HttpServlet {
             String date = request.getParameter("date");
             String[] iId = request.getParameterValues("iId");
             String[] cId = request.getParameterValues("cId");
+            int major_id = Integer.parseInt(request.getParameter("major_id"));
+            String page = request.getParameter("page");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             time = period.get(time);
-            for (String i : iId) {
-                for (String c : cId) {
-                    InterviewingDTO ig = new InterviewingDTO();
-                    ig.setInter_id(i);
-                    ig.setCan_id(c);
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    ig.setDate(sdf.parse(date + " " + time));
-                    ig.setLocation("3HTD Company");
-                    InterviewingDAO.addInterview(ig);
+            if (!InterviewingDAO.searchInterviewByDate(sdf.parse(date + " " + time))) {
+                for (String i : iId) {
+                    for (String c : cId) {
+                        InterviewingDTO ig = new InterviewingDTO();
+                        ig.setInter_id(i);
+                        ig.setCan_id(c);
+                        ig.setDate(sdf.parse(date + " " + time));
+                        ig.setLocation("3HTD Company");
+                        List<InterviewingDTO> listOfInterview = InterviewingDAO.searchInterviewByInterviewerId(i);
+                        System.out.println(listOfInterview.size());
+                        if (listOfInterview.size() < 16) {
+                            InterviewingDAO.addInterview(ig);
+                            CandidateDAO.updateCandidateStatus(c);
+                        } else {
+                            InterviewerDAO.updateInterviewerStatus(i, false);
+                        }
+                    }
                 }
+                request.setAttribute("major_id", major_id);
+                request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
+            }else{
+                request.setAttribute("message", "This date has been booked. Please choose another time");
+                request.setAttribute("page", page);
+                request.setAttribute("major_id", major_id);
+                request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
             }
         } catch (ParseException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);

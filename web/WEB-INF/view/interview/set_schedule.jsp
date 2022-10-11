@@ -26,8 +26,8 @@
                 <select name="major_id">
                     <c:forEach var="major" items="${listOfMajor}">
                         <c:choose>
-                            <c:when test="${not empty choosenMajor}">
-                                <option ${choosenMajor == major.major_id?'selected':''} value="${major.major_id}">${major.major_name}</option>
+                            <c:when test="${not empty chosenMajor}">
+                                <option ${chosenMajor == major.major_id?'selected':''} value="${major.major_id}">${major.major_name}</option>
                             </c:when>
                             <c:otherwise>
                                 <option value="${major.major_id}">${major.major_name}</option>
@@ -37,6 +37,9 @@
                 </select>
                 <button type="submit" name="op" value="set_schedule_filtered">Filter</button>
             </form>
+            <c:if test="${empty sublist}">
+                <h3>No result!</h3>
+            </c:if>
             <c:if test="${not empty sublist}">
                 <div class="container" style="margin: 10% 0% 5% 0%; ">
                     <div class="row" style="position: relative">
@@ -49,7 +52,7 @@
                                     Email: ${can.email} <br/>
                                 </p>    
                                 <p>
-                                    Major: ${listOfMajor[choosenMajor-1].major_name} <br/>
+                                    Major: ${listOfMajor[chosenMajor-1].major_name} <br/>
                                 </p>
                                 <p>
                                     Phone: ${can.phone} <br/>
@@ -88,6 +91,8 @@
                                 <c:forEach var="can" items="${sublist}">
                                     <input type="hidden" name="cId" value="${can.id}"/>
                                 </c:forEach>
+                                <input type="hidden" name="major_id" value="${chosenMajor}"/>
+                                <input type="hidden" name="page" value="${page}"/>
                                 <button type="button" class="btn cancel" onclick="closeForm()" style="float: right">Close</button><br/>
                                 <button title="Set" type="submit" class="btn" name="op" value="set_schedule_handler">Set</button>
                             </form>
@@ -97,10 +102,15 @@
                 <ul class="pagination">
                     <c:forEach var="p" items="${noOfPage}" varStatus="loop">
                         <li class="${page == loop.count?'active':''}">
-                            <a href="<c:url value="/interview?op=set_schedule_filtered&major_id=${choosenMajor}&page=${loop.count}"/>">${loop.count}</a>
+                            <a href="<c:url value="/interview?op=set_schedule_filtered&major_id=${chosenMajor}&page=${loop.count}"/>">${loop.count}</a>
                         </li>
                     </c:forEach>
                 </ul>
+            </c:if>
+            <c:if test="${not empty message}">
+                <script>
+                    document.getElementById("error").innerHTML = alert("${message}");
+                </script>
             </c:if>
         </div>
 
@@ -131,6 +141,7 @@
                     }
                 });
             });
+             
         </script>
     </body>
 </html>
