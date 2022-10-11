@@ -56,13 +56,7 @@
                     <ul>
                         <li class="active"><a href="./index.html">Home</a></li>
                         <li><a href="./shop-grid.html">Jobs</a></li>
-                        <li><a href="#">Pages</a>
-                            <ul class="header__menu__dropdown">
-                                <li><a href="./shop-details.html">Shop Details</a></li>
-                                <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                <li><a href="./checkout.html">Check Out</a></li>
-                                <li><a href="./blog-details.html">Blog Details</a></li>
-                            </ul>
+                        <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a>
                         </li>
                         <li><a href="./blog.html">About Us</a></li>
                         <li><a href="./contact.html">Contact</a></li>
