@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import config.Config;
 import daos.MajorDAO;
 import daos.OptionDAO;
 import daos.QuestionDAO;
@@ -27,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author ACER
  */
-@WebServlet(name = "ExamController", urlPatterns = {"/ExamController"})
+@WebServlet(name = "ExamController", urlPatterns = {"/exam"})
 public class ExamController extends HttpServlet {
 
     /**
@@ -43,9 +44,11 @@ public class ExamController extends HttpServlet {
             throws ServletException, IOException {
 //        String controller = (String) request.getAttribute("controller");
 //        String action = (String) request.getAttribute("action");
-        String action = request.getParameter("action");
-        System.out.println("Action : " + action);
-        switch (action) {
+        request.setAttribute("controller", "exam");
+        String op =  request.getParameter("op");
+//        request.setAttribute("action", op);
+        System.out.println("Action : " + op);
+        switch (op) {
             case "QuestionBank": {
                 questionBank(request, response);
                 break;
@@ -81,7 +84,8 @@ public class ExamController extends HttpServlet {
             request.setAttribute("listMajor", listMajor);
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
-            request.getRequestDispatcher("/questionBank.jsp").forward(request, response);
+                request.setAttribute("action", "questionBank");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -97,7 +101,8 @@ public class ExamController extends HttpServlet {
             List<MajorDTO> listMajor = majorDao.listAll();
             System.out.println("Create function 1");
             request.setAttribute("listMajor", listMajor);
-            request.getRequestDispatcher("/create.jsp").forward(request, response);
+                request.setAttribute("action", "create");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -130,7 +135,8 @@ public class ExamController extends HttpServlet {
                 System.out.println(i);
             }
 //            request.getRequestDispatcher(controller).forward(request, response);
-            request.getRequestDispatcher("/create.jsp").forward(request, response);
+                request.setAttribute("action", "questionBank");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -154,7 +160,8 @@ public class ExamController extends HttpServlet {
             request.setAttribute("question", q);
             request.setAttribute("listMajor", listMajor);
             request.setAttribute("listOption", listOption);
-            request.getRequestDispatcher("/update.jsp").forward(request, response);
+                request.setAttribute("action", "update");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -189,7 +196,8 @@ public class ExamController extends HttpServlet {
                 System.out.println(i);
             }
 //            request.getRequestDispatcher(controller).forward(request, response);
-            request.getRequestDispatcher("/index.jsp").forward(request, response);
+                request.setAttribute("action", "questionBank");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

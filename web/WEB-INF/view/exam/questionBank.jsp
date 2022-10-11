@@ -12,15 +12,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
         <style>
-            h1{
-                text-align: center
-            }
-            li{
-                border: 1px solid blue;
-                padding: 10px;
-                margin: 25px 0;
-                background: #C2C1C5;
-            }
             .update-btn{
                 text-decoration: none;
             }
@@ -42,7 +33,7 @@
     </head>
     <body>
 
-        <h1>Question bank</h1>
+        <h1 style="text-align: center">Question bank</h1>
 
  <!--        <c:forEach items="${listQuestion}" var="question">
             Question : ${question.questiontxt} <br/>
@@ -74,7 +65,7 @@
         <div class="list-question">
             <ol type="1">
                 <c:forEach items="${listQuestion}" var="question">
-                    <li>
+                    <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
                         <span class="question-title">Question : ${question.questiontxt} </span>
 
                         <span class="question-major">
