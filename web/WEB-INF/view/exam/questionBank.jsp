@@ -32,7 +32,9 @@
                 margin: 10px 0;
                 text-align: left;
             }
-
+            .list-question{
+                border: 1px solid red;
+            }
         </style>
     </head>
     <body>
@@ -67,10 +69,9 @@
 
         <div class="container">
             <div class="list-question">
-                <ol type="1">
-                    <c:forEach items="${listQuestion}" var="question">
+                    <c:forEach items="${listQuestion}" var="question" varStatus="loop">
                         <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
-                            <span class="question-title">Question : ${question.questiontxt} </span>
+                            <span class="question-title">${loop.count}. Question : ${question.questiontxt} </span>
 
                             <span class="question-major">
                                 Major : 
@@ -98,7 +99,6 @@
                             <button><a class="update-btn" href="<c:url value="/exam?op=Update&q_id=${question.q_id}"/>">Update</a></button>
                         </li>
                     </c:forEach>
-                </ol>
             </div>
         </div>
     </body>
