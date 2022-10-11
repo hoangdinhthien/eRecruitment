@@ -212,17 +212,10 @@
                                     <span class="arrow_carrot-down"></span>
                                 </div>
                                 <ul class="dropdown_menu dropdown_menu-1">
-                                    <li class="dropdown_item-1"><a href=" #">Fresh Meat</a></li>
-                                    <li class="dropdown_item-2"><a href=" #">Vegetables</a></li>
-                                    <li class="dropdown_item-3"><a href=" #">Fruit & Nut Gifts</a></li>
-                                    <li class="dropdown_item-4"><a href=" #">Fresh Berries</a></li>
-                                    <li class="dropdown_item-5"><a href=" #">Ocean Foods</a></li>
-                                    <li class="dropdown_item-6"><a href=" #">Butter & Eggs</a></li>
-                                    <li class="dropdown_item-7"><a href=" #">Fastfood</a></li>
-                                    <li class="dropdown_item-8"><a href=" #">Fresh Onion</a></li>
-                                    <li class="dropdown_item-9"><a href=" #">Papayaya & Crisps</a></li>
-                                    <li class="dropdown_item-10"><a href=" #">Oatmeal</a></li>
-                                    <li class="dropdown_item-11"><a href=" #">Fresh Bananas</a></li>
+                                    <c:forEach var="major" items="${listMajor}">
+                                        <li class="dropdown_item-1">
+                                            <a href="<c:url value='/home?op=index'/>">${major.major_name}</a></li>
+                                        </c:forEach>
                                 </ul>
                             </li>
                         </div>
