@@ -75,12 +75,12 @@ public class ExamController extends HttpServlet {
     protected void questionBank(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            MajorDAO majorDao = new MajorDAO();
-            List<MajorDTO> listMajor = majorDao.listAll();
             QuestionDAO qDao = new QuestionDAO();
             List<QuestionDTO> listQuestion = qDao.listAll();
             OptionDAO opDao = new OptionDAO();
             List<OptionDTO> listOption = opDao.listAll();
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor = majorDao.listAll();
             request.setAttribute("listMajor", listMajor);
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
