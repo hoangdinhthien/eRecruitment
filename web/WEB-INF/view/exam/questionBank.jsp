@@ -25,15 +25,14 @@
                 text-align: left;
             }
             .list-option{
-                border: 1px solid red;
                 background: #E4E4E4;
                 display: block;
                 padding: 10px 2px;
                 margin: 10px 0;
                 text-align: left;
             }
-            .list-question{
-                border: 1px solid red;
+            li{
+                list-style-type: none
             }
         </style>
     </head>
