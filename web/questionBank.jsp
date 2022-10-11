@@ -44,7 +44,7 @@
 
         <h1>Question bank</h1>
 
-        <c:forEach items="${listQuestion}" var="question">
+ <!--        <c:forEach items="${listQuestion}" var="question">
             Question : ${question.questiontxt} <br/>
             Major : 
             <c:forEach var="major" items="${listMajor}">
@@ -68,7 +68,7 @@
             </table>
             <button><a href="<c:url value="/ExamController?action=Update&q_id=${question.q_id}"/>">Update</a></button>
             <hr/>
-        </c:forEach>
+        </c:forEach> -->
 
 
         <div class="list-question">
