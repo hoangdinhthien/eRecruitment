@@ -31,11 +31,8 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-<<<<<<< HEAD
                     <file>${file.reference.mssql-jdbc-9.4.1.jre8.jar}</file>
-=======
-                    <file>${file.reference.sqljdbc4.jar}</file>
->>>>>>> origin/origin/Hieu
+
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

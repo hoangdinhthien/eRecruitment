@@ -96,12 +96,13 @@ public class InterviewController extends HttpServlet {
         try {
             int major_id = Integer.parseInt(request.getParameter("major_id"));
             String page = request.getParameter("page");
+            String success = request.getParameter("success");
             //page hien tai
             int intpage = 1;
             //Tong so page
             int totalpage = 0;
             //do la int nen khong duoc null
-            if (page != null) {
+            if (page != null && success == null) {
                 intpage = Integer.parseInt(page);
             }
             //Lay candidate theo major
@@ -110,51 +111,55 @@ public class InterviewController extends HttpServlet {
             //Lay available interviewer theo major
             List<InterviewerDTO> listOfInterviewer = InterviewerDAO.searchAvailableInterviewer(major_id, true);
 
-            //
-            //Tao list con de phan trang
-            List<CandidateDTO> sublist = new LinkedList<>();
-            //Tap hop so cua page
-            List<Integer> pageList = new LinkedList<>();
-            //Bat dau phan trang
-            if (listOfCandidate.size() > 0) {
-                totalpage = listOfCandidate.size() % 4 == 0 ? listOfCandidate.size() / 4 : (listOfCandidate.size() / 4) + 1;
-                for (int i = 0; i < totalpage; i++) {
-                    pageList.add(i);
-                }
-                int n = (intpage - 1) * 4;
+            if (listOfCandidate.iterator().hasNext()) {
+                //Tao list con de phan trang
+                List<CandidateDTO> sublist = new LinkedList<>();
+                //Tap hop so cua page
+                List<Integer> pageList = new LinkedList<>();
+                //Bat dau phan trang
+                if (listOfCandidate.size() > 0) {
+                    totalpage = listOfCandidate.size() % 4 == 0 ? listOfCandidate.size() / 4 : (listOfCandidate.size() / 4) + 1;
+                    for (int i = 0; i < totalpage; i++) {
+                        pageList.add(i);
+                    }
+                    int n = (intpage - 1) * 4;
 
-                if (listOfCandidate.size() >= n + 4) {
-                    sublist = listOfCandidate.subList(n, n + 4);
-                } else {
-                    sublist = listOfCandidate.subList(n, listOfCandidate.size());
+                    if (listOfCandidate.size() >= n + 4) {
+                        sublist = listOfCandidate.subList(n, n + 4);
+                    } else {
+                        sublist = listOfCandidate.subList(n, listOfCandidate.size());
+                    }
                 }
+                //Lay thoi gian hien tai cong them 1 ngay
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                Date date = new Date();
+                Calendar c = Calendar.getInstance();
+                c.setTime(date);
+                c.add(Calendar.DATE, 1);
+                date = c.getTime();
+                request.setAttribute("minDate", sdf.format(date));
+
+
+                //Pagination
+                request.setAttribute("sublist", sublist);
+                request.setAttribute("page", intpage);
+                request.setAttribute("noOfPage", pageList);
+
+                //Lay period
+                request.setAttribute("period", period.keySet());
+
+                //Lay list interviewer
+                request.setAttribute("interviewers", listOfInterviewer);
+                if (listOfInterviewer.size() < 2) {
+                    request.setAttribute("message", "Sorry, there's not enough available interviewers. Please comeback another time!");
+                }
+
             }
-            //Lay thoi gian hien tai cong them 1 ngay
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = new Date();
-            Calendar c = Calendar.getInstance();
-            c.setTime(date);
-            c.add(Calendar.DATE, 1);
-            date = c.getTime();
-            System.out.println(sdf.format(date));
-            request.setAttribute("minDate", sdf.format(date));
-
             //Lay lai Major va bao toan form
             List<MajorDTO> listOfMajor = MajorDAO.listAll();
             request.setAttribute("listOfMajor", listOfMajor);
             request.setAttribute("chosenMajor", major_id);
-
-            //Pagination
-            request.setAttribute("sublist", sublist);
-            request.setAttribute("page", intpage);
-            request.setAttribute("noOfPage", pageList);
-
-            //Lay period
-            request.setAttribute("period", period.keySet());
-
-            //Lay list interviewer
-            request.setAttribute("interviewers", listOfInterviewer);
-
+            
             //Set lai action de chay view
             request.setAttribute("action", "set_schedule");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -187,25 +192,28 @@ public class InterviewController extends HttpServlet {
                         ig.setDate(sdf.parse(date + " " + time));
                         ig.setLocation("3HTD Company");
                         List<InterviewingDTO> listOfInterview = InterviewingDAO.searchInterviewByInterviewerId(i);
+
                         //Gioi han so interview cua 1 interviewer
-                        if (listOfInterview.size() < 16) {
+                        if (listOfInterview.size() < 8) {
                             InterviewingDAO.addInterview(ig);
                             CandidateDAO.updateCandidateStatus(c);
-                        } else {
+                        } else {//Set interviewer unavailable va tra lai thong bao
                             InterviewerDAO.updateInterviewerStatus(i, false);
                             request.setAttribute("message", "Interviewer is not available anymore. Please choose another one!");
-                            request.setAttribute("page", page);
-                            request.setAttribute("major_id", major_id);
+//                            request.setAttribute("page", page);
+//                            request.setAttribute("major_id", major_id);
                             request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
                         }
                     }
                 }
-                request.setAttribute("major_id", major_id);
-                request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
-            } else {
+                //Add interview thanh cong
+//                request.setAttribute("major_id", major_id);
+//                request.setAttribute("page", "1");
+                request.getRequestDispatcher("/interview?op=set_schedule_filtered&success=true").forward(request, response);
+            } else {//Neu datetime da ton tai thi tra lai trang va thong bao loi
                 request.setAttribute("message", "This date has been booked. Please choose another time");
-                request.setAttribute("page", page);
-                request.setAttribute("major_id", major_id);
+//                request.setAttribute("page", page);
+//                request.setAttribute("major_id", major_id);
                 request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
             }
         } catch (ParseException ex) {

@@ -35,16 +35,16 @@
                         </c:choose>
                     </c:forEach>
                 </select>
-                <button type="submit" name="op" value="set_schedule_filtered">Filter</button>
+                <button class="set-can-btn" type="submit" name="op" value="set_schedule_filtered">Filter</button>
             </form>
             <c:if test="${empty sublist}">
                 <h3>No result!</h3>
             </c:if>
             <c:if test="${not empty sublist}">
-                <div class="container" style="margin: 10% 0% 5% 0%; ">
+                <div class="container" style="margin: 5% 0% 5% 0%; ">
                     <div class="row" style="position: relative">
                         <c:forEach var="can" items="${sublist}">
-                            <div class="col-md-6" style="padding: 2% 2% 5% 5%;text-align: left;background-color: #d1ecf1">
+                            <div class="col-md-6 set-can">
                                 <h3>
                                     Name: ${can.name} <br/>
                                 </h3> 
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                <ul class="pagination">
+                <ul class="pagination" style="margin-top: 30px">
                     <c:forEach var="p" items="${noOfPage}" varStatus="loop">
                         <li class="${page == loop.count?'active':''}">
                             <a href="<c:url value="/interview?op=set_schedule_filtered&major_id=${chosenMajor}&page=${loop.count}"/>">${loop.count}</a>
@@ -141,7 +141,7 @@
                     }
                 });
             });
-             
+
         </script>
     </body>
 </html>

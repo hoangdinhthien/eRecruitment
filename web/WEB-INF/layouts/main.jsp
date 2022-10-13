@@ -135,6 +135,18 @@
                                                     </li>
                                                 </ul>
                                             </c:when>
+                                            <c:when test="${not empty info && role == 'Interviewer'}">
+                                                <ul class="login-ava">
+                                                    <li style="list-style-type:none">
+                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <ul>
+                                                            <li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </c:when>
                                             <c:otherwise>
                                                 <div class="popup" onclick="popUp()"><i class="fa fa-user"></i> 
                                                     <div class="popuptext" id="myPopup">
@@ -249,6 +261,7 @@
                         </div>
                     </div>
                 </div>
+            </section>
         </div>
         <div class="container-fluid text-center row ">
             <div class="col" style="min-height: 500px">

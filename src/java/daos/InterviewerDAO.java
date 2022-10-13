@@ -50,7 +50,7 @@ public class InterviewerDAO {
     
     public static boolean updateInterviewerStatus(String id, boolean status) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("update [dbo].[Interviewer] set isStatus=? where can_id=?");
+        PreparedStatement stm = con.prepareStatement("update [dbo].[Interviewer] set isAvailable=? where inter_id=?");
         stm.setBoolean(1, status);
         stm.setString(2, id);
         int rs = stm.executeUpdate();
