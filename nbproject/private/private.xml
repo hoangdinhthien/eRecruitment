@@ -19,6 +19,7 @@
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/interview/set_schedule.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/LoginController.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/InterviewingDTO.java</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/MajorDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/GoogleDTO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/InterviewingDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/UserDAO.java</file>
@@ -34,6 +35,7 @@
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/CandidateDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/utils/DBUtils.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/utils/GoogleUtils.java</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/JobsController.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/CandidateDTO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/css/thien.css</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/HomeController.java</file>
