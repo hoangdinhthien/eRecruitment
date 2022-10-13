@@ -57,14 +57,7 @@
                         <li class="active"><a href="<c:url value="/home?op=index"/>">Home</a></li>
                         <li><a href="./shop-grid.html">Jobs</a></li>
 
-                        <li><a href="#">Pages</a>
-                            <ul class="header__menu__dropdown">
-                                <li><a href="./shop-details.html">Shop Details</a></li>
-                                <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                <li><a href="./checkout.html">Check Out</a></li>
-                                <li><a href="./blog-details.html">Blog Details</a></li>
-                            </ul>
-                        </li>
+
                         <li><a href="./blog.html">About Us</a></li>
                         <li><a href="./contact.html">Contact</a></li>
                     </ul>
@@ -226,17 +219,11 @@
                                     <span class="arrow_carrot-down"></span>
                                 </div>
                                 <ul class="dropdown_menu dropdown_menu-1">
-                                    <li class="dropdown_item-1"><a href=" #">Fresh Meat</a></li>
-                                    <li class="dropdown_item-2"><a href=" #">Vegetables</a></li>
-                                    <li class="dropdown_item-3"><a href=" #">Fruit & Nut Gifts</a></li>
-                                    <li class="dropdown_item-4"><a href=" #">Fresh Berries</a></li>
-                                    <li class="dropdown_item-5"><a href=" #">Ocean Foods</a></li>
-                                    <li class="dropdown_item-6"><a href=" #">Butter & Eggs</a></li>
-                                    <li class="dropdown_item-7"><a href=" #">Fastfood</a></li>
-                                    <li class="dropdown_item-8"><a href=" #">Fresh Onion</a></li>
-                                    <li class="dropdown_item-9"><a href=" #">Papayaya & Crisps</a></li>
-                                    <li class="dropdown_item-10"><a href=" #">Oatmeal</a></li>
-                                    <li class="dropdown_item-11"><a href=" #">Fresh Bananas</a></li>
+                                    <c:forEach var="major" items="${listMajor}">
+                                        <li class="dropdown_item-1">
+                                            <a href="<c:url value='/home?op=index'/>">${major.major_name}</a>
+                                        </li>
+                                    </c:forEach>
                                 </ul>
                             </li>
                         </div>

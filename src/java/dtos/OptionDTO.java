@@ -56,6 +56,12 @@ public class OptionDTO {
     public void setIsCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
     }
+
+    @Override
+    public String toString() {
+        return "OptionDTO{" + "op_id=" + op_id + ", q_id=" + q_id + ", content=" + content + ", isCorrect=" + isCorrect + '}';
+    }
+
     
     
 }
