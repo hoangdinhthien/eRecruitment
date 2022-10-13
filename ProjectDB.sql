@@ -1,17 +1,17 @@
 USE MASTER 
 GO
 
-DROP DATABASE if exists eRecruiment
+DROP DATABASE if exists eRecruitment
 go 
 
-CREATE DATABASE eRecruiment
+CREATE DATABASE eRecruitment
 go 
 
-use eRecruiment
+use eRecruitment
 go
 
 -- 1
-CREATE TABLE [Role]
+CREATE TABLE [Roles]
 (
 	[role_id] int Identity(1,1) PRIMARY KEY NOT NULL,
 	[role_name] NVARCHAR(100) NOT NULL
@@ -19,17 +19,17 @@ CREATE TABLE [Role]
 )
 GO
 
-INSERT INTO [Role]
+INSERT INTO [Roles]
 VALUES
-(N'Admin'),(N'HR Staff'),(N'Interviewer'), (N'Member')
+(N'Admin'),(N'HR Staff'),(N'Interviewers'), (N'Candidate'), (N'Member'),
 GO
 
 -- 2
-CREATE TABLE [User]
+CREATE TABLE [Userss]
 (
 	[email] NVARCHAR(60) PRIMARY KEY NOT NULL,
 	[name] NVARCHAR(60) NOT NULL,
-	[role_id] int FOREIGN KEY REFERENCES dbo.[Role] DEFAULT(4) not null,
+	[role_id] int FOREIGN KEY REFERENCES dbo.[Role] DEFAULT(5) not null,
 	[phone] varchar(11),
 	[address] nvarchar(200)
 )
@@ -37,7 +37,7 @@ GO
 
 CREATE TABLE [Notify]
 (
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] not null,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] not null,
 	[title] NVARCHAR(100) not null,
 	[content] text,
 	[link] NVARCHAR(200),
@@ -46,14 +46,14 @@ CREATE TABLE [Notify]
 GO
 
 /*
-INSERT INTO [User]
+INSERT INTO [Users]
 VALUES
 (),
 GO
 */
 
 -- 3
-CREATE TABLE [Major]
+CREATE TABLE [Majors]
 (
 	[major_id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[major_name] NVARCHAR(100) NOT NULL,
@@ -62,7 +62,7 @@ GO
 
 
 
-INSERT INTO [Major]
+INSERT INTO [Majors]
 VALUES
 ('Marketing'),('Logistic'),('Data Science and Analytics'),('Information Technology'),('Graphic Design'),
 ('Engineering'),('Risk Manager'),('Economic Finance'),('Business Intelligence and Development'),
@@ -71,46 +71,46 @@ GO
 
 
 -- 4
-CREATE TABLE [Interviewer]
+CREATE TABLE [Interviewers]
 (
 	[inter_id] CHAR(3) PRIMARY KEY NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL ,
-	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] NOT NULL ,
+	[major_id] int FOREIGN KEY REFERENCES dbo.[Majors] NOT NULL,
 	[isAvailable] bit DEFAULT (0) NOT NULL
 )
 GO
 
 /*
-INSERT INTO [Interviewer]
+INSERT INTO [Interviewers]
 VALUES
 (),
 GO
 */
 
 -- 5
-CREATE TABLE [HR_Staff]
+CREATE TABLE [HR_Staffs]
 (
 	[hr_id] CHAR(3) PRIMARY KEY NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] NOT NULL
 )
 GO
 
 /*
-INSERT INTO [HR_Staff]
+INSERT INTO [HR_Staffs]
 VALUES
 (),
 GO
 */
 
 
-CREATE TABLE [Level]
+CREATE TABLE [Levels]
 (
 	[level_id]  int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[level_name] NVARCHAR(10)  NOT NULL
 )
 GO
 
-INSERT INTO [Level]
+INSERT INTO [Levels]
 VALUES
 ('Intern'),('Fresher'),('Junior'),('Seninor'),('Manager'),('Leader')
 
@@ -120,10 +120,10 @@ CREATE TABLE [Jobs]
 (
 	[job_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[job_name] NVARCHAR(50) NOT NULL,
-	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
+	[major_id] int FOREIGN KEY REFERENCES dbo.[Majors] NOT NULL,
 	[job_vacancy] int NOT NULL,
 	[job_description] text,
-	[level_id] int FOREIGN KEY REFERENCES dbo.[Level] NOT NULL,
+	[level_id] int FOREIGN KEY REFERENCES dbo.[Levels] NOT NULL,
 	[salary] FLOAT not null,
 	[post_date] DATE not null
 )
@@ -140,7 +140,7 @@ GO
 CREATE TABLE [Saved_jobs]
 (
 	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] NOT NULL,
 	UNIQUE([job_id],[email])
 )
 GO
@@ -157,7 +157,7 @@ CREATE TABLE [Candidates]
 (
 	[can_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] NOT NULL,
 	[can_cv] NVARCHAR(50) NOT NULL,-- comment 
 	[isStatus] int DEFAULT (0) NOT NULL,
 	/*	Note: 
@@ -218,7 +218,7 @@ GO
 CREATE TABLE [Member_skills]
 (
 	[memSkill_id] INT Identity(1,1) PRIMARY KEY NOT NULL,
-	[mem_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Skills] NOT NULL,
 	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skills] NOT NULL,
 	UNIQUE([mem_id],[skill_id])
 )
@@ -236,7 +236,7 @@ CREATE TABLE [Questions]
 (
 	[q_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[questiontxt] text NOT NULL,
-	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
+	[major_id] int FOREIGN KEY REFERENCES dbo.[Majors] NOT NULL,
 )
 GO
 
@@ -265,7 +265,7 @@ GO
 */
 
 -- 14
-CREATE TABLE [Exam]
+CREATE TABLE [Exams]
 (
 	[exam_id] CHAR(3) PRIMARY KEY NOT NULL,
 	[exam_name] NVARCHAR(30) UNIQUE NOT NULL
@@ -273,24 +273,24 @@ CREATE TABLE [Exam]
 GO
 
 /*
-INSERT INTO [Exam]
+INSERT INTO [Exams]
 VALUES
 (),
 GO
 */
 
 -- 15
-CREATE TABLE [Exam_question]
+CREATE TABLE [Exam_questions]
 (
 	[examQ_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Questions] NOT NULL,
-	[exam_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Exam] NOT NULL,
+	[exam_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Exams] NOT NULL,
 	UNIQUE([q_id],[exam_id])
 )
 GO
 
 /*
-INSERT INTO [Exam_question]
+INSERT INTO [Exam_questions]
 VALUES
 (),
 GO
@@ -308,7 +308,7 @@ CREATE TABLE [Examination]
 GO
 
 /*
-INSERT INTO [Examination]
+INSERT INTO [Examsination]
 VALUES
 (),
 GO
@@ -320,7 +320,7 @@ GO
 CREATE TABLE [Interviewing]
 (
 	[id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewer] NOT NULL,
+	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewers] NOT NULL,
 	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
 	[date] DATETIME not null,
 	[location] NVARCHAR(100) NOT NULL,
@@ -330,7 +330,7 @@ CREATE TABLE [Interviewing]
 GO
 
 /*
-INSERT INTO [Examination]
+INSERT INTO [Examsination]
 VALUES
 (),
 GO
