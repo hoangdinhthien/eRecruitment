@@ -6,10 +6,13 @@
 package controllers;
 
 import config.Config;
+import daos.RoleDAO;
 import daos.UserDAO;
+import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -17,7 +20,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -64,6 +66,9 @@ public class UserController extends HttpServlet {
             String email = request.getParameter("email");
             UserDAO uDao = new UserDAO();
             UserDTO user = uDao.find(email);
+            RoleDAO rDao = new RoleDAO();
+            List<RoleDTO> listRole = rDao.selectAll();
+            request.setAttribute("listRole", listRole);
             request.setAttribute("user", user);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
 

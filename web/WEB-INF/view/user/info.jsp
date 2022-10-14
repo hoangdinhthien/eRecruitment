@@ -35,24 +35,23 @@
                         <div class="user-content">
                             <h5 class="user-content-item">
                                 Email: ${user.email}
-                                <input type="hidden" value="${user.email}" name="email"/>
                             </h5>
                             <h5 class="user-content-item">
                                 Name: ${user.name}
                             </h5>
-                            <c:if test="${user.role_id!=4}">
-                                <h5 class="user-content-item">
-                                    Role: ${user.role_id}
-                                </h5>
-                            </c:if>
                             <h5 class="user-content-item">
                                 Phone Number: ${user.phone}
-                                <input class="input" type="text" value="${user.phone}" name="phone" placeholder="Phone Number" pattern="[0]{1}[1-9]{2}[0-9]{8}"/>
                             </h5>
                             <h5 class="user-content-item">
                                 Address: ${user.address}
-                                <input class="input" type="text" value="${user.address}" name="address" placeholder="address"/>
                             </h5>
+                            <c:if test="${user.role_id!=5}">
+                                <h5 class="user-content-item">
+                                    Role: <c:forEach items="${listRole}" var="role">
+                                        <c:if test="${user.role_id==role.id}">${role.name}</c:if>
+                                    </c:forEach>
+                                </h5>
+                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -75,8 +74,6 @@
                     <button type="submit" >Update</button>
                 </form> 
             </dialog>
-            <input type="hidden" name="action" value="updateHandler"/>
-            <span class="account-management-item">-Delete this account</span>
         </div>
 
         <!--        <table>
