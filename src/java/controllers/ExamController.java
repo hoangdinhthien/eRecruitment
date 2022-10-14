@@ -13,9 +13,10 @@ import dtos.MajorDTO;
 import dtos.OptionDTO;
 import dtos.QuestionDTO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -45,7 +46,7 @@ public class ExamController extends HttpServlet {
 //        String controller = (String) request.getAttribute("controller");
 //        String action = (String) request.getAttribute("action");
         request.setAttribute("controller", "exam");
-        String op =  request.getParameter("op");
+        String op = request.getParameter("op");
 //        request.setAttribute("action", op);
         System.out.println("Action : " + op);
         switch (op) {
@@ -69,6 +70,10 @@ public class ExamController extends HttpServlet {
                 updateHandler(request, response);
                 break;
             }
+            case "CreateExam": {
+                createExam(request, response);
+                break;
+            }
         }
     }
 
@@ -77,6 +82,9 @@ public class ExamController extends HttpServlet {
         try {
             QuestionDAO qDao = new QuestionDAO();
             List<QuestionDTO> listQuestion = qDao.listAll();
+//            System.out.println("Count Test : " + qDao.count(2));
+//            QuestionDTO qTest = listQuestion.get(0);
+//            System.out.println("Q Test : " + qTest);
             OptionDAO opDao = new OptionDAO();
             List<OptionDTO> listOption = opDao.listAll();
             MajorDAO majorDao = new MajorDAO();
@@ -84,11 +92,9 @@ public class ExamController extends HttpServlet {
             request.setAttribute("listMajor", listMajor);
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
-                request.setAttribute("action", "questionBank");
+            request.setAttribute("action", "questionBank");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -101,11 +107,9 @@ public class ExamController extends HttpServlet {
             List<MajorDTO> listMajor = majorDao.listAll();
             System.out.println("Create function 1");
             request.setAttribute("listMajor", listMajor);
-                request.setAttribute("action", "create");
+            request.setAttribute("action", "create");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -119,7 +123,7 @@ public class ExamController extends HttpServlet {
             int major = Integer.parseInt(request.getParameter("major"));
             QuestionDAO qDao = new QuestionDAO();
             String newId = qDao.newId();
-            System.out.println("New Id : "+ newId + ", Question:" + question + ", Major: " + major);
+            System.out.println("New Id : " + newId + ", Question:" + question + ", Major: " + major);
             qDao.add(newId, question, major);
             System.out.println("Added!");
             int count = Integer.parseInt(request.getParameter("count"));
@@ -135,11 +139,9 @@ public class ExamController extends HttpServlet {
                 System.out.println(i);
             }
 //            request.getRequestDispatcher(controller).forward(request, response);
-                request.setAttribute("action", "questionBank");
-                questionBank(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+            request.setAttribute("action", "questionBank");
+            questionBank(request, response);
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -160,11 +162,9 @@ public class ExamController extends HttpServlet {
             request.setAttribute("question", q);
             request.setAttribute("listMajor", listMajor);
             request.setAttribute("listOption", listOption);
-                request.setAttribute("action", "update");
+            request.setAttribute("action", "update");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -178,7 +178,7 @@ public class ExamController extends HttpServlet {
             String q_id = request.getParameter("q_id");
             int major = Integer.parseInt(request.getParameter("major"));
             QuestionDAO qDao = new QuestionDAO();
-            System.out.println("New Id : "+ q_id+ ", Question:" + question + ", Major: " + major);
+            System.out.println("New Id : " + q_id + ", Question:" + question + ", Major: " + major);
             qDao.update(q_id, question, major);
             System.out.println("Added!");
             int count = Integer.parseInt(request.getParameter("count"));
@@ -196,14 +196,43 @@ public class ExamController extends HttpServlet {
                 System.out.println(i);
             }
 //            request.getRequestDispatcher(controller).forward(request, response);
-                questionBank(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
+            questionBank(request, response);
+        } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    protected void createExam(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int major = Integer.parseInt(request.getParameter("major"));
+            int numOfQuestion = Integer.parseInt(request.getParameter("numOfQuestion"));
+
+            QuestionDAO qDao = new QuestionDAO();
+            List<QuestionDTO> listQuestion = qDao.listOneMajor(major);
+            int size = qDao.count(major) - 1;
+
+            ArrayList<Integer> random = new ArrayList<>();
+            for (int i = 0; i <= size; i++) {
+                random.add(i);
+            }
+            
+            Random r = new Random();
+            if (listQuestion != null) {
+                for (int i = 0; i < numOfQuestion; i++) {
+                    int index = r.nextInt(random.size());
+                    QuestionDTO qTest = listQuestion.get(random.remove(index));
+                    System.out.println(i + 1 + ". Selected: " + qTest);
+                }
+            } else {
+                System.out.println("List Empty");
+            }
+            questionBank(request, response);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

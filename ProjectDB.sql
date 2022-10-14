@@ -11,7 +11,7 @@ use eRecruitment
 go
 
 -- 1
-CREATE TABLE [Roles]
+CREATE TABLE [Role]
 (
 	[role_id] int Identity(1,1) PRIMARY KEY NOT NULL,
 	[role_name] NVARCHAR(100) NOT NULL
@@ -19,7 +19,7 @@ CREATE TABLE [Roles]
 )
 GO
 
-INSERT INTO [Roles]
+INSERT INTO [Role]
 VALUES
 (N'Admin'),(N'HR Staff'),(N'Interviewers'), (N'Candidate'), (N'Member'),
 GO
@@ -37,7 +37,7 @@ GO
 
 CREATE TABLE [Notify]
 (
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] not null,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] not null,
 	[title] NVARCHAR(100) not null,
 	[content] text,
 	[link] NVARCHAR(200),
@@ -53,7 +53,7 @@ GO
 */
 
 -- 3
-CREATE TABLE [Majors]
+CREATE TABLE [Major]
 (
 	[major_id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[major_name] NVARCHAR(100) NOT NULL,
@@ -62,7 +62,7 @@ GO
 
 
 
-INSERT INTO [Majors]
+INSERT INTO [Major]
 VALUES
 ('Marketing'),('Logistic'),('Data Science and Analytics'),('Information Technology'),('Graphic Design'),
 ('Engineering'),('Risk Manager'),('Economic Finance'),('Business Intelligence and Development'),
@@ -71,11 +71,11 @@ GO
 
 
 -- 4
-CREATE TABLE [Interviewers]
+CREATE TABLE [Interviewer]
 (
 	[inter_id] CHAR(3) PRIMARY KEY NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] NOT NULL ,
-	[major_id] int FOREIGN KEY REFERENCES dbo.[Majors] NOT NULL,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL ,
+	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
 	[isAvailable] bit DEFAULT (0) NOT NULL
 )
 GO
@@ -88,10 +88,10 @@ GO
 */
 
 -- 5
-CREATE TABLE [HR_Staffs]
+CREATE TABLE [HR_Staff]
 (
 	[hr_id] CHAR(3) PRIMARY KEY NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] NOT NULL
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL
 )
 GO
 
@@ -103,27 +103,27 @@ GO
 */
 
 
-CREATE TABLE [Levels]
+CREATE TABLE [Level]
 (
 	[level_id]  int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[level_name] NVARCHAR(10)  NOT NULL
 )
 GO
 
-INSERT INTO [Levels]
+INSERT INTO [Level]
 VALUES
 ('Intern'),('Fresher'),('Junior'),('Seninor'),('Manager'),('Leader')
 
 
 -- 6
-CREATE TABLE [Jobs]
+CREATE TABLE [Job]
 (
 	[job_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[job_name] NVARCHAR(50) NOT NULL,
-	[major_id] int FOREIGN KEY REFERENCES dbo.[Majors] NOT NULL,
+	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
 	[job_vacancy] int NOT NULL,
 	[job_description] text,
-	[level_id] int FOREIGN KEY REFERENCES dbo.[Levels] NOT NULL,
+	[level_id] int FOREIGN KEY REFERENCES dbo.[Level] NOT NULL,
 	[salary] FLOAT not null,
 	[post_date] DATE not null
 )
@@ -137,10 +137,10 @@ GO
 */
 
 -- 7
-CREATE TABLE [Saved_jobs]
+CREATE TABLE [Saved_job]
 (
-	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] NOT NULL,
+	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
 	UNIQUE([job_id],[email])
 )
 GO
@@ -153,12 +153,13 @@ GO
 */
 
 -- 8
-CREATE TABLE [Candidates]
+CREATE TABLE [Candidate]
 (
 	[can_id] CHAR(4) PRIMARY KEY NOT NULL,
-	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Users] NOT NULL,
+	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
 	[can_cv] NVARCHAR(50) NOT NULL,-- comment 
+	[score] FLOAT,
 	[isStatus] int DEFAULT (0) NOT NULL,
 	/*	Note: 
 		0 : HR hasn't accepted
@@ -180,7 +181,8 @@ GO
 */
 
 -- 9
-CREATE TABLE [Skills]
+/*
+CREATE TABLE [Skill]
 (
 	[skill_id] int Identity(1,1) PRIMARY KEY NOT NULL,
 	[skill_name] NVARCHAR(100) UNIQUE NOT NULL,
@@ -189,19 +191,20 @@ CREATE TABLE [Skills]
 GO
 
 
-INSERT INTO [Skills] ([skill_name])
+INSERT INTO [Skill] ([skill_name])
 VALUES
 ('JavaSript'),('Java'),('Python'),('C++'),('C#'),('UI/UX'),('HTML'),('Testing'),('React Native'),('Angular'),('Mobile Develope'),('Ruby'),('Rust'),('Golang'),('TypeScript'),('BrainFuck'),
 ('PHP'),('Unity'),('Unreal Engine'),
 ('Data Visualization'),('Data Cleaning'),('MATLAB'),('SQL and NoSQL'),('Machine Learning'),('Linear Algebra and Calculus'),('Microsoft Excel'),('Critical Thinking')
 GO
-
+*/
 
 -- 10
-CREATE TABLE [Job_skills]
+CREATE TABLE [Job_skill]
 (
-	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
-	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skills] NOT NULL,
+	[skill_id] int Identity(1,1) PRIMARY KEY NOT NULL,
+	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
+	[detail] NVARCHAR(200) not null,
 	UNIQUE([job_id],[skill_id])
 )
 GO
@@ -215,12 +218,11 @@ GO
 
 -- 11
 
-CREATE TABLE [Member_skills]
+CREATE TABLE [Candidate_skill]
 (
-	[memSkill_id] INT Identity(1,1) PRIMARY KEY NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Skills] NOT NULL,
-	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skills] NOT NULL,
-	UNIQUE([mem_id],[skill_id])
+	[can_id] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
+	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skill] NOT NULL,
+	UNIQUE([email],[skill_id])
 )
 GO
 
@@ -232,11 +234,11 @@ GO
 */
 
 -- 12
-CREATE TABLE [Questions]
+CREATE TABLE [Question]
 (
 	[q_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[questiontxt] text NOT NULL,
-	[major_id] int FOREIGN KEY REFERENCES dbo.[Majors] NOT NULL,
+	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
 )
 GO
 
@@ -248,10 +250,10 @@ GO
 */
 
 -- 13
-CREATE TABLE [Options]
+CREATE TABLE [Option]
 (
 	[op_id] int Identity(1,1) PRIMARY KEY NOT NULL,
-	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Questions] NOT NULL,
+	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Question] NOT NULL,
 	[content] text not null,
 	[isCorrect] bit DEFAULT(0) NOT NULL
 )
@@ -265,7 +267,7 @@ GO
 */
 
 -- 14
-CREATE TABLE [Exams]
+CREATE TABLE [Exam]
 (
 	[exam_id] CHAR(3) PRIMARY KEY NOT NULL,
 	[exam_name] NVARCHAR(30) UNIQUE NOT NULL
@@ -280,11 +282,10 @@ GO
 */
 
 -- 15
-CREATE TABLE [Exam_questions]
+CREATE TABLE [Exam_question]
 (
-	[examQ_id] CHAR(4) PRIMARY KEY NOT NULL,
-	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Questions] NOT NULL,
-	[exam_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Exams] NOT NULL,
+	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Question] NOT NULL,
+	[exam_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Exam] NOT NULL,
 	UNIQUE([q_id],[exam_id])
 )
 GO
@@ -300,9 +301,8 @@ GO
 CREATE TABLE [Examination]
 (
 	[exam_id] CHAR(4) PRIMARY KEY NOT NULL,
-	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
-	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
-	[score] FLOAT ,
+	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
+	[score] FLOAT,
 	UNIQUE ([can_id])
 )
 GO
@@ -320,8 +320,8 @@ GO
 CREATE TABLE [Interviewing]
 (
 	[id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewers] NOT NULL,
-	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
+	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewer] NOT NULL,
+	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
 	[date] DATETIME not null,
 	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] INT,
