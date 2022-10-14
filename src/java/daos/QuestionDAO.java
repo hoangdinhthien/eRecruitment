@@ -25,7 +25,7 @@ public class QuestionDAO {
         List<QuestionDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select * from [Questions]");
+        ResultSet rs = stm.executeQuery("select * from [Question]");
         list = new ArrayList();
         while (rs.next()) {
             QuestionDTO q = new QuestionDTO();
@@ -41,7 +41,7 @@ public class QuestionDAO {
     public QuestionDTO selectOne(String id) throws SQLException, ClassNotFoundException {
         QuestionDTO q = new QuestionDTO();
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Questions] where [q_id] = ?");
+        PreparedStatement stm = con.prepareStatement("select * from [Question] where [q_id] = ?");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         if (rs.next()) {
@@ -56,14 +56,14 @@ public class QuestionDAO {
     public String newId() throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select * from [Questions] ");
+        ResultSet rs = stm.executeQuery("select * from [Question] ");
         int i = 0;
         while (rs.next()) {
             i++;
         }
         i++;
         String newId = "Q00" + i;
-        PreparedStatement pstm = con.prepareStatement("select * from [Questions] where [q_id] = ?");
+        PreparedStatement pstm = con.prepareStatement("select * from [Question] where [q_id] = ?");
         pstm.setString(1, newId);
         rs = pstm.executeQuery();
         while (rs.next()) {
@@ -84,7 +84,7 @@ public class QuestionDAO {
 
     public void add(String id, String content, int major) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("insert into [Questions] values ( ? , ? , ? )");
+        PreparedStatement stm = con.prepareStatement("insert into [Question] values ( ? , ? , ? )");
         stm.setString(1, id);
         stm.setString(2, content);
         stm.setInt(3, major);
@@ -94,7 +94,7 @@ public class QuestionDAO {
     
     public void update(String id, String content, int major) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("update [Questions] set questiontxt = ? , major_id = ? where q_id = ? ");
+        PreparedStatement stm = con.prepareStatement("update [Question] set questiontxt = ? , major_id = ? where q_id = ? ");
         stm.setString(1, content);
         stm.setInt(2, major);
         stm.setString(3, id);

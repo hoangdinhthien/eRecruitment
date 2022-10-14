@@ -134,6 +134,24 @@
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/login?op=interview_schedule&email=${info.email}"/>">Interview Schedule</a>
+                                                            </li>
+                                                            <li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </c:when>
+                                            <c:when test="${not empty info && role == 'Candidate'}">
+                                                <ul class="login-ava">
+                                                    <li style="list-style-type:none">
+                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <ul>
+                                                            <li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/login?op=interview_process&email=${info.email}"/>">Interview process</a>
+                                                            </li>
+                                                            <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
                                                             </li>
                                                         </ul>

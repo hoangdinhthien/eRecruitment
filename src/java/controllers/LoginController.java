@@ -73,15 +73,18 @@ public class LoginController extends HttpServlet {
                 } else {
                     //Neu da ton tai user roi thi kiem tra role
 
-                    if (u.getRole().equalsIgnoreCase("Admin")) {
+                    //Cái này kh có cũng đc
+//                    if (u.getRole().equalsIgnoreCase("Admin")) {
+//                    }
+//                    if (u.getRole().equalsIgnoreCase("HR Staff")) {
+//                    }
+//                    if (u.getRole().equalsIgnoreCase("Interviewer")) {
+//                    }
+//                    if (u.getRole().equalsIgnoreCase("Member")) {
+//                    }
+//                    if (u.getRole().equalsIgnoreCase("Candidate")) {
+//                    }
 
-                    }
-                    if (u.getRole().equalsIgnoreCase("HR Staff")) {
-                    }
-                    if (u.getRole().equalsIgnoreCase("Interviewer")) {
-                    }
-                    if (u.getRole().equalsIgnoreCase("Member")) {
-                    }
                     //Neu khong phai la user moi thi phai check role
                     session.setAttribute("role", u.getRole());
                 }

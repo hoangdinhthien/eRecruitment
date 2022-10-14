@@ -74,6 +74,14 @@ public class InterviewController extends HttpServlet {
             case "set_schedule_handler":
                 set_schedule_handler(request, response);
                 break;
+            //View interview process cho candidate
+            case "interview_process":
+                interview_process(request, response);
+                break;
+            //View interview schedule cho interviewer
+            case "interview_schedule":
+                interview_schedule(request, response);
+                break;
         }
     }
 
@@ -106,12 +114,12 @@ public class InterviewController extends HttpServlet {
                 intpage = Integer.parseInt(page);
             }
             //Lay candidate theo major
-            List<CandidateDTO> listOfCandidate = CandidateDAO.searchCandidateById(major_id, 2);
+            List<CandidateDTO> listOfCandidate = CandidateDAO.searchCandidateByMajor(major_id, 2);
 
             //Lay available interviewer theo major
             List<InterviewerDTO> listOfInterviewer = InterviewerDAO.searchAvailableInterviewer(major_id, true);
 
-            if (listOfCandidate.iterator().hasNext()) {
+            if (listOfCandidate.iterator().hasNext()) {//Kiem tra xem con candidate nao kh?
                 //Tao list con de phan trang
                 List<CandidateDTO> sublist = new LinkedList<>();
                 //Tap hop so cua page
@@ -139,7 +147,6 @@ public class InterviewController extends HttpServlet {
                 date = c.getTime();
                 request.setAttribute("minDate", sdf.format(date));
 
-
                 //Pagination
                 request.setAttribute("sublist", sublist);
                 request.setAttribute("page", intpage);
@@ -159,7 +166,7 @@ public class InterviewController extends HttpServlet {
             List<MajorDTO> listOfMajor = MajorDAO.listAll();
             request.setAttribute("listOfMajor", listOfMajor);
             request.setAttribute("chosenMajor", major_id);
-            
+
             //Set lai action de chay view
             request.setAttribute("action", "set_schedule");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -183,9 +190,10 @@ public class InterviewController extends HttpServlet {
             //parse time de check xem trong database co time do chua
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             time = period.get(time);
+            int index = 0;
             if (!InterviewingDAO.searchInterviewByDate(sdf.parse(date + " " + time))) {
-                for (String i : iId) { //Chay vong lap lay interviewer's id 
-                    for (String c : cId) { // Chay vong lay candidate's id
+                for (String c : cId) { // Chay vong lay candidate's id
+                    for (String i : iId) { //Chay vong lap lay interviewer's id 
                         InterviewingDTO ig = new InterviewingDTO();
                         ig.setInter_id(i);
                         ig.setCan_id(c);
@@ -196,24 +204,25 @@ public class InterviewController extends HttpServlet {
                         //Gioi han so interview cua 1 interviewer
                         if (listOfInterview.size() < 8) {
                             InterviewingDAO.addInterview(ig);
-                            CandidateDAO.updateCandidateStatus(c);
+                            index++;
                         } else {//Set interviewer unavailable va tra lai thong bao
                             InterviewerDAO.updateInterviewerStatus(i, false);
                             request.setAttribute("message", "Interviewer is not available anymore. Please choose another one!");
-//                            request.setAttribute("page", page);
-//                            request.setAttribute("major_id", major_id);
                             request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
                         }
                     }
+                    System.out.println(index);
+                    if (index % 2 == 0) {
+                        CandidateDAO.updateCandidateStatus(c, 3);
+                    }else{
+                        InterviewingDAO.deleteInterview(c);
+                    }
                 }
                 //Add interview thanh cong
-//                request.setAttribute("major_id", major_id);
-//                request.setAttribute("page", "1");
+                request.setAttribute("message", "Set schedule successfully!");
                 request.getRequestDispatcher("/interview?op=set_schedule_filtered&success=true").forward(request, response);
             } else {//Neu datetime da ton tai thi tra lai trang va thong bao loi
                 request.setAttribute("message", "This date has been booked. Please choose another time");
-//                request.setAttribute("page", page);
-//                request.setAttribute("major_id", major_id);
                 request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
             }
         } catch (ParseException ex) {
@@ -221,6 +230,41 @@ public class InterviewController extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    protected void interview_process(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            String email = request.getParameter("email");
+
+            CandidateDTO can = CandidateDAO.searchCandidateByEmail(email);
+            if (can.getIsStatus() == 3) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date currentDate = new Date();
+//                currentDate.compareTo(sdf.parse())
+            }
+
+            request.setAttribute("interview", can);
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    protected void interview_schedule(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            //Lay het major ra de lm combo box filter by major
+            List<MajorDTO> listOfMajor = MajorDAO.listAll();
+            request.setAttribute("listOfMajor", listOfMajor);
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

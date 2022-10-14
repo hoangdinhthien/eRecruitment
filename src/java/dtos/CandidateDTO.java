@@ -18,11 +18,12 @@ public class CandidateDTO {
     private String cv;
     private String phone;
     private int isStatus;
+    private String Status;
 
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String id, String jobId, int majorId, String email, String name, String cv, String phone, int isStatus) {
+    public CandidateDTO(String id, String jobId, int majorId, String email, String name, String cv, String phone, int isStatus, String Status) {
         this.id = id;
         this.jobId = jobId;
         this.majorId = majorId;
@@ -31,7 +32,17 @@ public class CandidateDTO {
         this.cv = cv;
         this.phone = phone;
         this.isStatus = isStatus;
+        this.Status = Status;
     }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String Status) {
+        this.Status = Status;
+    }
+
 
     public String getPhone() {
         return phone;

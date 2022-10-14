@@ -21,7 +21,7 @@ import utils.DBUtils;
 public class JobsDAO {
     public static List<JobsDTO> search_job(String job_name) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Jobs] where job_name like ? order by [post_date] desc");
+        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Job] where job_name like ? order by [post_date] desc");
         stm.setString(1, "%" + job_name + "%");
         ResultSet rs = stm.executeQuery();
         List<JobsDTO> list = new ArrayList<>();
@@ -42,7 +42,7 @@ public class JobsDAO {
     }
     public static List<JobsDTO> list_job() throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Jobs] order by [post_date] desc ");
+        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Job] order by [post_date] desc ");
         ResultSet rs = stm.executeQuery();
         List<JobsDTO> list = new ArrayList<>();
         while (rs.next()) {

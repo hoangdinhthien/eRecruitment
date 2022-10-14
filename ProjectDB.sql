@@ -1,13 +1,13 @@
 USE MASTER 
 GO
 
-DROP DATABASE eRecruiment
+DROP DATABASE if exists eRecruitment
 go 
 
-CREATE DATABASE eRecruiment
+CREATE DATABASE eRecruitment
 go 
 
-use eRecruiment
+use eRecruitment
 go
 
 -- 1
@@ -21,7 +21,7 @@ GO
 
 INSERT INTO [Role]
 VALUES
-(N'Admin'),(N'HR Staff'),(N'Interviewer'), (N'Member')
+(N'Admin'),(N'HR Staff'),(N'Interviewer'), (N'Candidate'), (N'Member')
 GO
 
 -- 2
@@ -29,7 +29,7 @@ CREATE TABLE [User]
 (
 	[email] NVARCHAR(60) PRIMARY KEY NOT NULL,
 	[name] NVARCHAR(60) NOT NULL,
-	[role_id] int FOREIGN KEY REFERENCES dbo.[Role] DEFAULT(4) not null,
+	[role_id] int FOREIGN KEY REFERENCES dbo.[Role] DEFAULT(5) not null,
 	[phone] varchar(11),
 	[address] nvarchar(200)
 )
@@ -40,12 +40,13 @@ CREATE TABLE [Notify]
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] not null,
 	[title] NVARCHAR(100) not null,
 	[content] text,
-	[link] NVARCHAR(200)
+	[link] NVARCHAR(200),
+	[date] datetime
 )
 GO
 
 /*
-INSERT INTO [User]
+INSERT INTO [Users]
 VALUES
 (),
 GO
@@ -80,7 +81,7 @@ CREATE TABLE [Interviewer]
 GO
 
 /*
-INSERT INTO [Interviewer]
+INSERT INTO [Interviewers]
 VALUES
 (),
 GO
@@ -95,7 +96,7 @@ CREATE TABLE [HR_Staff]
 GO
 
 /*
-INSERT INTO [HR_Staff]
+INSERT INTO [HR_Staffs]
 VALUES
 (),
 GO
@@ -113,9 +114,8 @@ INSERT INTO [Level]
 VALUES
 ('Intern'),('Fresher'),('Junior'),('Seninor'),('Manager'),('Leader')
 
-
 -- 6
-CREATE TABLE [Jobs]
+CREATE TABLE [Job]
 (
 	[job_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[job_name] NVARCHAR(50) NOT NULL,
@@ -127,35 +127,31 @@ CREATE TABLE [Jobs]
 	[post_date] DATE not null
 )
 GO
-
 /*
 INSERT INTO [Jobs]
 VALUES
 (),
 GO
 */
-
 -- 7
-CREATE TABLE [Saved_jobs]
+CREATE TABLE [Saved_job]
 (
-	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
+	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
 	UNIQUE([job_id],[email])
 )
 GO
-
 /*
 INSERT INTO [Saved_jobs]
 VALUES
 (),
 GO
 */
-
 -- 8
-CREATE TABLE [Candidates]
+CREATE TABLE [Candidate]
 (
 	[can_id] CHAR(4) PRIMARY KEY NOT NULL,
-	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
+	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
 	[can_cv] NVARCHAR(50) NOT NULL,-- comment 
 	[isStatus] int DEFAULT (0) NOT NULL,
@@ -170,68 +166,57 @@ CREATE TABLE [Candidates]
 	UNIQUE([job_id],[email])
 )
 GO
-
 /*
 INSERT INTO [Member]
 VALUES
 (),
 GO
 */
-
 -- 9
-CREATE TABLE [Skills]
+CREATE TABLE [Skill]
 (
 	[skill_id] int Identity(1,1) PRIMARY KEY NOT NULL,
 	[skill_name] NVARCHAR(100) UNIQUE NOT NULL,
 	[skill_description] text
 )
 GO
-
-
-INSERT INTO [Skills] ([skill_name])
+INSERT INTO [Skill] ([skill_name])
 VALUES
 ('JavaSript'),('Java'),('Python'),('C++'),('C#'),('UI/UX'),('HTML'),('Testing'),('React Native'),('Angular'),('Mobile Develope'),('Ruby'),('Rust'),('Golang'),('TypeScript'),('BrainFuck'),
 ('PHP'),('Unity'),('Unreal Engine'),
 ('Data Visualization'),('Data Cleaning'),('MATLAB'),('SQL and NoSQL'),('Machine Learning'),('Linear Algebra and Calculus'),('Microsoft Excel'),('Critical Thinking')
 GO
-
-
 -- 10
-CREATE TABLE [Job_skills]
+CREATE TABLE [Job_skill]
 (
-	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
-	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skills] NOT NULL,
+	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
+	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skill] NOT NULL,
 	UNIQUE([job_id],[skill_id])
 )
 GO
-
 /*
 INSERT INTO [Skills]
 VALUES
 (),
 GO
 */
-
 -- 11
-
 CREATE TABLE [Member_skills]
 (
 	[memSkill_id] INT Identity(1,1) PRIMARY KEY NOT NULL,
-	[mem_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
-	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skills] NOT NULL,
-	UNIQUE([mem_id],[skill_id])
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
+	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skill] NOT NULL,
+	UNIQUE([email],[skill_id])
 )
 GO
-
 /*
 INSERT INTO [Member_skills]
 VALUES
 (),
 GO
 */
-
 -- 12
-CREATE TABLE [Questions]
+CREATE TABLE [Question]
 (
 	[q_id] CHAR(4) PRIMARY KEY NOT NULL,
 	[questiontxt] text NOT NULL,
@@ -245,17 +230,15 @@ VALUES
 (),
 GO
 */
-
 -- 13
-CREATE TABLE [Options]
+CREATE TABLE [Option]
 (
 	[op_id] int Identity(1,1) PRIMARY KEY NOT NULL,
-	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Questions] NOT NULL,
+	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Question] NOT NULL,
 	[content] text not null,
 	[isCorrect] bit DEFAULT(0) NOT NULL
 )
 GO
-
 /*
 INSERT INTO [Options]
 VALUES
@@ -272,7 +255,7 @@ CREATE TABLE [Exam]
 GO
 
 /*
-INSERT INTO [Exam]
+INSERT INTO [Exams]
 VALUES
 (),
 GO
@@ -282,60 +265,50 @@ GO
 CREATE TABLE [Exam_question]
 (
 	[examQ_id] CHAR(4) PRIMARY KEY NOT NULL,
-	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Questions] NOT NULL,
+	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Question] NOT NULL,
 	[exam_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Exam] NOT NULL,
 	UNIQUE([q_id],[exam_id])
 )
 GO
 
 /*
-INSERT INTO [Exam_question]
+INSERT INTO [Exam_questions]
 VALUES
 (),
 GO
 */
-
 -- 16
 CREATE TABLE [Examination]
 (
 	[exam_id] CHAR(4) PRIMARY KEY NOT NULL,
-	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
-	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Jobs] NOT NULL,
+	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
+	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
 	[score] FLOAT ,
 	UNIQUE ([can_id])
 )
 GO
 
 /*
-INSERT INTO [Examination]
+INSERT INTO [Examsination]
 VALUES
 (),
 GO
 */
-
 -- 17
-
-
 CREATE TABLE [Interviewing]
 (
 	[id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[inter_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Interviewer] NOT NULL,
-	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidates] NOT NULL,
-<<<<<<< HEAD
+	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
 	[date] DATETIME not null,
 	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] INT,
-=======
-	[date] datetime not null,
-	[location] NVARCHAR(100) NOT NULL,
-	[inter_score] int ,
->>>>>>> origin/main
 	UNIQUE ([inter_id],[can_id])
 )
 GO
 
 /*
-INSERT INTO [Examination]
+INSERT INTO [Examsination]
 VALUES
 (),
 GO

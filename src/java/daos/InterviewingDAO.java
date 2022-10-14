@@ -34,10 +34,37 @@ public class InterviewingDAO {
         con.close();
         return rs != 0;
     }
+    public static boolean deleteInterview(String can_id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("delete from [eRecruitment].[dbo].[Interviewing] where [can_id]=?");
+        stm.setString(1, can_id);
+        int rs = stm.executeUpdate();
+        con.close();
+        return rs != 0;
+    }
 
     public static List<InterviewingDTO> searchInterviewByInterviewerId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select id, inter_id, can_id, date, location, inter_score from [dbo].[Interviewing] where inter_id=?");
+        stm.setString(1, id);
+        ResultSet rs = stm.executeQuery();
+        List<InterviewingDTO> list = new LinkedList();
+        while (rs.next()) {
+            InterviewingDTO i = new InterviewingDTO();
+            i.setId(rs.getInt("id"));
+            i.setInter_id(rs.getString("inter_id"));
+            i.setCan_id(rs.getString("can_id"));
+            i.setDate(rs.getDate("date"));
+            i.setLocation(rs.getString("location"));
+            i.setScore(rs.getInt("inter_score"));
+            list.add(i);
+        }
+        con.close();
+        return list;
+    }
+    public static List<InterviewingDTO> searchInterviewByCandidateId(String id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Select id, inter_id, can_id, date, location, inter_score from [dbo].[Interviewing] where [can_id]=?");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         List<InterviewingDTO> list = new LinkedList();

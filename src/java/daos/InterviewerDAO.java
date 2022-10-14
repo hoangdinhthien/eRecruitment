@@ -47,6 +47,21 @@ public class InterviewerDAO {
         con.close();
         return i;
     }
+    public static InterviewerDTO searchInterviewerByEmail(int email) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Select i.[inter_id],i.[email],u.[name]  from [dbo].[Interviewer] i join [dbo].[User] u"
+                + " on i.[email] = u.[email] where [email]=?");
+        stm.setInt(1, email);
+        ResultSet rs = stm.executeQuery();
+        InterviewerDTO i = new InterviewerDTO();
+        if (rs.next()) {
+            i.setId(rs.getString("inter_id"));
+            i.setEmail(rs.getString("email"));
+            i.setName(rs.getString("name"));
+        }
+        con.close();
+        return i;
+    }
     
     public static boolean updateInterviewerStatus(String id, boolean status) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
