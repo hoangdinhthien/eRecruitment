@@ -256,7 +256,8 @@ GO
 CREATE TABLE [Exam]
 (
 	[exam_id] CHAR(3) PRIMARY KEY NOT NULL,
-	[exam_name] NVARCHAR(30) UNIQUE NOT NULL
+	[exam_name] NVARCHAR(30) UNIQUE NOT NULL,
+	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL
 )
 GO
 
@@ -270,9 +271,9 @@ GO
 -- 15
 CREATE TABLE [Exam_question]
 (
-	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Question] NOT NULL,
 	[exam_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Exam] NOT NULL,
-	UNIQUE([q_id],[exam_id])
+	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Question] NOT NULL,
+	UNIQUE([exam_id],[q_id])
 )
 GO
 

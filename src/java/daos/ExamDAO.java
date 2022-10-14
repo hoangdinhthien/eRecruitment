@@ -44,11 +44,20 @@ public class ExamDAO {
         return newId;
     }
     
-    public void create(String name) throws ClassNotFoundException, SQLException{
+    public void create(String id,String name, int major) throws ClassNotFoundException, SQLException{
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("INSERT INTO [Exam] values ( ? , ? )");
-        stm.setString(1, newId());
+        PreparedStatement stm = con.prepareStatement("INSERT INTO [Exam] values ( ? , ? , ? )");
+        stm.setString(1, id);
         stm.setString(2, name);
-        stm.executeQuery();
+        stm.setInt(3, major);
+        stm.executeUpdate();
+    }
+    
+    public void addQuestion(String eId, String pId) throws ClassNotFoundException, SQLException{
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("INSERT INTO [Exam_question] values ( ? , ? )");
+        stm.setString(1, eId);
+        stm.setString(2, pId);
+        stm.executeUpdate();
     }
 }

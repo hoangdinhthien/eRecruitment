@@ -56,12 +56,20 @@
             <dialog style="height: 150px;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Update Infomation</h5>
+                        <h5 class="modal-title">Update Exam</h5>
                     </div>
                     <form action="<c:url value="/exam"/>">
                         <!--<div class="modal-body">-->
                         <input type="hidden" value="CreateExam" name="op"/>
                         <table class="center bordertest" >
+                            <tr>
+                                <td>
+                                    Number Of Question : 
+                                </td>
+                                <td>
+                                    <input type="text" name="name" required="true"/>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
                                     Major : 

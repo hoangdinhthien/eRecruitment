@@ -56,7 +56,9 @@
                     <ul>
                         <li class="active"><a href="./index.html">Home</a></li>
                         <li><a href="./shop-grid.html">Jobs</a></li>
-                        <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a>
+                        <c:if test="${not empty info && role == 'HR Staff' || role == 'Inter'}"
+                        <li>
+                            <a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a>
                         </li>
                         <li><a href="./blog.html">About Us</a></li>
                         <li><a href="./contact.html">Contact</a></li>
@@ -166,6 +168,8 @@
                                 <ul>
                                     <li class="active"><a href="./index.html">Home</a></li>
                                     <li><a href="./shop-grid.html">Jobs</a></li>
+                                    <li><a href="./shop-grid.html">Jobs</a></li>
+                                    <li><a href="./shop-grid.html">Jobs</a></li>
                                     <li><a href="#">Pages</a>
                                         <ul class="header__menu__dropdown">
                                             <li><a href="./shop-details.html">Shop Details</a></li>
@@ -182,7 +186,7 @@
                         <div class="col-lg-3">
                             <div class="header__cart">
                                 <ul>
-                                    <li><i class="fa fa-bell"></i></li>
+                                    <li><a href="#"><i class="fa fa-bell" ></i></a></li>
                                 </ul>
                             </div>
                         </div>

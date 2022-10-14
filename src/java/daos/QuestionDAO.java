@@ -62,6 +62,34 @@ public class QuestionDAO {
         }
     }
 
+    public List<QuestionDTO> listOneExam(String eId) throws SQLException, ClassNotFoundException {
+        List<QuestionDTO> list = null;
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [Question].* "
+                + " FROM [Exam_question] "
+                + " INNER JOIN [Question] on [Exam_question].q_id = [Question].q_id "
+                + " where [Exam_question].exam_id = ? "
+                + " ORDER BY NEWID() ");
+        stm.setString(1, eId);
+        ResultSet rs = stm.executeQuery();
+        list = new ArrayList();
+        boolean check = false;
+        while (rs.next()) {
+            QuestionDTO q = new QuestionDTO();
+            q.setQ_id(rs.getString("q_id"));
+            q.setQuestiontxt(rs.getString("questiontxt"));
+            q.setMajor_id(rs.getInt("major_id"));
+            list.add(q);
+            check = true;
+        }
+        con.close();
+        if (check) {
+            return list;
+        } else {
+            return null;
+        }
+    }
+
     public QuestionDTO selectOne(String id) throws SQLException, ClassNotFoundException {
         QuestionDTO q = new QuestionDTO();
         Connection con = DBUtils.makeConnection();

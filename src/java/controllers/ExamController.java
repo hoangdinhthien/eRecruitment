@@ -6,6 +6,7 @@
 package controllers;
 
 import config.Config;
+import daos.ExamDAO;
 import daos.MajorDAO;
 import daos.OptionDAO;
 import daos.QuestionDAO;
@@ -51,7 +52,7 @@ public class ExamController extends HttpServlet {
         System.out.println("Action : " + op);
         switch (op) {
             case "QuestionBank": {
-                questionBank(request, response);
+                takeExam(request, response);
                 break;
             }
             case "Update": {
@@ -207,7 +208,12 @@ public class ExamController extends HttpServlet {
         try {
             int major = Integer.parseInt(request.getParameter("major"));
             int numOfQuestion = Integer.parseInt(request.getParameter("numOfQuestion"));
-
+            String name = request.getParameter("name");
+            
+            ExamDAO eDao = new ExamDAO();
+            String id = eDao.newId();
+            eDao.create(id, name, major);
+            
             QuestionDAO qDao = new QuestionDAO();
             List<QuestionDTO> listQuestion = qDao.listOneMajor(major);
             int size = qDao.count(major) - 1;
@@ -222,6 +228,7 @@ public class ExamController extends HttpServlet {
                 for (int i = 0; i < numOfQuestion; i++) {
                     int index = r.nextInt(random.size());
                     QuestionDTO qTest = listQuestion.get(random.remove(index));
+                    eDao.addQuestion(id, qTest.getQ_id());
                     System.out.println(i + 1 + ". Selected: " + qTest);
                 }
             } else {
@@ -233,6 +240,28 @@ public class ExamController extends HttpServlet {
         }
     }
 
+    protected void takeExam(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            QuestionDAO qDao = new QuestionDAO();
+            List<QuestionDTO> listQuestion = qDao.listOneExam("Q01");
+            OptionDAO opDao = new OptionDAO();
+            List<OptionDTO> listOption = opDao.listOneQExam("Q01");
+            System.out.println(listOption);
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor = majorDao.listAll();
+            request.setAttribute("listMajor", listMajor);
+            request.setAttribute("listQuestion", listQuestion);
+            request.setAttribute("listOption", listOption);
+            request.setAttribute("action", "questionBank");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
