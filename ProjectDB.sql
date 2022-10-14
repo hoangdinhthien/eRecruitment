@@ -21,11 +21,11 @@ GO
 
 INSERT INTO [Role]
 VALUES
-(N'Admin'),(N'HR Staff'),(N'Interviewers'), (N'Candidate'), (N'Member'),
+(N'Admin'),(N'HR Staff'),(N'Interviewers'), (N'Candidate'), (N'Member')
 GO
 
 -- 2
-CREATE TABLE [Userss]
+CREATE TABLE [User]
 (
 	[email] NVARCHAR(60) PRIMARY KEY NOT NULL,
 	[name] NVARCHAR(60) NOT NULL,
@@ -220,9 +220,9 @@ GO
 
 CREATE TABLE [Candidate_skill]
 (
-	[can_id] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
-	[skill_id] int FOREIGN KEY REFERENCES dbo.[Skill] NOT NULL,
-	UNIQUE([email],[skill_id])
+	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
+	[skill_id] int FOREIGN KEY REFERENCES dbo.[Job_skill] NOT NULL,
+	UNIQUE([can_id],[skill_id])
 )
 GO
 
