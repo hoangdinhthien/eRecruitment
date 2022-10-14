@@ -25,7 +25,7 @@ public class OptionDAO {
         List<OptionDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select * from [Options]");
+        ResultSet rs = stm.executeQuery("select * from [Option]");
         list = new ArrayList();
         while (rs.next()) {
             OptionDTO opt = new OptionDTO();
@@ -42,7 +42,7 @@ public class OptionDAO {
     public List<OptionDTO> listOneQuestion(String id) throws SQLException, ClassNotFoundException {
         List<OptionDTO> list = null;
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Options] where [q_id] = ?");
+        PreparedStatement stm = con.prepareStatement("select * from [Option] where [q_id] = ?");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         list = new ArrayList();
@@ -60,7 +60,7 @@ public class OptionDAO {
     
     public void delete (String id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("delete from [Options] where [q_id] = ?");
+        PreparedStatement stm = con.prepareStatement("delete from [Option] where [q_id] = ?");
         stm.setString(1, id);
         stm.executeUpdate();
         con.close();
@@ -68,7 +68,7 @@ public class OptionDAO {
     
     public void add(String id, String content, boolean isCorrect) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("insert into [Options] ([q_id], [content], [isCorrect]) "
+        PreparedStatement stm = con.prepareStatement("insert into [Option] ([q_id], [content], [isCorrect]) "
                 + " values ( ? , ? , ? )");
         stm.setString(1, id);
         stm.setString(2, content);
