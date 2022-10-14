@@ -12,23 +12,23 @@ import java.util.Date;
  * @author DELL
  */
 public class JobsDTO {
-    private int job_id;
+    private String job_id;
     private String job_name;
     private int major_id;
     private int job_vacancy;
-    private String job_des;
+    private String job_description;
     private int level_id;
-    private int salary;
+    private double salary;
     private Date post_date;
 
     public JobsDTO() {
     }
 
-    public int getJob_id() {
+    public String getJob_id() {
         return job_id;
     }
 
-    public void setJob_id(int job_id) {
+    public void setJob_id(String job_id) {
         this.job_id = job_id;
     }
 
@@ -56,12 +56,12 @@ public class JobsDTO {
         this.job_vacancy = job_vacancy;
     }
 
-    public String getJob_des() {
-        return job_des;
+    public String getJob_description() {
+        return job_description;
     }
 
-    public void setJob_des(String job_des) {
-        this.job_des = job_des;
+    public void setJob_description(String job_description) {
+        this.job_description = job_description;
     }
 
     public int getLevel_id() {
@@ -72,11 +72,11 @@ public class JobsDTO {
         this.level_id = level_id;
     }
 
-    public int getSalary() {
+    public double getSalary() {
         return salary;
     }
 
-    public void setSalary(int salary) {
+    public void setSalary(double salary) {
         this.salary = salary;
     }
 
@@ -87,5 +87,6 @@ public class JobsDTO {
     public void setPost_date(Date post_date) {
         this.post_date = post_date;
     }
+
     
 }

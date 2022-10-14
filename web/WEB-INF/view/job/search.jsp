@@ -13,12 +13,12 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Search Job</h1>
-        <form action="<c:url value="/job"/>">
+        <a class="link" href="<c:url value="/job?op=add_job"/>">Add a new job</a>
+        <!--<form action="<c:url value="/job"/>">
             Search: 
             <input type="text" name="search" value=""/><br/>
             <button type="submit" name="op" value="search">Search</button>
-        </form>
+        </form>-->
         <table border="1" cellspacing="0" cellpadding="4">
             <thead>
                 <tr>
@@ -38,7 +38,7 @@
                     <td>${job.job_name}</td>
                     <td>${job.major_id}</td>
                     <td>${job.job_vacancy}</td>
-                    <td>${job.job_des}</td>
+                    <td>${job.job_description}</td>
                     <td>${job.level_id}</td>
                     <td>${job.salary}</td>
                     <td>${job.post_date}</td>

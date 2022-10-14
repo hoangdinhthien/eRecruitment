@@ -6,8 +6,14 @@
 package controllers;
 
 import config.Config;
+import daos.MajorDAO;
+import dtos.MajorDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,12 +36,21 @@ public class HomeController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String controller = (String) request.getAttribute("controller");
-        String action = (String) request.getAttribute("action");
-        switch (action) {
-            case "index":
-                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-                break;
+        try {
+            String controller = (String) request.getAttribute("controller");
+            String action = (String) request.getAttribute("action");
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor = majorDao.listAll();
+            request.setAttribute("listMajor", listMajor);
+            switch (action) {
+                case "index":
+                    request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                    break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
