@@ -96,6 +96,7 @@
                     </div>
                     <input type="submit" name="op" value="Create">
                 </form>
+                <button ><a href="<c:url value="/exam?op=QuestionBank"/>">Cancel</a></button>
             </div>
 
             <script src="script.js"></script> 

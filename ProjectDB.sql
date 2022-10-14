@@ -39,9 +39,9 @@ CREATE TABLE [Notify]
 (
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] not null,
 	[title] NVARCHAR(100) not null,
-	[content] text,
+	[content] text not null,
 	[link] NVARCHAR(200),
-	[date] datetime
+	[date] datetime not null
 )
 GO
 
@@ -88,20 +88,6 @@ GO
 */
 
 -- 5
-CREATE TABLE [HR_Staff]
-(
-	[hr_id] CHAR(3) PRIMARY KEY NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL
-)
-GO
-
-/*
-INSERT INTO [HR_Staffs]
-VALUES
-(),
-GO
-*/
-
 
 CREATE TABLE [Level]
 (
@@ -300,10 +286,9 @@ GO
 -- 16
 CREATE TABLE [Examination]
 (
-	[exam_id] CHAR(4) PRIMARY KEY NOT NULL,
+	[exam_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Exam] NOT NULL,
 	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
-	[score] FLOAT,
-	UNIQUE ([can_id])
+	UNIQUE ([exam_id],[can_id])
 )
 GO
 
