@@ -7,10 +7,14 @@ package controllers;
 
 import config.Config;
 import daos.JobsDAO;
+import daos.MajorDAO;
 import dtos.JobsDTO;
+import dtos.MajorDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +53,13 @@ public class JobsController extends HttpServlet {
                     break;
                 case "search":
                     search_jobs(request, response);
+                    break;
+                case "add_job":
+                    add_job(request, response);
+                    break;
+                case "add_job_handler":
+                    add_job_handler(request, response);
+                    break;
             }
         }
     }
@@ -59,6 +70,9 @@ public class JobsController extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             try {
                 List<JobsDTO> list = JobsDAO.list_job();
+                MajorDAO majorDao = new MajorDAO();
+                List<MajorDTO> listMajor = majorDao.listAll();
+                request.setAttribute("listMajor", listMajor);
                 request.setAttribute("list", list);
                 request.setAttribute("action", "search");
                 request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -69,6 +83,7 @@ public class JobsController extends HttpServlet {
             }
         }
     }
+
     protected void search_jobs(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -76,6 +91,9 @@ public class JobsController extends HttpServlet {
             String search = request.getParameter("search");
             try {
                 List<JobsDTO> list = JobsDAO.search_job(search);
+                MajorDAO majorDao = new MajorDAO();
+                List<MajorDTO> listMajor = majorDao.listAll();
+                request.setAttribute("listMajor", listMajor);
                 request.setAttribute("list", list);
                 request.setAttribute("search", search);
                 request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -84,6 +102,44 @@ public class JobsController extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+    }
+
+    protected void add_job(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        }
+    }
+
+    protected void add_job_handler(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            String job_id = request.getParameter("job_id");
+            String job_name = request.getParameter("job_name");
+            int major_id = Integer.parseInt(request.getParameter("major_id"));
+            String job_description = request.getParameter("job_description");
+            int job_vacancy = Integer.parseInt(request.getParameter("job_vacancy"));
+            int level_id = Integer.parseInt(request.getParameter("level_id"));
+            double salary = Double.parseDouble(request.getParameter("salary"));
+            Date postDate = new Date();
+            JobsDTO new_job = new JobsDTO();
+            new_job.setJob_id(job_id);
+            new_job.setJob_name(job_name);
+            new_job.setMajor_id(major_id);
+            new_job.setJob_description(job_description);
+            new_job.setJob_vacancy(job_vacancy);
+            new_job.setLevel_id(level_id);
+            new_job.setSalary(salary);
+            new_job.setPost_date(postDate);
+            JobsDAO.add_job(new_job);
+            request.getRequestDispatcher("/job?op=list").forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

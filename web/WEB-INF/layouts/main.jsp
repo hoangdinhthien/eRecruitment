@@ -87,18 +87,17 @@
                                 <div class="header__top__left">
                                     <ul>
                                         <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                                        <li>Free Shipping for all Order of $99</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="header__top__right">
-                                    <div class="header__top__right__social">
+<!--                                    <div class="header__top__right__social">
                                         <a href="#"><i class="fa fa-facebook"></i></a>
                                         <a href="#"><i class="fa fa-twitter"></i></a>
                                         <a href="#"><i class="fa fa-linkedin"></i></a>
                                         <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                                    </div>
+                                    </div>-->
                                     <div class="header__top__right__auth">
                                         <c:choose>
                                             <c:when test="${not empty info && role == 'Member'}">
@@ -197,16 +196,16 @@
 
                                     <li class="active"><a href="<c:url value='/home?op=index'/>">Home</a></li>
                                     <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
-                                    <li><a href="#">Pages</a>
+<!--                                    <li><a href="#">Pages</a>
                                         <ul class="header__menu__dropdown">
-                                            <li><a href="./shop-details.html">Shop Details</a></li>
-                                            <li><a href="./shoping-cart.html">Shoping Cart</a></li>
-                                            <li><a href="./checkout.html">Check Out</a></li>
-                                            <li><a href="./blog-details.html">Blog Details</a></li>
+                                            <li><a href="#">Shop Details</a></li>
+                                            <li><a href="#">Shoping Cart</a></li>
+                                            <li><a href="#">Check Out</a></li>
+                                            <li><a href="#">Blog Details</a></li>
                                         </ul>
-                                    </li>
-                                    <li><a href="./blog.html">About Us</a></li>
-                                    <li><a href="./contact.html">Contact</a></li>
+                                    </li>-->
+                                    <li><a href="#">About Us</a></li>
+                                    <li><a href="#">Contact</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -237,8 +236,8 @@
                                     <span class="arrow_carrot-down"></span>
                                 </div>
                                 <ul class="dropdown_menu dropdown_menu-1">
-                                    <c:forEach var="major" items="${listMajor}">
-                                        <li class="dropdown_item-1">
+                                    <c:forEach var="major" items="${listMajor}" varStatus="loop">
+                                        <li class="dropdown_item-${loop.count}">
                                             <a href="<c:url value='/home?op=index'/>">${major.major_name}</a>
                                         </li>
                                     </c:forEach>
