@@ -73,7 +73,7 @@ GO
 -- 4
 CREATE TABLE [Interviewer]
 (
-	[inter_id] CHAR(3) PRIMARY KEY NOT NULL,
+	[inter_id] CHAR(3) PRIMARY KEY NOT NULL, --I00
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL ,
 	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
 	[isAvailable] bit DEFAULT (0) NOT NULL
@@ -101,10 +101,10 @@ VALUES
 ('Intern'),('Fresher'),('Junior'),('Seninor'),('Manager'),('Leader')
 
 
--- 6
+-- 6 
 CREATE TABLE [Job]
 (
-	[job_id] CHAR(4) PRIMARY KEY NOT NULL,
+	[job_id] CHAR(4) PRIMARY KEY NOT NULL, --J000
 	[job_name] NVARCHAR(50) NOT NULL,
 	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
 	[job_vacancy] int NOT NULL,
@@ -141,7 +141,7 @@ GO
 -- 8
 CREATE TABLE [Candidate]
 (
-	[can_id] CHAR(4) PRIMARY KEY NOT NULL,
+	[can_id] CHAR(4) PRIMARY KEY NOT NULL, --C000
 	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
 	[can_cv] NVARCHAR(50) NOT NULL,-- comment 
@@ -222,7 +222,7 @@ GO
 -- 12
 CREATE TABLE [Question]
 (
-	[q_id] CHAR(4) PRIMARY KEY NOT NULL,
+	[q_id] CHAR(4) PRIMARY KEY NOT NULL, --Q000
 	[questiontxt] text NOT NULL,
 	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL,
 )
@@ -238,7 +238,7 @@ GO
 -- 13
 CREATE TABLE [Option]
 (
-	[op_id] int Identity(1,1) PRIMARY KEY NOT NULL,
+	[op_id] int Identity(1,1) PRIMARY KEY NOT NULL, 
 	[q_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Question] NOT NULL,
 	[content] text not null,
 	[isCorrect] bit DEFAULT(0) NOT NULL
@@ -255,7 +255,7 @@ GO
 -- 14
 CREATE TABLE [Exam]
 (
-	[exam_id] CHAR(3) PRIMARY KEY NOT NULL,
+	[exam_id] CHAR(3) PRIMARY KEY NOT NULL, --E00
 	[exam_name] NVARCHAR(30) UNIQUE NOT NULL,
 	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL
 )

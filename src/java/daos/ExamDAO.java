@@ -26,7 +26,7 @@ public class ExamDAO {
             i++;
         }
         i++;
-        String newId = "Q0" + i;
+        String newId = "E0" + i;
         PreparedStatement pstm = con.prepareStatement("select * from [Exam] where [exam_id] = ?");
         pstm.setString(1, newId);
         rs = pstm.executeQuery();

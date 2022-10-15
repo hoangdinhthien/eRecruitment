@@ -100,4 +100,17 @@ public class OptionDAO {
         stm.executeUpdate();
         con.close();
     }
+    
+    public boolean isCorrect(int id) throws SQLException, ClassNotFoundException {
+        boolean check = false;
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select [isCorrect] from [Option] where [op_id] = ? ");
+        stm.setInt(1, id);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            check = rs.getBoolean("isCorrect");
+        }
+        con.close();
+        return check;
+    }
 }

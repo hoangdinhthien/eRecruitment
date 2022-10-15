@@ -53,10 +53,10 @@
         <h1 style="text-align: center">Exam</h1>
 
         <div class="container">
-            <form action="<c:url value="/exam"/>" >
+            <form action="<c:url value="/exam"/>"  method="post">
                 <div class="list-question">
                     <input type="hidden" name="op" value="result" />
-                    <input type="hidden" name="can_id" value="${can_id}" />
+                    <input type="hidden" name="eId" value="E01" />
                     <c:forEach items="${listQuestion}" var="question" varStatus="loop">
                         <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
                             <span class="question-title">${loop.count}. Question : ${question.questiontxt} </span>
@@ -78,7 +78,6 @@
                                 </c:forEach>
                             </table>
                         </li>
-                        <input type="hidden" name="numOfQuestion" value="${loop.count}" />
                     </c:forEach>
                     <br/>
                 </div>

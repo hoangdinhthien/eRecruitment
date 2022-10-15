@@ -154,7 +154,7 @@ public class QuestionDAO {
         con.close();
     }
 
-    public int count(int major_id) throws SQLException, ClassNotFoundException {
+    public int countByMajor(int major_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("select * from [Question] where [major_id] = ?");
         stm.setInt(1, major_id);
@@ -165,5 +165,20 @@ public class QuestionDAO {
         }
         con.close();
         return count;
+    }
+
+    public double countByExam(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT Count([Question].q_id) as count "
+                + " FROM [Exam_question] "
+                + " INNER JOIN [Question] on [Exam_question].q_id = [Question].q_id "
+                + " where [Exam_question].exam_id = ? ");
+        stm.setString(1, id);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("count");
+        }
+        con.close();
+        return 0;
     }
 }
