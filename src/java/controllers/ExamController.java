@@ -253,8 +253,8 @@ public class ExamController extends HttpServlet {
             request.setAttribute("listMajor", listMajor);
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
-            request.setAttribute("action", "questionBank");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            request.setAttribute("action", "exam");
+            request.getRequestDispatcher("/WEB-INF/view/exam/exam.jsp").forward(request, response);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }

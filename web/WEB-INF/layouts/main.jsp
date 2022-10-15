@@ -56,7 +56,7 @@
                     <ul>
                         <li class="active"><a href="./index.html">Home</a></li>
                         <li><a href="./shop-grid.html">Jobs</a></li>
-                        <c:if test="${not empty info && role == 'HR Staff' || role == 'Inter'}"
+                        <%--<c:if test="${not empty info && role == 'HR Staff' || role == 'Inter'}"></c:if>--%>
                         <li>
                             <a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a>
                         </li>
