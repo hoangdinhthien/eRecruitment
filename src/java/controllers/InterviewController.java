@@ -6,6 +6,7 @@ import daos.InterviewerDAO;
 import daos.InterviewingDAO;
 import daos.MajorDAO;
 import dtos.CandidateDTO;
+import dtos.GoogleDTO;
 import dtos.InterviewerDTO;
 import dtos.InterviewingDTO;
 import dtos.MajorDTO;
@@ -25,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -202,7 +204,7 @@ public class InterviewController extends HttpServlet {
                         List<InterviewingDTO> listOfInterview = InterviewingDAO.searchInterviewByInterviewerId(i);
 
                         //Gioi han so interview cua 1 interviewer
-                        if (listOfInterview.size() < 8) {
+                        if (listOfInterview.size() < 16) {
                             InterviewingDAO.addInterview(ig);
                             index++;
                         } else {//Set interviewer unavailable va tra lai thong bao
@@ -214,7 +216,7 @@ public class InterviewController extends HttpServlet {
                     System.out.println(index);
                     if (index % 2 == 0) {
                         CandidateDAO.updateCandidateStatus(c, 3);
-                    }else{
+                    } else {
                         InterviewingDAO.deleteInterview(c);
                     }
                 }
@@ -237,16 +239,26 @@ public class InterviewController extends HttpServlet {
     protected void interview_process(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String email = request.getParameter("email");
-
+            //Lay email tu session
+            HttpSession session = request.getSession();
+            GoogleDTO g = (GoogleDTO) session.getAttribute("info");
+            String email = g.getEmail();
+            //Search candidate va interview cua candidate
             CandidateDTO can = CandidateDAO.searchCandidateByEmail(email);
-            if (can.getIsStatus() == 3) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date currentDate = new Date();
-//                currentDate.compareTo(sdf.parse())
+            List<InterviewingDTO> interviews = InterviewingDAO.searchInterviewByCandidateId(can.getId());
+            //Truy van bang interviewing
+            for (InterviewingDTO i : interviews) {
+                //Lay ten candidate
+                i.setCan_name(can.getName());
+                if (can.getIsStatus() == 3) { //Lay candidate da len lich
+                    //So sanh time interview voi thoi gian hien tai
+                    Date currentDate = new Date();
+                    if (i.getDate().compareTo(currentDate) < 0) {
+                        i.setStatus("Expired");
+                    }
+                }
             }
-
-            request.setAttribute("interview", can);
+            request.setAttribute("interview", interviews);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -258,9 +270,20 @@ public class InterviewController extends HttpServlet {
     protected void interview_schedule(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            //Lay het major ra de lm combo box filter by major
-            List<MajorDTO> listOfMajor = MajorDAO.listAll();
-            request.setAttribute("listOfMajor", listOfMajor);
+            //Lay email tu session
+            HttpSession session = request.getSession();
+            GoogleDTO g = (GoogleDTO) session.getAttribute("info");
+            String email = g.getEmail();
+            //Search interviewer va list interviews
+            InterviewerDTO ir = InterviewerDAO.searchInterviewerByEmail(email);
+            List<InterviewingDTO> interviews = InterviewingDAO.searchInterviewByInterviewerId(ir.getId());
+            for (InterviewingDTO i : interviews) {
+                CandidateDTO can = CandidateDAO.searchCandidateById(i.getCan_id());
+                //Lay ten candidate
+                i.setCan_name(can.getName());
+            }
+
+            request.setAttribute("interview", interviews);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);

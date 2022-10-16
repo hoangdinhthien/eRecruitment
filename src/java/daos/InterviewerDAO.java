@@ -32,11 +32,11 @@ public class InterviewerDAO {
         con.close();
         return list;
     }
-    public static InterviewerDTO searchInterviewerById(int inter_id) throws ClassNotFoundException, SQLException {
+    public static InterviewerDTO searchInterviewerById(String inter_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select i.[inter_id],i.[email],u.[name]  from [dbo].[Interviewer] i join [dbo].[User] u"
                 + " on i.[email] = u.[email] where [inter_id]=?");
-        stm.setInt(1, inter_id);
+        stm.setString(1, inter_id);
         ResultSet rs = stm.executeQuery();
         InterviewerDTO i = new InterviewerDTO();
         if (rs.next()) {
@@ -47,11 +47,11 @@ public class InterviewerDAO {
         con.close();
         return i;
     }
-    public static InterviewerDTO searchInterviewerByEmail(int email) throws ClassNotFoundException, SQLException {
+    public static InterviewerDTO searchInterviewerByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select i.[inter_id],i.[email],u.[name]  from [dbo].[Interviewer] i join [dbo].[User] u"
-                + " on i.[email] = u.[email] where [email]=?");
-        stm.setInt(1, email);
+                + " on i.[email] = u.[email] where i.[email]=?");
+        stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         InterviewerDTO i = new InterviewerDTO();
         if (rs.next()) {

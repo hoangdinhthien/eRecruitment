@@ -5,6 +5,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,6 +14,40 @@
         <title>Interview Process</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <div class="container">
+            <c:if test="${not empty interview}">
+                <table class="table table-striped">
+                    <thead>
+                    <th>Name</th>
+                    <th>Interview's Date</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="i" items="${interview}">
+                            <tr>
+                                <td>${i.can_name}</td>
+                                <td>
+                                    <fmt:formatDate value="${i.date}" pattern="dd-MM-yyyy HH:mm"/>
+                                </td>
+                                <td>${i.location}</td>
+                                <c:if test="${i.status=='Expired'}">
+                                    <td style="color: red">${i.status}</td>
+                                </c:if>
+                                <c:if test="${i.status=='Has Interviewed'}">
+                                    <td style="color: #007fff">${i.status}</td>
+                                </c:if>
+                                <c:if test="${i.status=='Hasn\'t Interviewed'}">
+                                    <td style="color: #EDBB0E">${i.status}</td>
+                                </c:if>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
+            <c:if test="${empty interview}">
+                <h2>There's no interview's schedule!</h2>
+            </c:if>
+        </div>
     </body>
 </html>

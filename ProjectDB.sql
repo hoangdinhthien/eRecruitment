@@ -35,7 +35,7 @@ CREATE TABLE [User]
 )
 GO
 
-CREATE TABLE [Notify]
+CREATE TABLE [Notification]
 (
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] not null,
 	[title] NVARCHAR(100) not null,
@@ -303,6 +303,7 @@ CREATE TABLE [Interviewing]
 	[date] DATETIME not null,
 	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] INT,
+	[inter_comment] text,
 	UNIQUE ([inter_id],[can_id])
 )
 GO

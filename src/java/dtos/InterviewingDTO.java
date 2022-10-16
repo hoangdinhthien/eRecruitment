@@ -14,6 +14,8 @@ public class InterviewingDTO {
     private String can_name;
     private Date date;
     private String location;
+    private String status;
+    private String comment;
     private int score;
 
     public InterviewingDTO() {
@@ -27,6 +29,19 @@ public class InterviewingDTO {
         this.can_name = can_name;
         this.date = date;
         this.location = location;
+        this.score = score;
+    }
+
+    public InterviewingDTO(int id, String inter_id, String inter_name, String can_id, String can_name, Date date, String location, String status, String comment, int score) {
+        this.id = id;
+        this.inter_id = inter_id;
+        this.inter_name = inter_name;
+        this.can_id = can_id;
+        this.can_name = can_name;
+        this.date = date;
+        this.location = location;
+        this.status = status;
+        this.comment = comment;
         this.score = score;
     }
 
@@ -92,6 +107,22 @@ public class InterviewingDTO {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
     
 }

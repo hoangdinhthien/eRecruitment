@@ -62,6 +62,23 @@ public class CandidateDAO {
         con.close();
         return c;
     }
+    public static CandidateDTO searchCandidateById(String id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, u.[name] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
+                + " on j.[job_id] = c.[job_id] JOIN [dbo].[User] u on c.[email] = u.[email] WHERE c.[can_id]=?");
+        stm.setString(1, id);
+        ResultSet rs = stm.executeQuery();
+        CandidateDTO c = new CandidateDTO();
+        if (rs.next()) {
+            c.setId(rs.getString("can_id"));
+            c.setMajorId(rs.getInt("major_id"));
+            c.setEmail(rs.getString("email"));
+            c.setCv(rs.getString("can_cv"));
+            c.setName(rs.getString("name"));
+        }
+        con.close();
+        return c;
+    }
     
     public static boolean updateCandidateStatus(String id,int isStatus) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();

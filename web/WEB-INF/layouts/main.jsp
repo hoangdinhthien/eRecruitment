@@ -133,7 +133,7 @@
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=interview_schedule&email=${info.email}"/>">Interview Schedule</a>
+                                                                <a class="link" href="<c:url value="/interview?op=interview_schedule&email=${info.email}"/>">Interview Schedule</a>
                                                             </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
@@ -148,7 +148,7 @@
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=interview_process&email=${info.email}"/>">Interview process</a>
+                                                                <a class="link" href="<c:url value="/interview?op=interview_process&email=${info.email}"/>">Interview process</a>
                                                             </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
