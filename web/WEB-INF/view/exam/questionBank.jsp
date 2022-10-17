@@ -11,11 +11,8 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <style>
-            .update-btn{
-                text-decoration: none;
-            }
             .question-title{
                 display: block;
                 text-align: left;
@@ -44,69 +41,53 @@
                 margin-right: auto !important;
             }
             .bordertest tr td {
-                border-style:solid;border-color: #96D4D4;
+                border-style:solid;
+                border-color: #96D4D4;
+            }
+            .update-btn{
+                text-align: right;
+                margin: 0 auto;
+            }
+            .option{
+                display: block;
+                padding: 20px;
+
             }
         </style>
     </head>
     <body>
 
         <h1 style="text-align: center">Question bank</h1>
-        <button onclick="document.querySelector('dialog').showModal()" >Create Exam </button>
+        <button class="btn btn-danger"onclick="document.querySelector('dialog').showModal()" >Create Exam </button>
+        <a href="<c:url value="/exam?op=Add"/>"
+            <button class="btn btn-danger" >Add question</button>
+        </a>
         <div>
-            <dialog style="height: 150px;">
+            <dialog>
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Update Exam</h5>
-                    </div>
-                    <form action="<c:url value="/exam"/>">
-                        <!--<div class="modal-body">-->
-                        <input type="hidden" value="CreateExam" name="op"/>
-                        <table class="center bordertest" >
-                            <tr>
-                                <td>
-                                    Number Of Question : 
-                                </td>
-                                <td>
-                                    <input type="text" name="name" required="true"/>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Major : 
-                                </td>
-                                <td class="center">
-                                    <select name="major" style="text-align-last:center; position: fixed !important; display: inline-block;">
-                                        <c:forEach var="major" items="${listMajor}" >
-                                            <option value="${major.major_id}" >${major.major_name}</option>
-                                        </c:forEach>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Number Of Question : 
-                                </td>
-                                <td>
-                                    <input type="number" name="numOfQuestion" min="1" max="10" required="true"/>
-                                </td>
-                            </tr>
-                        </table>
-                        <!--</div>-->
-                        <br/>
-                        <div class="modal-footer">
-                            <table class="center">
-                                <tr>
-                                    <td>
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                    </td>
-                                    <!--                        </tr>
-                                                            <tr>-->
-                                    <td>
-                                        <button onclick="document.querySelector('dialog').close()" class="btn btn-secondary" >Cancel</button>
-                                    </td>
-                                </tr>
-                            </table>
+                    <h5 class="modal-title">Create Exam</h5>
+                    <form action="<c:url value="/exam"/>">  
+                        <div class="input-group mb-3">
+                            <input type="hidden" value="CreateExam" name="op"/>
+                            <span class="input-group-text">Exam name:</span>
+                            <input class="form-control" type="text" name="name" required="true"/>
                         </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text mb-3">Major:</span>
+                            <select class="form-control" name="major">
+                                <c:forEach var="major" items="${listMajor}" >
+                                    <option value="${major.major_id}" >${major.major_name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Number Of Question :</span>
+                            <input class="form-control" type="number" name="numOfQuestion" min="1" max="10" required="true"/>
+                        </div>
+                        <button type="submit" class="btn btn-secondary">Update</button>
+                        <button onclick="document.querySelector('dialog').close()" class="btn btn-secondary" >Cancel</button>
                     </form> 
                 </div>
             </dialog>
@@ -125,22 +106,24 @@
                         </span>
 
                         <input type="hidden" name="q_id" value="${question.q_id}"/>
-                        <table id = "main" class="list-option">
+                        <div id = "main" class="list-option">
                             <c:set var="numOfOption" value="0"/>
                             <c:forEach var="option" items="${listOption}">
                                 <c:if test="${option.q_id == question.q_id}">
-                                    <tr>
-                                        <td>
-                                            <c:if test="${option.isCorrect}"> <input type="radio" checked/> </c:if>
-                                            </td>
-                                            <td>
-                                            ${option.content}
-                                        </td>
-                                    </tr>
+                                    <div class="input-group">
+                                        <div class="input-group-text">
+                                            <c:if test="${option.isCorrect}"> <input class="form-check-label" type="radio" checked/> </c:if>
+                                            </div>
+                                            <input type="text" id="disabledTextInput" class="form-control" placeholder="${option.content}">
+                                    </div>
                                 </c:if>
                             </c:forEach>
-                        </table>
-                        <button><a class="update-btn" href="<c:url value="/exam?op=Update&q_id=${question.q_id}"/>">Update</a></button>
+                        </div>
+                        <div class="update-btn">
+                            <a href="<c:url value="/exam?op=Update&q_id=${question.q_id}"/>">
+                                <button class="btn btn-primary">Update question</button>
+                            </a>
+                        </div>
                     </li>
                 </c:forEach>
             </div>
