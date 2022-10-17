@@ -19,14 +19,14 @@
         <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
         <!-- Css Styles -->
-        <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css">
-        <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css">
-        <link rel="stylesheet" href="css/elegant-icons.css" type="text/css">
-        <link rel="stylesheet" href="css/nice-select.css" type="text/css">
-        <link rel="stylesheet" href="css/jquery-ui.min.css" type="text/css">
-        <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
-        <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
-        <link rel="stylesheet" href="css/style.css" type="text/css">
+        <link rel="stylesheet" href="<c:url value="/css/bootstrap.min.css"/>" type="text/css">
+        <link rel="stylesheet" href="<c:url value="/css/font-awesome.min.css"/>" type="text/css">
+        <link rel="stylesheet" href="<c:url value="/css/elegant-icons.css"/>" type="text/css">
+        <link rel="stylesheet" href="<c:url value="/css/nice-select.css"/>" type="text/css">
+        <link rel="stylesheet" href="<c:url value="/css/jquery-ui.min.css"/>" type="text/css">
+        <link rel="stylesheet" href="<c:url value="/css/owl.carousel.min.css"/>" type="text/css">
+        <link rel="stylesheet" href="<c:url value="/css/slicknav.min.css"/>" type="text/css">
+        <link rel="stylesheet" href="<c:url value="/css/style.css"/>" type="text/css">
     </head>
     <body>
         <div>
@@ -38,7 +38,7 @@
             <div class="humberger__menu__overlay"></div>
             <div class="humberger__menu__wrapper">
                 <div class="humberger__menu__logo">
-                    <a href="<c:url value="/home?op=index"/>"><img src="img/logo.png" alt=""></a>
+                    <a href="#"><img src="img/logo.png" alt=""></a>
                 </div>
                 <div class="humberger__menu__cart">
                     <ul>
@@ -54,19 +54,12 @@
                 </div>
                 <nav class="humberger__menu__nav mobile-menu">
                     <ul>
-                        <li class="active"><a href="<c:url value="/home?op=index"/>">Home</a></li>
+                        <li class="active"><a href="./index.html">Home</a></li>
                         <li><a href="./shop-grid.html">Jobs</a></li>
-                            <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
-                            <li >
-                                <a href="#"> Other </a>
-                                <ul class="header__menu__dropdown">
-                                    <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
-                                    <li><a href="<c:url value="/exam?op=takeExam"/>">Test Exam</a></li>
-                                    <!--<li><a href="#">Shoping Cart</a></li>-->
-                                </ul>
-                            </li>
-                        </c:if>
-
+                        <%--<c:if test="${not empty info && role == 'HR Staff' || role == 'Inter'}"></c:if>--%>
+                        <li>
+                            <a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a>
+                        </li>
                         <li><a href="./blog.html">About Us</a></li>
                         <li><a href="./contact.html">Contact</a></li>
                     </ul>
@@ -96,17 +89,18 @@
                                 <div class="header__top__left">
                                     <ul>
                                         <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
+                                        <li>Free Shipping for all Order of $99</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="header__top__right">
-                                    <!--                                    <div class="header__top__right__social">
-                                                                            <a href="#"><i class="fa fa-facebook"></i></a>
-                                                                            <a href="#"><i class="fa fa-twitter"></i></a>
-                                                                            <a href="#"><i class="fa fa-linkedin"></i></a>
-                                                                            <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                                                                        </div>-->
+                                    <div class="header__top__right__social">
+                                        <a href="#"><i class="fa fa-facebook"></i></a>
+                                        <a href="#"><i class="fa fa-twitter"></i></a>
+                                        <a href="#"><i class="fa fa-linkedin"></i></a>
+                                        <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                                    </div>
                                     <div class="header__top__right__auth">
                                         <c:choose>
                                             <c:when test="${not empty info && role == 'Member'}">
@@ -128,36 +122,6 @@
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/interview?op=set_schedule"/>">Set Interview Schedule</a>
-                                                            </li>
-                                                            <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </c:when>
-                                            <c:when test="${not empty info && role == 'Interviewer'}">
-                                                <ul class="login-ava">
-                                                    <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
-                                                        <ul>
-                                                            <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=interview_schedule&email=${info.email}"/>">Interview Schedule</a>
-                                                            </li>
-                                                            <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </c:when>
-                                            <c:when test="${not empty info && role == 'Candidate'}">
-                                                <ul class="login-ava">
-                                                    <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
-                                                        <ul>
-                                                            <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=interview_process&email=${info.email}"/>">Interview process</a>
                                                             </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
@@ -202,27 +166,27 @@
                         <div class="col-lg-6">
                             <nav class="header__menu">
                                 <ul>
-
-                                    <li class="active"><a href="<c:url value='/home?op=index'/>">Home</a></li>
-                                    <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
-                                        <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
-                                        <li ><a href="#"> Other </a>
-                                            <ul class="header__menu__dropdown">
-                                                <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
-                                                <li><a href="<c:url value="/exam?op=takeExam"/>">Test Exam</a></li>
-                                                <!--<li><a href="#">Shoping Cart</a></li>-->
-                                            </ul>
-                                        </li>
-                                    </c:if>
-                                    <li><a href="#">About Us</a></li>
-                                    <li><a href="#">Contact</a></li>
+                                    <li class="active"><a href="./index.html">Home</a></li>
+                                    <li><a href="./shop-grid.html">Jobs</a></li>
+                                    <li><a href="./shop-grid.html">Jobs</a></li>
+                                    <li><a href="./shop-grid.html">Jobs</a></li>
+                                    <li><a href="#">Pages</a>
+                                        <ul class="header__menu__dropdown">
+                                            <li><a href="./shop-details.html">Shop Details</a></li>
+                                            <li><a href="./shoping-cart.html">Shoping Cart</a></li>
+                                            <li><a href="./checkout.html">Check Out</a></li>
+                                            <li><a href="./blog-details.html">Blog Details</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="./blog.html">About Us</a></li>
+                                    <li><a href="./contact.html">Contact</a></li>
                                 </ul>
                             </nav>
                         </div>
                         <div class="col-lg-3">
                             <div class="header__cart">
                                 <ul>
-                                    <li><i class="fa fa-bell"></i></li>
+                                    <li><a href="#"><i class="fa fa-bell" ></i></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -246,20 +210,19 @@
                                     <span class="arrow_carrot-down"></span>
                                 </div>
                                 <ul class="dropdown_menu dropdown_menu-1">
-                                    <c:forEach var="major" items="${listMajor}" varStatus="loop">
-                                        <li class="dropdown_item-${loop.count}">
-                                            <a href="<c:url value='/home?op=index'/>">${major.major_name}</a>
-                                        </li>
-                                    </c:forEach>
+                                    <c:forEach var="major" items="${listMajor}">
+                                        <li class="dropdown_item-1">
+                                            <a href="<c:url value='/home?op=index'/>">${major.major_name}</a></li>
+                                        </c:forEach>
                                 </ul>
                             </li>
                         </div>
                         <div class="col-lg-9">
                             <div class="hero__search">
                                 <div class="hero__search__form">
-                                    <form action="<c:url value="/job"/>">
-                                        <input type="text" name="search" placeholder="What do yo u need?">
-                                        <button type="submit" class="site-btn" name="op" value="search">SEARCH</button>
+                                    <form action="#">
+                                        <input type="text" placeholder="What do yo u need?">
+                                        <button type="submit" class="site-btn">SEARCH</button>
                                     </form>
                                 </div>
                                 <div class="hero__search__phone">
@@ -275,7 +238,6 @@
                         </div>
                     </div>
                 </div>
-            </section>
         </div>
         <div class="container-fluid text-center row ">
             <div class="col" style="min-height: 500px">
@@ -358,14 +320,14 @@
 
         </div>
         <!-- Js Plugins -->
-        <script src="js/jquery-3.3.1.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/jquery.nice-select.min.js"></script>
-        <script src="js/jquery-ui.min.js"></script>
-        <script src="js/jquery.slicknav.js"></script>
-        <script src="js/mixitup.min.js"></script>
-        <script src="js/owl.carousel.min.js"></script>
-        <script src="js/main.js"></script>
-        <script src="js/popUp.js"></script>
+        <script src="<c:url value="/js/jquery-3.3.1.min.js"/>"></script>
+        <script src="<c:url value="/js/bootstrap.min.js"/>"></script>
+        <script src="<c:url value="/js/jquery.nice-select.min.js"/>"></script>
+        <script src="<c:url value="/js/jquery-ui.min.js"/>"></script>
+        <script src="<c:url value="/js/jquery.slicknav.js"/>"></script>
+        <script src="<c:url value="/js/mixitup.min.js"/>"></script>
+        <script src="<c:url value="/js/owl.carousel.min.js"/>"></script>
+        <script src="<c:url value="/js/main.js"/>"></script>
+        <script src="<c:url value="/js/popUp.js"/>"></script>
     </body>
 </html>

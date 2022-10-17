@@ -21,7 +21,7 @@ GO
 
 INSERT INTO [Role]
 VALUES
-(N'Admin'),(N'HR Staff'),(N'Interviewers'), (N'Candidate'), (N'Member')
+(N'Admin'),(N'HR Staff'),(N'Interviewer'), (N'Candidate'), (N'Member')
 GO
 
 -- 2
@@ -35,13 +35,15 @@ CREATE TABLE [User]
 )
 GO
 
-CREATE TABLE [Notify]
+CREATE TABLE [Notification]
 (
+	[nId] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] not null,
 	[title] NVARCHAR(100) not null,
 	[content] text not null,
 	[link] NVARCHAR(200),
-	[date] datetime not null
+	[date] datetime not null,
+	[isRead] bit DEFAULT (0) not null
 )
 GO
 
