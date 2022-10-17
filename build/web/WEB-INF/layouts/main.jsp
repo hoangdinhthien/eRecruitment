@@ -106,7 +106,7 @@
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=logout"/>">Info</a>
+                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
                                                             </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
@@ -119,7 +119,9 @@
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
-                                                        <ul>
+                                                        <ul><li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
+                                                            </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/interview?op=set_schedule"/>">Set Interview Schedule</a>
                                                             </li>
@@ -134,7 +136,9 @@
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
-                                                        <ul>
+                                                        <ul><li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
+                                                            </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=interview_schedule&email=${info.email}"/>">Interview Schedule</a>
                                                             </li>
@@ -149,7 +153,9 @@
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
-                                                        <ul>
+                                                        <ul><li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
+                                                            </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=interview_process&email=${info.email}"/>">Interview process</a>
                                                             </li>

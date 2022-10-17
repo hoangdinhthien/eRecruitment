@@ -40,7 +40,7 @@ public class UserController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String action = ((String) request.getAttribute("action")).toLowerCase();
+        String action = request.getParameter("op");
 //        String action = request.getParameter("action");
         System.out.println("Option : " + action);
         switch (action) {
@@ -63,7 +63,9 @@ public class UserController extends HttpServlet {
         try {
 //            HttpSession session = request.getSession();
 //            String email = (String) session.getAttribute("email");
+
             String email = request.getParameter("email");
+            System.out.println("Info");
             UserDAO uDao = new UserDAO();
             UserDTO user = uDao.find(email);
             RoleDAO rDao = new RoleDAO();
@@ -84,6 +86,7 @@ public class UserController extends HttpServlet {
 //            HttpSession session = request.getSession();
 //            String email = (String) session.getAttribute("email");
             String email = request.getParameter("email");
+            
             UserDAO uDao = new UserDAO();
             UserDTO user = uDao.find(email);
             request.setAttribute("user", user);
@@ -101,6 +104,7 @@ public class UserController extends HttpServlet {
 //            HttpSession session = request.getSession();
 //            String email = (String) session.getAttribute("email");
             String email = request.getParameter("email");
+            
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             UserDAO uDao = new UserDAO();

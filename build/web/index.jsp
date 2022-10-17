@@ -7,5 +7,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<jsp:forward page="/user?op=info&email=hoangthse162042@fpt.edu.vn"/>
+<jsp:forward page="/home?op=index"/>
 <%--<jsp:forward page="/home/index.do"/>--%>
