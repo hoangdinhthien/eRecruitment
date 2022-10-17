@@ -258,18 +258,23 @@ public class ExamController extends HttpServlet {
     protected void takeExam(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-//            String canId = request.getParameter("canId");
+            String canId = request.getParameter("canId");
             // CandidateDAO cDao = new Candidate 
+            ExamDAO eDao = new ExamDAO();
+            String eId = eDao.getExam(canId);
+            System.out.println(eId);
+            if (eId == null) {
 
-            QuestionDAO qDao = new QuestionDAO();
-            List<QuestionDTO> listQuestion = qDao.listOneExam("E01");
-            OptionDAO opDao = new OptionDAO();
-            System.out.println(opDao.isCorrect(11));
-            List<OptionDTO> listOption = opDao.listOneQExam("E01");
+            } else {
+                QuestionDAO qDao = new QuestionDAO();
+                List<QuestionDTO> listQuestion = qDao.listOneExam(eId);
+                OptionDAO opDao = new OptionDAO();
+                List<OptionDTO> listOption = opDao.listOneQExam(eId);
 //            System.out.println(listOption);
-            request.setAttribute("listQuestion", listQuestion);
-            request.setAttribute("listOption", listOption);
-            request.getRequestDispatcher("/WEB-INF/view/exam/exam.jsp").forward(request, response);
+                request.setAttribute("listQuestion", listQuestion);
+                request.setAttribute("listOption", listOption);
+                request.getRequestDispatcher("/WEB-INF/view/exam/exam.jsp").forward(request, response);
+            }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -278,6 +283,7 @@ public class ExamController extends HttpServlet {
     protected void result(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            String canId = request.getParameter("canId");
             String eId = request.getParameter("eId");
             QuestionDAO qDao = new QuestionDAO();
             double count = qDao.countByExam(eId);
