@@ -11,7 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link href="<c:url value="/site2.css"/>" rel="stylesheet" type="text/css">
+        <!--<link href="<c:url value="/site2.css"/>" rel="stylesheet" type="text/css">-->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -30,13 +30,11 @@
                 border: none;
             }
             .create-exam{
-                border: 1px solid red;
                 border-radius: 10px;
                 background:  #C7C7C7;
                 padding: 25px 30px;
             }
             .question-input{
-                border: 1px solid green;
                 border-radius: 10px;
                 background-color: #E3E3E3;
                 margin:  20px;
@@ -46,7 +44,7 @@
                 border: none; 
                 margin:  10px 5px;
             }
-     
+
         </style>
 
     </head>
@@ -57,15 +55,13 @@
             <div class="create-exam">
                 <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()">
                     <div>
-                        <textarea type="text" placeholder="Enter Question" name="question" cols="100" rows="2" size ="1000" style="resize: none;" required="true"></textarea>
+                        <textarea type="text" placeholder="Enter Question" name="question" cols="150" rows="10" style="resize: none;" required="true"></textarea>
                     </div>
                     <select name="major">
                         <c:forEach var="major" items="${listMajor}">
                             <option value="${major.major_id}">${major.major_name}</option>
                         </c:forEach>
                     </select>
-
-                    <hr>
 
                     <div class="question-input">
                         <table>
@@ -94,9 +90,16 @@
                             <input type="button" id="removeButton"  value="Remove" onclick="remove(2)"  style="width: 12%" disabled="true"/>
                         </div>
                     </div>
-                    <input type="submit" name="op" value="Create">
+                    <div >
+                        <button style="font-size: 20px" class="btn btn-primary" type="submit" name="op" value="Create">Create</button>
+                    </div>
                 </form>
-                <button ><a href="<c:url value="/exam?op=QuestionBank"/>">Cancel</a></button>
+                    <br/>
+                <div>
+                    <a href="<c:url value="/exam?op=QuestionBank"/>">
+                        <button class="btn" >Cancel</button>
+                    </a>
+                </div>
             </div>
 
             <script src="script.js"></script> 

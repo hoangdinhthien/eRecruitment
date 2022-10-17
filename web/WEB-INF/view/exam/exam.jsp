@@ -46,13 +46,16 @@
             .bordertest tr td {
                 border-style:solid;border-color: #96D4D4;
             }
+            .close-window{
+                margin-bottom:  40px;
+            }
         </style>
     </head>
     <body>
 
         <h1 style="text-align: center">Exam</h1>
 
-        <div class="container">
+        <div class="container-sm">
             <form action="<c:url value="/exam"/>"  method="post">
                 <div class="list-question">
                     <input type="hidden" name="op" value="result" />
@@ -81,10 +84,11 @@
                     </c:forEach>
                     <br/>
                 </div>
-                <button type="submit" class="btn btn-primary center">Submit</button>
+                <div class="d-flex justify-content-center align-items-center flex-column gap-5 pb-4">                
+                    <button type="submit" class="btn btn-primary mx-auto d-inline-block">Submit</button>
+                    <button type="button" class="" onclick="window.close();">Close current window if possible</button>
+                </div>
             </form>
-            <br/><br/><br/>
-            <button type="button" onclick="window.close();">Close current window if possible</button>
         </div>
     </body>
 </html>

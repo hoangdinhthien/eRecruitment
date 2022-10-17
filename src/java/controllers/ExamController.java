@@ -262,10 +262,10 @@ public class ExamController extends HttpServlet {
             // CandidateDAO cDao = new Candidate 
 
             QuestionDAO qDao = new QuestionDAO();
-            List<QuestionDTO> listQuestion = qDao.listOneExam("E01");
+            List<QuestionDTO> listQuestion = qDao.listOneExam("E05");
             OptionDAO opDao = new OptionDAO();
             System.out.println(opDao.isCorrect(11));
-            List<OptionDTO> listOption = opDao.listOneQExam("E01");
+            List<OptionDTO> listOption = opDao.listOneQExam("E05");
 //            System.out.println(listOption);
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
