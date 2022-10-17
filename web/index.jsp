@@ -8,4 +8,3 @@
 <!DOCTYPE html>
 
 <jsp:forward page="/exam?op=QuestionBank"/>
-\
