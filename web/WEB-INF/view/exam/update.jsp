@@ -53,28 +53,36 @@
         <div class="container">
             <h2>Update question</h2>
             <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()">
-                
+
                 <div class="update-question">
                     <textarea type="text" placeholder="Question" name="question" cols="150" rows="10" style="resize: none;" required="true">${question.questiontxt}</textarea><br/>
                     <input type="hidden" name="q_id" value="${question.q_id}"/>
-                        <select name="major">
-                            <c:forEach var="major" items="${listMajor}">
-                                <option value="${major.major_id}" <c:if test="${major.major_id == question.major_id}"> selected="selected" </c:if> >${major.major_name}</option>
-                            </c:forEach>
-                        </select>
+                    <select name="major">
+                        <c:forEach var="major" items="${listMajor}">
+                            <option value="${major.major_id}" <c:if test="${major.major_id == question.major_id}"> selected="selected" </c:if> >${major.major_name}</option>
+                        </c:forEach>
+                    </select>
                 </div>
 
                 <div class="update-selection">
                     <table id = "main">
                         <h4 class="update-title">Choose correct option:</h4>
+                        <tbody id = "main"></tbody>
                         <c:set var="numOfOption" value="0"/>
                         <c:forEach var="option" items="${listOption}">
                             <c:set var="numOfOption" value="${numOfOption+1}"/>
-                            <div class="update-option">
-                                <input type="radio" value="${numOfOption}"  name="correctOptions" required="true" <c:if test="${option.isCorrect}"> checked </c:if>/>
-                                <input type="text" placeholder="Option"  name="option${numOfOption}" value="${option.content}" required="true" />    
-                            </div>
+                            <!--<div class="update-option">-->
+                            <tr>
+                                <td class="text-center" >
+                                    <input type="radio" value="${numOfOption}"  name="correctOptions" required="true" <c:if test="${option.isCorrect}"> checked </c:if>/>
+                                    </td>
+                                    <td class="text-center" >
+                                        <input type="text" placeholder="Option"  name="option${numOfOption}" value="${option.content}" required="true" /> 
+                                </td>
+                            </tr>   
+                            <!--</div>-->
                         </c:forEach>
+                        </tbody>
                     </table>
                 </div>
 
@@ -82,16 +90,16 @@
                     <input type="hidden" id="countInput" name="count" value="2" class="update-btn btn btn-primary"/>
                     <input type="button" id="addButton" value="Add" onclick="add(${numOfOption})" <c:if test="${numOfOption == 10}"> disabled="true" </c:if>/>
                     <input type="button" id="removeButton" value="Remove" onclick="remove(${numOfOption})" <c:if test="${numOfOption <= 2}"> disabled="true" </c:if>/>
-                    <input type="hidden" name="op" value="UpdateHandler"/>
-                    <input type="submit"/>
-                </div>
-            </form>
-        </div>
-                    
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-        <script src="script.js"></script> 
+                        <input type="hidden" name="op" value="UpdateHandler"/>
+                        <input type="submit"/>
+                    </div>
+                </form>
+            </div>
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+            <script src="<c:url value="/js/hoang.js"/>"></script> 
     </body>
 </html>

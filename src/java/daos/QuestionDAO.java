@@ -114,7 +114,15 @@ public class QuestionDAO {
             i++;
         }
         i++;
-        String newId = "Q00" + i;
+        System.out.println(i);
+        String newId = null;
+        if (i < 10) {
+            newId = "Q00" + i;
+        } else if (i < 100) {
+            newId = "Q0" + i;
+        } else {
+            newId = "Q" + i;
+        }
         PreparedStatement pstm = con.prepareStatement("select * from [Question] where [q_id] = ?");
         pstm.setString(1, newId);
         rs = pstm.executeQuery();

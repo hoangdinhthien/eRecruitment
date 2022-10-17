@@ -61,7 +61,7 @@
                                 <a href="#"> Other </a>
                                 <ul class="header__menu__dropdown">
                                     <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
-                                    <li><a href="<c:url value="/exam?op=takeExam"/>">Test Exam</a></li>
+                                    <li><a href="<c:url value="/exam?op=takeExam&canId=C001"/>">Test Exam</a></li>
                                     <!--<li><a href="#">Shoping Cart</a></li>-->
                                 </ul>
                             </li>
@@ -209,7 +209,7 @@
                                         <li ><a href="#"> Other </a>
                                             <ul class="header__menu__dropdown">
                                                 <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
-                                                <li><a href="<c:url value="/exam?op=takeExam"/>">Test Exam</a></li>
+                                                <li><a href="<c:url value="/exam?op=takeExam&canId=C001"/>">Test Exam</a></li>
                                                 <!--<li><a href="#">Shoping Cart</a></li>-->
                                             </ul>
                                         </li>

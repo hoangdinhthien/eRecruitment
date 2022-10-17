@@ -260,24 +260,17 @@ public class ExamController extends HttpServlet {
         try {
             String canId = request.getParameter("canId");
             // CandidateDAO cDao = new Candidate 
+            System.out.println(canId);
             ExamDAO eDao = new ExamDAO();
             String eId = eDao.getExam(canId);
             System.out.println(eId);
             if (eId == null) {
-
-<<<<<<< HEAD
+                System.out.println("Nul");
             } else {
                 QuestionDAO qDao = new QuestionDAO();
                 List<QuestionDTO> listQuestion = qDao.listOneExam(eId);
                 OptionDAO opDao = new OptionDAO();
                 List<OptionDTO> listOption = opDao.listOneQExam(eId);
-=======
-            QuestionDAO qDao = new QuestionDAO();
-            List<QuestionDTO> listQuestion = qDao.listOneExam("E05");
-            OptionDAO opDao = new OptionDAO();
-            System.out.println(opDao.isCorrect(11));
-            List<OptionDTO> listOption = opDao.listOneQExam("E05");
->>>>>>> de8366dabd1291727442125c344cb6d38fd30a10
 //            System.out.println(listOption);
                 request.setAttribute("listQuestion", listQuestion);
                 request.setAttribute("listOption", listOption);
