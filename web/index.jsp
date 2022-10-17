@@ -6,6 +6,6 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<%--<jsp:forward page="/home?op=index"/>--%>
-<jsp:forward page="/exam?op=QuestionBank"/>
+<jsp:forward page="/home?op=index"/>
+<%--<jsp:forward page="/exam?op=QuestionBank"/>--%>
 <%--<jsp:forward page="/exam?op=takeExam"/>--%>

@@ -1,8 +1,15 @@
 //
 package controllers;
 
+import config.Config;
+import daos.MajorDAO;
+import dtos.MajorDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,19 +34,24 @@ public class FrontController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = request.getServletPath();
-        String controller = url.substring(0, url.lastIndexOf("/"));
-        String action = url.substring(url.lastIndexOf("/") + 1, url.lastIndexOf("."));
-
-        System.out.println("ServletPath: " + url);
-        System.out.println("Controller: " + controller);
-        System.out.println("Action: " + action);
-
-        request.setAttribute("controller", controller);
-        request.setAttribute("action", action);
-
-        //this.getServletContext().getRequestDispatcher(controller).forward(request, response);
-        request.getRequestDispatcher(controller).forward(request, response);
+        try {
+            String action =  request.getParameter("op");
+            request.setAttribute("controller", "home");
+            request.setAttribute("action", action);
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor;
+            listMajor = majorDao.listAll();
+            request.setAttribute("listMajor", listMajor);
+            switch (action) {
+                case "index":
+                    request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                    break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

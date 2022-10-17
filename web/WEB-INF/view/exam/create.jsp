@@ -99,6 +99,6 @@
                 <button ><a href="<c:url value="/exam?op=QuestionBank"/>">Cancel</a></button>
             </div>
 
-            <script src="script.js"></script> 
+            <script src="<c:url value="/js/hoang.js"/>"></script> 
     </body>
 </html>
