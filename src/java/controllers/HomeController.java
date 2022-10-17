@@ -35,29 +35,24 @@ public class HomeController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String controller = (String) request.getAttribute("controller");
-        String action = (String) request.getAttribute("action");
-        switch (action) {
-            case "index": // Hien trang chu
-                //code xu ly
-                index(request, response);
-                break;
-            case "about": // Hien trang chu
-                //code xu ly
-                aboutus(request, response);
-                break;
+        try {
+            String action =  request.getParameter("op");
+            request.setAttribute("controller", "home");
+            request.setAttribute("action", action);
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor;
+            listMajor = majorDao.listAll();
+            request.setAttribute("listMajor", listMajor);
+            switch (action) {
+                case "index":
+                    request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                    break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    protected void index(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-
-    }
-
-    protected void aboutus(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

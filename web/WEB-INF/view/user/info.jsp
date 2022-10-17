@@ -23,7 +23,7 @@
                     <!-- ben trai  -->
                     <div class="col-2">
                         <figure>
-                            <img src="" class="user-img"/>
+                            <img src="${info.picture}" class="user-img"/>
                         </figure>
 
                         <!-- user name -->
