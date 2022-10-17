@@ -35,8 +35,9 @@ CREATE TABLE [User]
 )
 GO
 
-CREATE TABLE [Notify]
+CREATE TABLE [Notification]
 (
+	[nId] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] not null,
 	[title] NVARCHAR(100) not null,
 	[content] text not null,
