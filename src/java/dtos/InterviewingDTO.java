@@ -12,6 +12,7 @@ public class InterviewingDTO {
     private String inter_name;
     private String can_id;
     private String can_name;
+    private String can_cv;
     private Date date;
     private String location;
     private String status;
@@ -32,18 +33,21 @@ public class InterviewingDTO {
         this.score = score;
     }
 
-    public InterviewingDTO(int id, String inter_id, String inter_name, String can_id, String can_name, Date date, String location, String status, String comment, int score) {
+    public InterviewingDTO(int id, String inter_id, String inter_name, String can_id, String can_name, String can_cv, Date date, String location, String status, String comment, int score) {
         this.id = id;
         this.inter_id = inter_id;
         this.inter_name = inter_name;
         this.can_id = can_id;
         this.can_name = can_name;
+        this.can_cv = can_cv;
         this.date = date;
         this.location = location;
         this.status = status;
         this.comment = comment;
         this.score = score;
     }
+
+
 
     public int getId() {
         return id;
@@ -123,6 +127,14 @@ public class InterviewingDTO {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getCan_cv() {
+        return can_cv;
+    }
+
+    public void setCan_cv(String can_cv) {
+        this.can_cv = can_cv;
     }
     
 }

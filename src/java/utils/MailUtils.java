@@ -23,7 +23,8 @@ import javax.mail.internet.MimeMessage;
  * @author Thien's
  */
 public class MailUtils {
-        public static void send(String from, String to, String subject, String body) throws Exception {
+
+    public static void send(String to, String subject, String body) throws Exception {
         Properties props = System.getProperties();
         props.setProperty("mail.transport.protocol", "smtp");
         props.setProperty("mail.host", "smtp.gmail.com");
@@ -33,7 +34,7 @@ public class MailUtils {
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.socketFactory.fallback", "false");
-        
+
 //        props.put("mail.smtp.host", smtpServer);
 //        props.put("mail.smtp.port", "587");
 //        props.put("mail.smtp.starttls.enable", "true");
@@ -63,6 +64,7 @@ public class MailUtils {
         msg.setSentDate(new Date());
         msg.saveChanges();
 // — Send the message –
+        msg.setContent(body, "text/html");
         Transport.send(msg);
         System.out.println("Message sent OK.");
 

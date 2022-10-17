@@ -49,7 +49,7 @@ public class InterviewingDAO {
 
     public static List<InterviewingDTO> searchInterviewByInterviewerId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select  i.id, i.inter_id, i.can_id, i.[date], i.[location], i.[inter_score], i.[inter_comment], c.isStatus"
+        PreparedStatement stm = con.prepareStatement("Select  i.id, i.inter_id, i.can_id, i.[date], i.[location], i.[inter_score], i.[inter_comment], c.isStatus, c.[can_cv]"
                 + " from [dbo].[Interviewing] i join  [dbo].[Candidate] c on i.[can_id]=c.[can_id] where inter_id=? order by c.isStatus asc");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
@@ -67,6 +67,7 @@ public class InterviewingDAO {
             } else if (rs.getInt("isStatus") == 4) {
                 i.setStatus("Has Interviewed");
             }
+            i.setCan_cv(rs.getString("can_cv"));
             list.add(i);
         }
         con.close();

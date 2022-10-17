@@ -30,9 +30,20 @@
                 </div>
                 <div class="">
                     <nav class="interview-table-content">
-                        <c:forEach var="i" items="${interview}">
+                        <c:forEach var="i" items="${interview}" varStatus="loop">
                             <div style="border-radius: 10px;border: 3px solid pink; padding-bottom: 0;margin-bottom: 50px;">
-                                <div class="set-can" style="padding-top: 30px ; padding-bottom: 80px">
+                                <div class="set-can" style="padding-top: 30px ; padding-bottom: 80px;">
+                                    <div class="form-popup-cv form-container-cv" id="myForm${loop.count}">
+                                        <button type="button" class="btn cancel" onclick="closeForm(${loop.count})">Close</button>
+                                        <embed
+                                            type="application/pdf"
+                                            src=""
+                                            frameBorder="0"
+                                            scrolxling="auto"
+                                            height="500px"
+                                            width="80%"
+                                            >
+                                    </div>
                                     <ul class="">
                                         <li style="text-align: left">${i.can_name}</li>
                                         <li><fmt:formatDate value="${i.date}" pattern="dd-MM-yyyy HH:mm"/></li>
@@ -47,7 +58,7 @@
                                             <li style="color: #EDBB0E">${i.status}</li>
                                             </c:if>
                                     </ul>
-                                    <button class="interview-table-content-btn ">View CV</button>
+                                    <button class="interview-table-content-btn " onclick="openForm(${loop.count})">View CV</button>
                                 </div>
                                 <c:if test="${i.status=='Hasn\'t Interviewed'}">
                                     <div class="interview-record set-can" style="text-align: left;">
@@ -64,31 +75,19 @@
                         </c:forEach>
                     </nav>
                 </div>
-                <tbody>
-                    <c:forEach var="i" items="${interview}">
-                        <tr>
-                            <td style="text-align: left"></td>
-                            <td>
+            </c:if>
+            <c:if test="${empty interview}">
+                <h2>There's no interview's schedule!</h2>
+            </c:if>
+        </div>
+        <script>
+            function openForm(count) {
+                document.getElementById("myForm" + count).style.display = "block";
+            }
 
-                            </td>
-                            <td>${i.location}</td>
-                            <c:if test="${i.status=='Expired'}">
-                                <td style="color: red">${i.status}</td>
-                            </c:if>
-                            <c:if test="${i.status=='Has Interviewed'}">
-                                <td style="color: #007fff">${i.status}</td>
-                            </c:if>
-                            <c:if test="${i.status=='Hasn\'t Interviewed'}">
-                                <td style="color: #EDBB0E">${i.status}</td>
-                            </c:if>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
-        </c:if>
-        <c:if test="${empty interview}">
-            <h2>There's no interview's schedule!</h2>
-        </c:if>
-    </div>
-</body>
+            function closeForm(count) {
+                document.getElementById("myForm" + count).style.display = "none";
+            }
+        </script>
+    </body>
 </html>

@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import utils.MailUtils;
 
 /**
  *
@@ -191,6 +192,7 @@ public class InterviewController extends HttpServlet {
             String page = request.getParameter("page");
             //parse time de check xem trong database co time do chua
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat mailf = new SimpleDateFormat("dd-MM-yyyy");
             time = period.get(time);
             int index = 0;
             if (!InterviewingDAO.searchInterviewByDate(sdf.parse(date + " " + time))) {
@@ -213,12 +215,48 @@ public class InterviewController extends HttpServlet {
                             request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
                         }
                     }
-                    System.out.println(index);
                     if (index % 2 == 0) {
                         CandidateDAO.updateCandidateStatus(c, 3);
                     } else {
                         InterviewingDAO.deleteInterview(c);
                     }
+                    CandidateDTO can = CandidateDAO.searchCandidateById(c);
+                    String to = can.getEmail();
+                    String subject = "3HTD: You have got an interview schedule";
+                    String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                            + "<p>We have considered your result and decided to have an interview with you</p>"
+                            + "<p>On: <strong>"
+                            + time.substring(0, time.lastIndexOf(":"))
+                            + "</strong>  <strong>"
+                            + mailf.format(sdf.parse(date + " " + time))
+                            + "</strong> - "
+                            + " At: "
+                            + "<strong>3HTD Company</strong>"
+                            + "</p>"
+                            + "<p>Please get it on time.</p><br/>"
+                            + "<p>Sincerely</p>"
+                            + "<p>3HTD</p>";
+                    MailUtils.send(to, subject, body);
+                    System.out.println(mailf.format(sdf.parse(date + " " + time)));
+                }
+                for (String i : iId) {
+                    InterviewerDTO inter = InterviewerDAO.searchInterviewerById(i);
+                    String to = inter.getEmail();
+                    String subject = "3HTD: You have got a new interview schedule";
+                    String body = "<p>Dear <strong>" + inter.getName() + "</strong>, </p><br/>"
+                            + "<p>There are always potential candidates want to join in our company. So we has set an interview for you and them.</p>"
+                            + "<p>On: <strong>"
+                            + time.substring(0, time.lastIndexOf(":"))
+                            + "</strong>  <strong>"
+                            + mailf.format(sdf.parse(date + " " + time))
+                            + "</strong> - "
+                            + " At: "
+                            + "<strong>3HTD Company</strong>"
+                            + "</p>"
+                            + "<p>Please get it on time.</p><br/>"
+                            + "<p>Sincerely</p>"
+                            + "<p>3HTD</p>";
+                    MailUtils.send(to, subject, body);
                 }
                 //Add interview thanh cong
                 request.setAttribute("message", "Set schedule successfully!");
@@ -232,6 +270,8 @@ public class InterviewController extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -282,7 +322,6 @@ public class InterviewController extends HttpServlet {
                 //Lay ten candidate
                 i.setCan_name(can.getName());
             }
-
             request.setAttribute("interview", interviews);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {

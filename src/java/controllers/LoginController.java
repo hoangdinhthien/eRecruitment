@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import utils.GoogleUtils;
+import utils.MailUtils;
 
 /**
  *
@@ -46,6 +47,12 @@ public class LoginController extends HttpServlet {
             case "logout":
                 logout(request, response);
                 break;
+            case "verification":
+                verification(request, response);
+                break;
+            case "verification_handler":
+                verification_handler(request, response);
+                break;
         }
     }
 
@@ -67,9 +74,8 @@ public class LoginController extends HttpServlet {
                 //Neu user chua ton tai thi tao moi
                 UserDTO u = UserDAO.searchUserByEmail(google.getEmail());
                 if (u == null) {
-                    UserDAO.addBasicInfo(new UserDTO(google.getEmail(), google.getName(), 4));
-                    //Mac dinh user moi la member
-                    session.setAttribute("role", "Member");
+                    session.setAttribute("info", google);
+                    request.getRequestDispatcher("/login?op=verification").forward(request, response);
                 } else {
                     //Neu da ton tai user roi thi kiem tra role
 
@@ -84,12 +90,11 @@ public class LoginController extends HttpServlet {
 //                    }
 //                    if (u.getRole().equalsIgnoreCase("Candidate")) {
 //                    }
-
                     //Neu khong phai la user moi thi phai check role
                     session.setAttribute("role", u.getRole());
                 }
-                //luu thong tin dang nhap vao session cho chac
                 session.setAttribute("info", google);
+                //luu thong tin dang nhap vao session cho chac
                 request.setAttribute("controller", "home");
                 request.setAttribute("action", "index");
                 request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -97,6 +102,8 @@ public class LoginController extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -108,6 +115,55 @@ public class LoginController extends HttpServlet {
         request.setAttribute("controller", "home");
         request.setAttribute("action", "index");
         request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+    }
+
+    protected void verification(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            int verifyCode = (int) Math.floor(((Math.random() * 899999) + 100000));
+            String to = google.getEmail();
+            String subject = "3HTD: Verify Your Account";
+            String body = "<h3>You receive this email because you has chosen verify via this email address.</h3></br>"
+                    + "<p>This is your verification code:</p></br>"
+                    + "<p style=\"font-size: 20px; font-weight:bold;\">G - "
+                    + verifyCode
+                    + "</p></br>"
+                    + "<p>This code has effect on 10 minutes. If this is not you please skip this message!</p>";
+            MailUtils.send(to, subject, body);
+            request.setAttribute("code", verifyCode);
+            request.setAttribute("action", "verification");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    protected void verification_handler(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            String code= request.getParameter("code");
+            String inputCode= request.getParameter("inputCode").trim();
+            if (!code.equals(inputCode)) {
+                
+                request.setAttribute("message", "Wrong code!");
+                request.setAttribute("inputCode", inputCode);
+                request.setAttribute("code", code);
+                request.setAttribute("action", "verification");
+            } else {
+                UserDAO.addBasicInfo(new UserDTO(google.getEmail(), google.getName(), 4));
+                //Mac dinh user moi la member
+                session.setAttribute("role", "Member");
+                request.setAttribute("controller", "home");
+                request.setAttribute("action", "index");
+            }
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (Exception ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
