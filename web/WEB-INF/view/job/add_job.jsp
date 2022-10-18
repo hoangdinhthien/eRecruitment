@@ -13,13 +13,13 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <form action="<c:url value="/job"/>">
-            Job ID
+        <form action="<c:url value="/job"/>" style="background-color: blue" >
+            Job ID:
             <input type="text" name="job_id"/><br/>
-            Job name
+            Job name:
             <input type="text" name="job_name"/><br/>
-            Major ID
-            <select>
+            Major ID:<br/>
+            <select name="major_id">
                 <option value="1">Marketing</option>
                 <option value="2">Logistic</option>
                 <option value="3">Data Science and Analytics</option>
@@ -30,22 +30,21 @@
                 <option value="8">Economic Finance</option>
                 <option value="9">Business Intelligence and Development</option>
                 <option value="10">Operations</option>
-            </select>
-            Job vacancy
+            </select><br/>
+            Job vacancy:
             <input type="text" name="job_vacancy"/><br/>
             Job Description
             <input type="text" name="job_description"/><br/>
-            Level ID
-            <select>
+            Level ID:<br/>
+            <select name="level_id">
                 <option value="1">Intern</option>
                 <option value="2">Fresher</option>
                 <option value="3">Junior</option>
                 <option value="4">Senior</option>
                 <option value="5">Manager</option>
                 <option value="6">Leader</option>
-            </select>
-            <input type="text" name="level_id"/><br/>
-            Salary
+            </select><br/>
+            Salary:
             <input type="text" name="salary"/><br/>
             <button type="submit" name="op" value="add_job_handler">ADD</button>
         </form>

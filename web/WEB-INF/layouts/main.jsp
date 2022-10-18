@@ -54,8 +54,8 @@
                 </div>
                 <nav class="humberger__menu__nav mobile-menu">
                     <ul>
-                        <li class="active"><a href="./index.html">Home</a></li>
-                        <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
+                        <li class="${empty list?'active':''}"><a href="./index.html">Home</a></li>
+                        <li><a class="link ${not empty list?'active':''}" href="<c:url value="/job?op=list"/>">Jobs</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="header__menu__dropdown">
                                 <li><a href="./shop-details.html">Shop Details</a></li>
@@ -170,8 +170,8 @@
                         <div class="col-lg-6">
                             <nav class="header__menu">
                                 <ul>
-                                    <li class="active"><a href="./index.html">Home</a></li>
-                                    <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
+                                    <li class="${empty list?'active':''}"><a href="./index.html">Home</a></li>
+                                    <li class="${not empty list?'active':''}"><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
                                     <li><a href="#">Pages</a>
                                         <ul class="header__menu__dropdown">
                                             <li><a href="./shop-details.html">Shop Details</a></li>
