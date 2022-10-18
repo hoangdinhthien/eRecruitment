@@ -32,6 +32,7 @@ public class InterviewerDAO {
         con.close();
         return list;
     }
+    
     public static InterviewerDTO searchInterviewerById(String inter_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select i.[inter_id],i.[email],u.[name]  from [dbo].[Interviewer] i join [dbo].[User] u"

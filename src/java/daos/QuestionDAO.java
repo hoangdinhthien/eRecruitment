@@ -38,6 +38,58 @@ public class QuestionDAO {
         return list;
     }
 
+    public List<QuestionDTO> listOneMajor(int Major) throws SQLException, ClassNotFoundException {
+        List<QuestionDTO> list = null;
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select * from [Question] where [major_id] = ?");
+        stm.setInt(1, Major);
+        ResultSet rs = stm.executeQuery();
+        list = new ArrayList();
+        boolean check = false;
+        while (rs.next()) {
+            QuestionDTO q = new QuestionDTO();
+            q.setQ_id(rs.getString("q_id"));
+            q.setQuestiontxt(rs.getString("questiontxt"));
+            q.setMajor_id(rs.getInt("major_id"));
+            list.add(q);
+            check = true;
+        }
+        con.close();
+        if (check) {
+            return list;
+        } else {
+            return null;
+        }
+    }
+
+    public List<QuestionDTO> listOneExam(String eId) throws SQLException, ClassNotFoundException {
+        List<QuestionDTO> list = null;
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [Question].* "
+                + " FROM [Exam_question] "
+                + " INNER JOIN [Question] on [Exam_question].q_id = [Question].q_id "
+                + " where [Exam_question].exam_id = ? "
+                + " ORDER BY NEWID() ");
+        stm.setString(1, eId);
+        ResultSet rs = stm.executeQuery();
+        list = new ArrayList();
+        boolean check = false;
+        while (rs.next()) {
+            QuestionDTO q = new QuestionDTO();
+            q.setQ_id(rs.getString("q_id"));
+            q.setQuestiontxt(rs.getString("questiontxt"));
+            q.setMajor_id(rs.getInt("major_id"));
+            list.add(q);
+            check = true;
+        }
+        con.close();
+        if (check) {
+            return list;
+        } else {
+            return null;
+        }
+    }
+
     public QuestionDTO selectOne(String id) throws SQLException, ClassNotFoundException {
         QuestionDTO q = new QuestionDTO();
         Connection con = DBUtils.makeConnection();
@@ -62,7 +114,15 @@ public class QuestionDAO {
             i++;
         }
         i++;
-        String newId = "Q00" + i;
+        System.out.println(i);
+        String newId = null;
+        if (i < 10) {
+            newId = "Q00" + i;
+        } else if (i < 100) {
+            newId = "Q0" + i;
+        } else {
+            newId = "Q" + i;
+        }
         PreparedStatement pstm = con.prepareStatement("select * from [Question] where [q_id] = ?");
         pstm.setString(1, newId);
         rs = pstm.executeQuery();
@@ -91,7 +151,7 @@ public class QuestionDAO {
         stm.executeUpdate();
         con.close();
     }
-    
+
     public void update(String id, String content, int major) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("update [Question] set questiontxt = ? , major_id = ? where q_id = ? ");
@@ -100,5 +160,33 @@ public class QuestionDAO {
         stm.setString(3, id);
         stm.executeUpdate();
         con.close();
+    }
+
+    public int countByMajor(int major_id) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select * from [Question] where [major_id] = ?");
+        stm.setInt(1, major_id);
+        ResultSet rs = stm.executeQuery();
+        int count = 0;
+        while (rs.next()) {
+            count++;
+        }
+        con.close();
+        return count;
+    }
+
+    public double countByExam(String id) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT Count([Question].q_id) as count "
+                + " FROM [Exam_question] "
+                + " INNER JOIN [Question] on [Exam_question].q_id = [Question].q_id "
+                + " where [Exam_question].exam_id = ? ");
+        stm.setString(1, id);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("count");
+        }
+        con.close();
+        return 0;
     }
 }

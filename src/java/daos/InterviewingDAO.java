@@ -73,13 +73,14 @@ public class InterviewingDAO {
         con.close();
         return list;
     }
-
+    
     public static List<InterviewingDTO> searchInterviewByCandidateId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm;
         stm = con.prepareStatement(" Select Min(i.id) as id, Min(i.can_id) as can_id, Min(i.inter_id) as inter_id, Min(i.[location]) as location, "
                 + "Min(i.[inter_score]) as inter_score, Min(i.[date]) as [date], [isStatus] "
                 + "from  [dbo].[Interviewing] i join  [dbo].[Candidate] c on i.[can_id]=c.[can_id] where i.[can_id]=? Group By [isStatus]");
+
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         List<InterviewingDTO> list = new LinkedList();

@@ -57,15 +57,40 @@ public class OptionDAO {
         con.close();
         return list;
     }
-    
-    public void delete (String id) throws SQLException, ClassNotFoundException {
+
+    public List<OptionDTO> listOneQExam(String id) throws SQLException, ClassNotFoundException {
+        List<OptionDTO> list = null;
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [Option].* "
+                + " FROM [Exam_question] "
+                + " INNER JOIN [Question] on [Exam_question].q_id = [Question].q_id "
+                + " INNER JOIN [Option] on [Question].q_id = [Option].q_id "
+                + " where [Exam_question].exam_id = ? "
+                + " ORDER BY NEWID() ");
+        stm.setString(1, id);
+        ResultSet rs = stm.executeQuery();
+        list = new ArrayList();
+        while (rs.next()) {
+            OptionDTO opt = new OptionDTO();
+            opt.setOp_id(rs.getInt("op_id"));
+            opt.setQ_id(rs.getString("q_id"));
+            opt.setContent(rs.getString("content"));
+            opt.setIsCorrect(rs.getBoolean("isCorrect"));
+            list.add(opt);
+        }
+        con.close();
+        return list;
+    }
+
+    public void delete(String id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("delete from [Option] where [q_id] = ?");
         stm.setString(1, id);
         stm.executeUpdate();
         con.close();
     }
-    
+
+
     public void add(String id, String content, boolean isCorrect) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("insert into [Option] ([q_id], [content], [isCorrect]) "
@@ -75,5 +100,18 @@ public class OptionDAO {
         stm.setBoolean(3, isCorrect);
         stm.executeUpdate();
         con.close();
+    }
+
+    public boolean isCorrect(int id) throws SQLException, ClassNotFoundException {
+        boolean check = false;
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select [isCorrect] from [Option] where [op_id] = ? ");
+        stm.setInt(1, id);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            check = rs.getBoolean("isCorrect");
+        }
+        con.close();
+        return check;
     }
 }

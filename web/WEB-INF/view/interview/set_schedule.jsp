@@ -12,6 +12,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Set Schedule</title>
 
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -27,6 +28,7 @@
                         <c:choose>
                             <c:when test="${not empty chosenMajor}">
                                 <option ${chosenMajor == major.major_id?'selected':''} value="${major.major_id}">${major.major_name}</option>
+
                             </c:when>
                             <c:otherwise>
                                 <option value="${major.major_id}">${major.major_name}</option>
@@ -55,6 +57,7 @@
                                 </p>
                                 <p>
                                     Phone: ${can.phone} <br/>
+
                                 </p>
                             </div>
                         </c:forEach>
@@ -111,6 +114,7 @@
                     document.getElementById("error").innerHTML = alert("${message}");
                 </script>
             </c:if>
+
         </div>
 
         <%--//Script--%>

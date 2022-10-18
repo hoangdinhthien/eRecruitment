@@ -57,6 +57,16 @@
                         <li class="active"><a href="<c:url value="/home?op=index"/>">Home</a></li>
                         <li><a href="./shop-grid.html">Jobs</a></li>
 
+                        <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
+                            <li >
+                                <a href="#"> Other </a>
+                                <ul class="header__menu__dropdown">
+                                    <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
+                                    <li><a href="<c:url value="/exam?op=takeExam&canId=C001"/>">Test Exam</a></li>
+                                    <!--<li><a href="#">Shoping Cart</a></li>-->
+                                </ul>
+                            </li>
+                        </c:if>
 
                         <li><a href="./blog.html">About Us</a></li>
                         <li><a href="./contact.html">Contact</a></li>
@@ -92,12 +102,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="header__top__right">
-<!--                                    <div class="header__top__right__social">
-                                        <a href="#"><i class="fa fa-facebook"></i></a>
-                                        <a href="#"><i class="fa fa-twitter"></i></a>
-                                        <a href="#"><i class="fa fa-linkedin"></i></a>
-                                        <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                                    </div>-->
+
                                     <div class="header__top__right__auth">
                                         <c:choose>
                                             <c:when test="${not empty info && role == 'Member'}">
@@ -196,14 +201,17 @@
 
                                     <li class="active"><a href="<c:url value='/home?op=index'/>">Home</a></li>
                                     <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
-<!--                                    <li><a href="#">Pages</a>
-                                        <ul class="header__menu__dropdown">
-                                            <li><a href="#">Shop Details</a></li>
-                                            <li><a href="#">Shoping Cart</a></li>
-                                            <li><a href="#">Check Out</a></li>
-                                            <li><a href="#">Blog Details</a></li>
-                                        </ul>
-                                    </li>-->
+
+                                    <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
+                                        <li ><a href="#"> Other </a>
+                                            <ul class="header__menu__dropdown">
+                                                <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
+                                                <li><a href="<c:url value="/exam?op=takeExam&canId=C001"/>">Test Exam</a></li>
+                                                <!--<li><a href="#">Shoping Cart</a></li>-->
+                                            </ul>
+                                        </li>
+                                    </c:if>
+
                                     <li><a href="#">About Us</a></li>
                                     <li><a href="#">Contact</a></li>
                                 </ul>

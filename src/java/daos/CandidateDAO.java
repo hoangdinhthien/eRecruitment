@@ -79,6 +79,7 @@ public class CandidateDAO {
         con.close();
         return c;
     }
+
     
     public static boolean updateCandidateStatus(String id,int isStatus) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();

@@ -1,4 +1,6 @@
+
 package controllers;
+
 
 import config.Config;
 import daos.UserDAO;
@@ -11,6 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+
+import javax.servlet.annotation.WebServlet;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,10 +23,13 @@ import javax.servlet.http.HttpSession;
 import utils.GoogleUtils;
 import utils.MailUtils;
 
+
 /**
  *
  * @author Thien
  */
+
+ @WebServlet(name = "login", urlPatterns = {"/login"})
 public class LoginController extends HttpServlet {
 
     /**
@@ -53,6 +61,7 @@ public class LoginController extends HttpServlet {
             case "verification_handler":
                 verification_handler(request, response);
                 break;
+
         }
     }
 
@@ -95,6 +104,7 @@ public class LoginController extends HttpServlet {
                 }
                 session.setAttribute("info", google);
                 //luu thong tin dang nhap vao session cho chac
+
                 request.setAttribute("controller", "home");
                 request.setAttribute("action", "index");
                 request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -105,6 +115,7 @@ public class LoginController extends HttpServlet {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 
