@@ -45,10 +45,10 @@
                             <h5 class="user-content-item">
                                 Address: ${user.address}
                             </h5>
-                            <c:if test="${user.role_id!=5}">
+                            <c:if test="${user.roleId!=5}">
                                 <h5 class="user-content-item">
                                     Role: <c:forEach items="${listRole}" var="role">
-                                        <c:if test="${user.role_id==role.id}">${role.name}</c:if>
+                                        <c:if test="${user.roleId==role.id}">${role.name}</c:if>
                                     </c:forEach>
                                 </h5>
                             </c:if>
@@ -76,7 +76,7 @@
             </dialog>
         </div>
 
-        <!--        <table>
+<!--                <table>
                     <tbody>
                         <tr>
                             <td>
@@ -94,16 +94,16 @@
         ${user.name}
     </td>
 </tr>
-        <c:if test="${user.role_id!=4}">
+        <%--<c:if test="${user.role_id!=4}">--%>
             <tr>
                 <td>
                     Role :
                 </td>
                 <td>
-            ${user.role_id}
+            ${user.roleId}
         </td>
     </tr>
-        </c:if>
+        <%--</c:if>--%>
         <tr>
             <td>
                 Phone Number :
