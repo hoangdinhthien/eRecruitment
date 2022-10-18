@@ -211,9 +211,8 @@
                         <div class="col-lg-6">
                             <nav class="header__menu">
                                 <ul>
-
-                                    <li class="active"><a href="<c:url value='/home?op=index'/>">Home</a></li>
-                                    <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
+                                    <li class="${empty list?'active':'link'}"><a href="<c:url value='/home?op=index'/>">Home</a></li>
+                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
 
                                     <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
                                         <li ><a href="#"> Other </a>

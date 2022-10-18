@@ -29,7 +29,7 @@
         <div class="container">
             <div class="result">
                 <h2>${message}</h2>
-                <a class="return-home-btn" href="<c:url value="/exam?op=QuestionBank"/>">
+                <a class="return-home-btn" href="<c:url value="/home?op=index"/>">
                     <button class=" btn btn-info">Return to home page</button>
                 </a>
             </div>

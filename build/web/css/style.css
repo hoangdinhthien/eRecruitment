@@ -411,6 +411,29 @@ ol {
 .header__top__right__auth a i {
     margin-right: 6px;
 }
+.header__top__right__auth ul li {display: inline-block;}
+.header__top__right__auth ul li a{color: white;}
+.header__top__right__auth ul li:hover {background: #ddd;}
+.header__top__right__auth ul li:hover ul {display: block;}
+
+.header__top__right__auth ul li image:hover {background: black !important}
+
+
+.header__top__right__auth ul li ul {
+    position: absolute;
+    width: 200px;
+    display: none;
+    z-index: 5;
+    text-align: center;
+}
+.header__top__right__auth ul li ul li { 
+    background: #ddd; 
+    display: block; 
+    padding: 5%;
+
+}
+.header__top__right__auth ul li ul li a {display:block !important;color: white;} 
+.header__top__right__auth ul li ul li:hover {background: #aaa;}
 
 
 .header__logo {
@@ -2932,17 +2955,17 @@ ol {
 /* The actual popup */
 .popup .popuptext {
     visibility: hidden;
-    width: 160px;
-    background-color: #555;
+    width: 250px;
     color: #fff;
     text-align: center;
     border-radius: 6px;
     padding: 8px 0;
     position: absolute;
-    z-index: 1;
+    z-index: 10;
     top: 150%;
-    left: 50%;
+    right: -1050%;
     margin-left: -80px;
+    background-color: #ddd;
 }
 
 /* Popup arrow */
@@ -2954,7 +2977,7 @@ ol {
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent transparent #555 transparent;
+    border-color: transparent transparent #ddd transparent;
 }
 
 /* Toggle this class - hide and show the popup */
