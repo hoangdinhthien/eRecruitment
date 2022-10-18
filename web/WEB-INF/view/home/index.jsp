@@ -12,6 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <<<<<<< HEAD
         <!-- Featured Section Begin -->
         <div class="container">
             <div class="row">
@@ -24,6 +25,7 @@
                         </h5>
                     </div>
                     <c:if test="${empty info}">
+
                         <div class="row">
                             <div class="col login">
                                 <h3>Join Us</h3>

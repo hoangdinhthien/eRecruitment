@@ -56,7 +56,8 @@
                     <ul>
                         <li class="active"><a href="<c:url value="/home?op=index"/>">Home</a></li>
                         <li><a href="./shop-grid.html">Jobs</a></li>
-                            <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
+
+                        <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
                             <li >
                                 <a href="#"> Other </a>
                                 <ul class="header__menu__dropdown">
@@ -66,6 +67,7 @@
                                 </ul>
                             </li>
                         </c:if>
+
 
                         <li><a href="./blog.html">About Us</a></li>
                         <li><a href="./contact.html">Contact</a></li>
@@ -101,12 +103,6 @@
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="header__top__right">
-                                    <!--                                    <div class="header__top__right__social">
-                                                                            <a href="#"><i class="fa fa-facebook"></i></a>
-                                                                            <a href="#"><i class="fa fa-twitter"></i></a>
-                                                                            <a href="#"><i class="fa fa-linkedin"></i></a>
-                                                                            <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                                                                        </div>-->
                                     <div class="header__top__right__auth">
                                         <c:choose>
                                             <c:when test="${not empty info && role == 'Member'}">
@@ -114,6 +110,9 @@
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
                                                         <ul>
+                                                            <li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
+                                                            </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
                                                             </li>
@@ -125,7 +124,9 @@
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
-                                                        <ul>
+                                                        <ul><li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
+                                                            </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/interview?op=set_schedule"/>">Set Interview Schedule</a>
                                                             </li>
@@ -142,7 +143,11 @@
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=interview_schedule&email=${info.email}"/>">Interview Schedule</a>
+                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
+                                                            </li>
+                                                            <li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/interview?op=interview_schedule&email=${info.email}"/>">Interview Schedule</a>
+
                                                             </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
@@ -157,7 +162,11 @@
                                                         <img src="${info.picture}" alt="" class="avatar"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=interview_process&email=${info.email}"/>">Interview process</a>
+                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
+                                                            </li>
+                                                            <li style="list-style-type:none">
+                                                                <a class="link" href="<c:url value="/interview?op=interview_process&email=${info.email}"/>">Interview process</a>
+
                                                             </li>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
@@ -205,7 +214,8 @@
 
                                     <li class="active"><a href="<c:url value='/home?op=index'/>">Home</a></li>
                                     <li><a class="link" href="<c:url value="/job?op=list"/>">Jobs</a></li>
-                                        <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
+
+                                    <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
                                         <li ><a href="#"> Other </a>
                                             <ul class="header__menu__dropdown">
                                                 <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
@@ -214,6 +224,8 @@
                                             </ul>
                                         </li>
                                     </c:if>
+
+
                                     <li><a href="#">About Us</a></li>
                                     <li><a href="#">Contact</a></li>
                                 </ul>
