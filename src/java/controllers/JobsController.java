@@ -60,6 +60,8 @@ public class JobsController extends HttpServlet {
                 case "add_job_handler":
                     add_job_handler(request, response);
                     break;
+                case "filter_job":
+                    filter_job(request, response);
             }
         }
     }
@@ -140,6 +142,28 @@ public class JobsController extends HttpServlet {
             Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    protected void filter_job(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            int fmajor = Integer.parseInt(request.getParameter("major_id"));
+            int flevel = Integer.parseInt(request.getParameter("level_id"));
+            int fsalary = Integer.parseInt(request.getParameter("salary"));
+            try {
+                List<JobsDTO> list = JobsDAO.filter_job(fmajor,flevel,fsalary);
+                MajorDAO majorDao = new MajorDAO();
+                List<MajorDTO> listMajor = majorDao.listAll();
+                request.setAttribute("listMajor", listMajor);
+                request.setAttribute("list", list);
+                request.setAttribute("action", "search");
+                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
