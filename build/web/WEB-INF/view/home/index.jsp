@@ -12,7 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <<<<<<< HEAD
         <!-- Featured Section Begin -->
         <div class="container">
             <div class="row">
