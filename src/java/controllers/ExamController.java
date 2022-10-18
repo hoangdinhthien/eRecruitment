@@ -90,11 +90,16 @@ public class ExamController extends HttpServlet {
     protected void questionBank(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            String major = request.getParameter("major");
+            System.out.println(major);
             QuestionDAO qDao = new QuestionDAO();
-            List<QuestionDTO> listQuestion = qDao.listAll();
-//            System.out.println("Count Test : " + qDao.count(2));
-//            QuestionDTO qTest = listQuestion.get(0);
-//            System.out.println("Q Test : " + qTest);
+            List<QuestionDTO> listQuestion = null;
+            if (major != null) {
+                int id = Integer.parseInt(major);
+                listQuestion = qDao.listOneMajor(id);
+            } else {
+                listQuestion = qDao.listAll();
+            }
             OptionDAO opDao = new OptionDAO();
             List<OptionDTO> listOption = opDao.listAll();
             MajorDAO majorDao = new MajorDAO();
