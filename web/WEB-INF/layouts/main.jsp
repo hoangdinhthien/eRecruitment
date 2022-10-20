@@ -256,8 +256,10 @@
                                 <ul><c:if test="${not empty info}">
                                         <li> 
                                             <a href="<c:url value="/user?op=listNotification"/>">
-                                                <i class="fa fa-bell"></i>
-                                                <sup style="position: absolute;font-size: 10pt; top: 15px; right: 0px;color: red"><strong>${count}</strong></sup>
+                                                <i class="fa fa-bell">
+                                                <c:if test="${count!=0}">
+                                                    <sup style="position: absolute;font-size: 13pt; top: 5px; right: 0px;color: red; "><strong>${count}</strong></sup>
+                                                </c:if></i>
                                             </a>
                                         </li>
                                     </c:if>

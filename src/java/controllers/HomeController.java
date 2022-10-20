@@ -43,12 +43,14 @@ public class HomeController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-//            HttpSession session = request.getSession();
-//            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-//            NotificationDAO nDao = new NotificationDAO();
-//            List<NotificationDTO> notify = nDao.select(google.getEmail());
-//            request.setAttribute("listNotification", notify);
-
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            if (google != null) {
+                NotificationDAO nDao = new NotificationDAO();
+                List<NotificationDTO> notify = nDao.select(google.getEmail());
+                request.setAttribute("listNotification", notify);
+                request.setAttribute("count", nDao.count(google.getEmail()));
+            }
             MajorDAO majorDao = new MajorDAO();
             List<MajorDTO> listMajor;
             listMajor = majorDao.listAll();

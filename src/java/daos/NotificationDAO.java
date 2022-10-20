@@ -34,6 +34,7 @@ public class NotificationDAO {
         ResultSet rs = stm.executeQuery();
         List<NotificationDTO> list = null;
         list = new ArrayList();
+        boolean check = false;
         while (rs.next()) {
             try {
                 NotificationDTO n = new NotificationDTO();
@@ -49,12 +50,17 @@ public class NotificationDAO {
                 n.setIsRead(rs.getBoolean("isRead"));
                 System.out.println(n);
                 list.add(n);
+                check = true;
             } catch (ParseException ex) {
                 Logger.getLogger(NotificationDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         con.close();
-        return list;
+        if (check) {
+            return list;
+        } else {
+            return null;
+        }
     }
 
     public void add(String email, String title, String content, String linkTitle, String link) throws ClassNotFoundException, SQLException {
