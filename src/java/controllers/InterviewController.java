@@ -29,13 +29,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import utils.MailUtils;
 
-
 /**
  *
  * @author Thien
  */
 public class InterviewController extends HttpServlet {
 
+    HttpSession session;
     //Tao 4 period trong 1 ngay
     Map<String, String> period;
 
@@ -62,30 +62,39 @@ public class InterviewController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("controller", "interview");
-        String op = request.getParameter("op");
-        request.setAttribute("action", op);
-        switch (op) {
-            //Chuyen den giao dien set schedule
-            case "set_schedule":
-                set_schedule_view(request, response);
-                break;
-            //Xu ly filter
-            case "set_schedule_filtered":
-                set_schedule_filtered(request, response);
-                break;
-            //Xu ly xep lich phong van
-            case "set_schedule_handler":
-                set_schedule_handler(request, response);
-                break;
-            //View interview process cho candidate
-            case "interview_process":
-                interview_process(request, response);
-                break;
-            //View interview schedule cho interviewer
-            case "interview_schedule":
-                interview_schedule(request, response);
-                break;
+        session = request.getSession();
+        if (session.getAttribute("info") == null) {
+            response.sendRedirect("home?op=index");
+        } else {
+            request.setAttribute("controller", "interview");
+            String op = request.getParameter("op");
+            request.setAttribute("action", op);
+            switch (op) {
+                //Chuyen den giao dien set schedule
+                case "set_schedule":
+                    set_schedule_view(request, response);
+                    break;
+                //Xu ly filter
+                case "set_schedule_filtered":
+                    set_schedule_filtered(request, response);
+                    break;
+                //Xu ly xep lich phong van
+                case "set_schedule_handler":
+                    set_schedule_handler(request, response);
+                    break;
+                //View interview process cho candidate
+                case "interview_process":
+                    interview_process(request, response);
+                    break;
+                //View interview schedule cho interviewer
+                case "interview_schedule":
+                    interview_schedule(request, response);
+                    break;
+                //Record ve buoi interview
+                case "record":
+                    record(request, response);
+                    break;
+            }
         }
     }
 
@@ -204,6 +213,7 @@ public class InterviewController extends HttpServlet {
                         ig.setCan_id(c);
                         ig.setDate(sdf.parse(date + " " + time));
                         ig.setLocation("3HTD Company");
+                        ig.setIsStatus(3);
                         List<InterviewingDTO> listOfInterview = InterviewingDAO.searchInterviewByInterviewerId(i);
 
                         //Gioi han so interview cua 1 interviewer
@@ -323,6 +333,34 @@ public class InterviewController extends HttpServlet {
                 //Lay ten candidate
                 i.setCan_name(can.getName());
             }
+
+            //Pagination
+            String page = request.getParameter("page");
+            int intpage = 1;
+            int totalpage = 0;
+            int itemsPerPage = 2;
+            if (page != null) {
+                intpage = Integer.parseInt(page);
+            }
+            List<InterviewingDTO> sublist = new LinkedList<>();
+            List<Integer> pageList = new LinkedList<>();
+            if (interviews.size() > 0) {
+                totalpage = interviews.size() % itemsPerPage == 0 ? interviews.size() / itemsPerPage : (interviews.size() / itemsPerPage) + 1;
+                for (int i = 0; i < totalpage; i++) {
+                    pageList.add(i);
+                }
+                int n = (intpage - 1) * itemsPerPage;
+
+                if (interviews.size() >= n + itemsPerPage) {
+                    sublist = interviews.subList(n, n + itemsPerPage);
+                } else {
+                    sublist = interviews.subList(n, interviews.size());
+                }
+            }
+            request.setAttribute("sublist", sublist);
+            request.setAttribute("page", intpage);
+            request.setAttribute("noOfPage", pageList);
+
             request.setAttribute("interview", interviews);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
@@ -332,17 +370,45 @@ public class InterviewController extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void record(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            String can_id = request.getParameter("can_id");
+            String comment = request.getParameter("comment");
+            int score = Integer.parseInt(request.getParameter("score"));
+            InterviewingDTO ig = new InterviewingDTO();
+            ig.setId(id);
+            ig.setComment(comment);
+            ig.setScore(score);
+            ig.setIsStatus(4);
+            if (InterviewingDAO.addInterviewRecord(ig)) { // update thanh cong
+                request.setAttribute("message", "Add record sucessfully!"); // gui thong bao thanh cong
+                if (InterviewingDAO.checkInterviewRecord(can_id)) { // check xem ca 2 interviewers da record chua
+                    CandidateDAO.updateCandidateStatus(can_id, 4); //Status: 4 la da interview
+                }
+            } else { //Update fail
+                request.setAttribute("message", "Adding fail. Please try again!");// Gui thong bao fail
+            }
+            request.getRequestDispatcher("interview?op=interview_schedule").forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+/**
+ * Handles the HTTP <code>GET</code> method.
+ *
+ * @param request servlet request
+ * @param response servlet response
+ * @throws ServletException if a servlet-specific error occurs
+ * @throws IOException if an I/O error occurs
+ */
+@Override
+        protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
@@ -356,7 +422,7 @@ public class InterviewController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
@@ -367,7 +433,7 @@ public class InterviewController extends HttpServlet {
      * @return a String containing servlet description
      */
     @Override
-    public String getServletInfo() {
+        public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 

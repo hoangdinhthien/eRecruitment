@@ -30,6 +30,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "UserController", urlPatterns = {"/user"})
 public class UserController extends HttpServlet {
 
+    HttpSession session;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -41,42 +43,44 @@ public class UserController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("controller", "user");
-        response.setContentType("text/html;charset=UTF-8");
-        String action = request.getParameter("op");
-        request.setAttribute("action", action);
+        session = request.getSession();
+        if (session.getAttribute("info") != null) {
+            request.setAttribute("controller", "user");
+            response.setContentType("text/html;charset=UTF-8");
+            String action = request.getParameter("op");
+            request.setAttribute("action", action);
 //        String action = request.getParameter("action");
-        System.out.println("Option : " + action);
-        switch (action) {
-            case "info": {
-                view(request, response);
-                break;
+            System.out.println("Option : " + action);
+            switch (action) {
+                case "info": {
+                    view(request, response);
+                    break;
+                }
+                case "update": {
+                    view(request, response);
+                    break;
+                }
+                case "updatehandler": {
+                    updateHandler(request, response);
+                    break;
+                }
             }
-            case "update": {
-                view(request, response);
-                break;
-            }
-            case "updatehandler": {
-                updateHandler(request, response);
-                break;
-            }
+        } else {
+            response.sendRedirect("home?op=index");
         }
     }
 
     public void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-
-//            String email = request.getParameter("email");
-            System.out.println("Info");
-            UserDAO uDao = new UserDAO();
-            UserDTO user = uDao.find(google.getEmail());
-            RoleDAO rDao = new RoleDAO();
-            List<RoleDTO> listRole = rDao.selectAll();
-            request.setAttribute("listRole", listRole);
-            request.setAttribute("user", user);
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                session = request.getSession();
+                GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+                UserDAO uDao = new UserDAO();
+                UserDTO user = uDao.find(google.getEmail());
+                RoleDAO rDao = new RoleDAO();
+                List<RoleDTO> listRole = rDao.selectAll();
+                request.setAttribute("listRole", listRole);
+                request.setAttribute("user", user);
+                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
 
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
@@ -85,11 +89,11 @@ public class UserController extends HttpServlet {
         }
     }
 
-     public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
+            session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            
+
             UserDAO uDao = new UserDAO();
             UserDTO user = uDao.find(google.getEmail());
             request.setAttribute("user", user);
@@ -101,12 +105,13 @@ public class UserController extends HttpServlet {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public void updateHandler(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
+            session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             String email = google.getEmail();
-            
+
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             UserDAO uDao = new UserDAO();
@@ -123,7 +128,7 @@ public class UserController extends HttpServlet {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

@@ -14,6 +14,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Interview Schedule</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+        <%--css--%>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="<c:url value='/css/thien.css'/>" type="text/css">
+        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
     </head>
     <body>
         <div class="container">
@@ -30,10 +39,10 @@
                 </div>
                 <div class="">
                     <nav class="interview-table-content">
-                        <c:forEach var="i" items="${interview}" varStatus="loop">
+                        <c:forEach var="i" items="${sublist}" varStatus="loop">
                             <div style="border-radius: 10px;border: 3px solid pink; padding-bottom: 0;margin-bottom: 50px;">
                                 <div class="set-can" style="padding-top: 30px ; padding-bottom: 80px;">
-                                    <div class="form-popup-cv form-container-cv" id="myForm${loop.count}">
+                                    <div class="form-popup-cv form-container-cv" id="myBox${loop.count}">
                                         <button type="button" class="btn cancel" onclick="closeForm(${loop.count})">Close</button>
                                         <embed
                                             type="application/pdf"
@@ -48,9 +57,6 @@
                                         <li style="text-align: left">${i.can_name}</li>
                                         <li><fmt:formatDate value="${i.date}" pattern="dd-MM-yyyy HH:mm"/></li>
                                         <li>${i.location}</li>
-                                            <c:if test="${i.status=='Expired'}">
-                                            <li style="color: red">${i.status}</li>
-                                            </c:if>
                                             <c:if test="${i.status=='Has Interviewed'}">
                                             <li style="color: #007fff">${i.status}</li>
                                             </c:if>
@@ -58,15 +64,45 @@
                                             <li style="color: #EDBB0E">${i.status}</li>
                                             </c:if>
                                     </ul>
-                                    <button class="interview-table-content-btn " onclick="openForm(${loop.count})">View CV</button>
+                                    <c:if test="${i.status=='Has Interviewed'}">
+                                        <!-- Trigger/Open The Modal -->
+                                        <button id="myBtn" class="btn btn-default" style="position: absolute; bottom: 10px; right: 180px">Modify your record</button>
+
+                                        <!-- The Modal -->
+                                        <div id="myModal" class="modal">
+
+                                            <!-- Modal content -->
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h2>Modify your record</h2>
+                                                    <span class="close">&times;</span>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="<c:url value="/interview"/>">
+                                                        <textarea rows="5" cols="110" name="comment"  placeholder="Enter text here..." required>${i.comment}</textarea><br/>
+                                                        <input type="number" name="score" value="${i.score}" min='0' max='100' required=""
+                                                               style="width: 5%"> &nbsp; /100
+                                                        <input type="hidden" name="id" value="${i.id}">
+                                                        <input type="hidden" name="can_id" value="${i.can_id}">
+                                                        <input type="hidden" name="op" value="record">
+                                                        <button type="submit" class="interview-record-btn">Submit</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </c:if> 
+                                    <button class="interview-table-content-btn" onclick="openForm(${loop.count})">View CV</button>
                                 </div>
                                 <c:if test="${i.status=='Hasn\'t Interviewed'}">
                                     <div class="interview-record set-can" style="text-align: left;">
-                                        <textarea rows="5" cols="100" name="comment" form="record" placeholder="Enter text here..."
-                                                  required></textarea>
-                                        <form id="record">
+                                        <form action="<c:url value="/interview"/>">
+                                            <textarea rows="5" cols="130" name="comment"  placeholder="Enter text here..." required></textarea><br/>
                                             <input type="number" name="score" value="${score}" min='0' max='100' required=""
-                                                   style="width: 5%"/> &nbsp; /100
+                                                   style="width: 5%"> &nbsp; /100
+                                            <input type="hidden" name="id" value="${i.id}">
+                                            <input type="hidden" name="can_id" value="${i.can_id}">
+                                            <input type="hidden" name="op" value="record">
                                             <button type="submit" class="interview-record-btn">Submit</button>
                                         </form>
                                     </div>
@@ -76,17 +112,55 @@
                     </nav>
                 </div>
             </c:if>
+            <ul class="pagination" style="margin-top: 30px">
+                <c:forEach var="p" items="${noOfPage}" varStatus="loop">
+                    <li class="${page == loop.count?'active':''}">
+                        <a href="<c:url value="/interview?op=interview_schedule&page=${loop.count}"/>">${loop.count}</a>
+                    </li>
+                </c:forEach>
+            </ul>
             <c:if test="${empty interview}">
                 <h2>There's no interview's schedule!</h2>
+            </c:if>
+            <c:if test="${not empty message}">
+                <script>
+                    document.getElementById("error").innerHTML = alert("${message}");
+                </script>
             </c:if>
         </div>
         <script>
             function openForm(count) {
-                document.getElementById("myForm" + count).style.display = "block";
+                document.getElementById("myBox" + count).style.display = "block";
             }
 
             function closeForm(count) {
-                document.getElementById("myForm" + count).style.display = "none";
+                document.getElementById("myBox" + count).style.display = "none";
+            }
+
+            // Get the modal
+            var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+            var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+            btn.onclick = function () {
+                modal.style.display = "block";
+            }
+
+// When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+// When the user clicks anywhere outside of the modal, close it
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
             }
         </script>
     </body>

@@ -18,12 +18,12 @@ public class CandidateDTO {
     private String cv;
     private String phone;
     private int isStatus;
-    private String Status;
+    private String status;
 
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String id, String jobId, int majorId, String email, String name, String cv, String phone, int isStatus, String Status) {
+    public CandidateDTO(String id, String jobId, int majorId, String email, String name, String cv, String phone, int isStatus, String status) {
         this.id = id;
         this.jobId = jobId;
         this.majorId = majorId;
@@ -32,15 +32,15 @@ public class CandidateDTO {
         this.cv = cv;
         this.phone = phone;
         this.isStatus = isStatus;
-        this.Status = Status;
+        this.status = status;
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(String Status) {
-        this.Status = Status;
+        this.status = Status;
     }
 
 
