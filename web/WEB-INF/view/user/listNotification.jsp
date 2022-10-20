@@ -16,6 +16,8 @@
     <body>
         <c:choose>
             <c:when test="${listNotification != null}">
+                <a href="<c:url value="/user?op=readAll"/>">Mark all as read</a> | 
+                <a href="<c:url value="/user?op=delete"/>">Delete all that read</a> <hr/>
                 <c:forEach items="${listNotification}" var="notification">
                     ${notification.title}<br/>
                     ${notification.content}<br/>
@@ -27,7 +29,7 @@
                         Readed
                     </c:if>
                     <c:if test="${!notification.isRead}">
-                        New
+                        New | <a href="<c:url value="/user?op=read&nId=${notification.nId}"/>">Mark as read</a>
                     </c:if>
                         
                     <hr/>

@@ -86,6 +86,10 @@ public class UserController extends HttpServlet {
                     read(request, response);
                     break;
                 }
+                case "readAll": {
+                    readAll(request, response);
+                    break;
+                }
                 case "toLink": {
                     toLink(request, response);
                     break;
@@ -167,8 +171,7 @@ public class UserController extends HttpServlet {
             int nId = Integer.parseInt(request.getParameter("nId"));
             NotificationDAO nDao = new NotificationDAO();
             nDao.read(nId);
-            request.setAttribute("action", "listNotification");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            request.getRequestDispatcher("/user?op=listNotification").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -182,8 +185,7 @@ public class UserController extends HttpServlet {
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             NotificationDAO nDao = new NotificationDAO();
             nDao.readAll(google.getEmail());
-            request.setAttribute("action", "listNotification");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            request.getRequestDispatcher("/user?op=listNotification").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
@@ -200,8 +202,7 @@ public class UserController extends HttpServlet {
             if (link != null) {
                 request.getRequestDispatcher(link).forward(request, response);
             } else {
-                request.setAttribute("action", "listNotification");
-                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                request.getRequestDispatcher("/user?op=listNotification").forward(request, response);
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
@@ -216,8 +217,7 @@ public class UserController extends HttpServlet {
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             NotificationDAO nDao = new NotificationDAO();
             nDao.delete(google.getEmail());
-            request.setAttribute("action", "listNotification");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            request.getRequestDispatcher("/user?op=listNotification").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
