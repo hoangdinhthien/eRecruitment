@@ -60,10 +60,34 @@
     <body>
 
         <h1 style="text-align: center">Question bank</h1>
-        <button class="btn btn-danger"onclick="document.querySelector('dialog').showModal()" >Create Exam </button>
-        <a href="<c:url value="/exam?op=Add"/>"
-           <button class="btn btn-danger" >Add question</button>
-        </a>
+        <div class="container">
+            <button class="btn btn-danger"onclick="document.querySelector('dialog').showModal()" >Create Exam </button>
+            <a href="<c:url value="/exam?op=Add"/>"
+               <button class="btn btn-danger" >Add question</button>
+            </a>
+            <div class="row">
+                <div class="col-sm">                   
+                </div>
+                <div class="col-lg-3">                   
+                    <li class="dropdown dropdown-1">
+                        <div>
+                            <span>Major</span>
+                            <span class="arrow_carrot-down"></span>
+                        </div>
+                        <ul class="dropdown_menu dropdown_menu-1">
+                            <c:forEach var="major" items="${listMajor}">
+                                <li class="dropdown_item-1">
+                                    <a href="<c:url value='/home?op=index'/>">${major.major_name}</a></li>
+                                </c:forEach>
+                        </ul>
+                    </li>
+                </div>
+                <div class="col-sm">                   
+                </div>
+            </div>
+        </div>
+               
+               
         <div>
             <dialog>
                 <div class="modal-content">
