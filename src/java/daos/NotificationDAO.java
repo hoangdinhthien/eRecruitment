@@ -10,9 +10,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.Date;
 import utils.DBUtils;
 
 /**
@@ -23,41 +29,146 @@ public class NotificationDAO {
 
     public List<NotificationDTO> select(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Notification] where [email] = ?");
+        PreparedStatement stm = con.prepareStatement("select * from [Notification] where [email] = ? order by [date] desc ");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         List<NotificationDTO> list = null;
+        list = new ArrayList();
         while (rs.next()) {
-            NotificationDTO n = new NotificationDTO();
-            n.setnId(rs.getInt("nId"));
-            n.setEmail(rs.getString("email"));
-            n.setTitle(rs.getString("title"));
-            n.setContent(rs.getString("content"));
-            n.setLink(rs.getString("link"));
-            n.setDate(rs.getDate("date"));
-            list.add(n);
+            try {
+                NotificationDTO n = new NotificationDTO();
+                n.setnId(rs.getInt("nId"));
+                n.setEmail(rs.getString("email"));
+                n.setTitle(rs.getString("title"));
+                n.setContent(rs.getString("content"));
+                n.setLinkTitle(rs.getString("link_title"));
+                n.setLink(rs.getString("link"));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                n.setDate(sdf.parse(rs.getString("date")));
+                n.setTimeAgo(timeAgo(new Date(), sdf.parse(rs.getString("date"))));
+                n.setIsRead(rs.getBoolean("isRead"));
+                System.out.println(n);
+                list.add(n);
+            } catch (ParseException ex) {
+                Logger.getLogger(NotificationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         con.close();
         return list;
     }
-    
-    public void add(String email, String title, String content, String link) throws ClassNotFoundException, SQLException{
+
+    public void add(String email, String title, String content, String linkTitle, String link) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("insert into [Notification] ( [email], [title], [content], [link], [date]) values ( ? , ? , ? , ? , ? )");
+        PreparedStatement stm = con.prepareStatement("insert into [Notification] ( [email], [title], [content], [link_title], [link], [date] , [isRead]) values ( ? , ? , ? , ? , ? , ? , 0)");
         stm.setString(1, email);
         stm.setString(2, title);
         stm.setString(3, content);
-        stm.setString(4, link);
+        stm.setString(4, linkTitle);
+        stm.setString(5, link);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        stm.setString(5, dtf.format(now));
+        stm.setString(6, dtf.format(now));
         stm.executeUpdate();
+        con.close();
     }
-    
-    public void delete(int id) throws ClassNotFoundException, SQLException{
+
+    public void read(int id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("delet from [Notification] where [nId] = ? ");
+        PreparedStatement stm = con.prepareStatement("update [Notification] set [isRead] = 1 where [nId] = ? ");
         stm.setInt(1, id);
         stm.executeUpdate();
+        con.close();
     }
+
+    public void readAll(String email) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("update [Notification] set [isRead] = 1 where [email] = ? ");
+        stm.setString(1, email);
+        stm.executeUpdate();
+        con.close();
+    }
+
+    public String getLink(int id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select [link] from [Notification] where [nId] = ? ");
+        stm.setInt(1, id);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            return rs.getString("link");
+        } else {
+            return null;
+        }
+    }
+
+    public int count(String email) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select COUNT(*) as count from [Notification] where [email] = ? and [isRead] = 0 ");
+        stm.setString(1, email);
+        ResultSet rs = stm.executeQuery();
+        int count = 0;
+        if (rs.next()) {
+            count = rs.getInt("count");
+        }
+        con.close();
+        return count;
+    }
+
+    public void delete(String email) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("delete from [Notification] where [email] = ? and  [isRead] = 1");
+        stm.setString(1, email);
+        stm.executeUpdate();
+        con.close();
+
+    }
+
+    public String timeAgo(Date currentDate, Date pastDate) {
+        long milliSecPerMinute = 60 * 1000; //Milliseconds Per Minute
+        long milliSecPerHour = milliSecPerMinute * 60; //Milliseconds Per Hour
+        long milliSecPerDay = milliSecPerHour * 24; //Milliseconds Per Day
+        long milliSecPerMonth = milliSecPerDay * 30; //Milliseconds Per Month
+        long milliSecPerYear = milliSecPerDay * 365; //Milliseconds Per Year
+        //Difference in Milliseconds between two dates
+        long msExpired = currentDate.getTime() - pastDate.getTime();
+        //Second or Seconds ago calculation
+        if (msExpired < milliSecPerMinute) {
+            return "Just now.";
+        } //Minute or Minutes ago calculation
+        else if (msExpired < milliSecPerHour) {
+            if (Math.round(msExpired / milliSecPerMinute) == 1) {
+                return String.valueOf(Math.round(msExpired / milliSecPerMinute)) + " minute ago. ";
+            } else {
+                return String.valueOf(Math.round(msExpired / milliSecPerMinute)) + " minutes ago. ";
+            }
+        } //Hour or Hours ago calculation
+        else if (msExpired < milliSecPerDay) {
+            if (Math.round(msExpired / milliSecPerHour) == 1) {
+                return String.valueOf(Math.round(msExpired / milliSecPerHour)) + " hour ago. ";
+            } else {
+                return String.valueOf(Math.round(msExpired / milliSecPerHour)) + " hours ago. ";
+            }
+        } //Day or Days ago calculation
+        else if (msExpired < milliSecPerMonth) {
+            if (Math.round(msExpired / milliSecPerDay) == 1) {
+                return String.valueOf(Math.round(msExpired / milliSecPerDay)) + " day ago. ";
+            } else {
+                return String.valueOf(Math.round(msExpired / milliSecPerDay)) + " days ago. ";
+            }
+        } //Month or Months ago calculation 
+        else if (msExpired < milliSecPerYear) {
+            if (Math.round(msExpired / milliSecPerMonth) == 1) {
+                return String.valueOf(Math.round(msExpired / milliSecPerMonth)) + "  month ago. ";
+            } else {
+                return String.valueOf(Math.round(msExpired / milliSecPerMonth)) + "  months ago. ";
+            }
+        } //Year or Years ago calculation 
+        else {
+            if (Math.round(msExpired / milliSecPerYear) == 1) {
+                return String.valueOf(Math.round(msExpired / milliSecPerYear)) + " year ago.";
+            } else {
+                return String.valueOf(Math.round(msExpired / milliSecPerYear)) + " years ago.";
+            }
+        }
+    }
+
 }

@@ -5,11 +5,13 @@ import daos.CandidateDAO;
 import daos.InterviewerDAO;
 import daos.InterviewingDAO;
 import daos.MajorDAO;
+import daos.NotificationDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.InterviewerDTO;
 import dtos.InterviewingDTO;
 import dtos.MajorDTO;
+import dtos.NotificationDTO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -28,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import utils.MailUtils;
-
 
 /**
  *
@@ -62,30 +63,47 @@ public class InterviewController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("controller", "interview");
-        String op = request.getParameter("op");
-        request.setAttribute("action", op);
-        switch (op) {
-            //Chuyen den giao dien set schedule
-            case "set_schedule":
-                set_schedule_view(request, response);
-                break;
-            //Xu ly filter
-            case "set_schedule_filtered":
-                set_schedule_filtered(request, response);
-                break;
-            //Xu ly xep lich phong van
-            case "set_schedule_handler":
-                set_schedule_handler(request, response);
-                break;
-            //View interview process cho candidate
-            case "interview_process":
-                interview_process(request, response);
-                break;
-            //View interview schedule cho interviewer
-            case "interview_schedule":
-                interview_schedule(request, response);
-                break;
+        try {
+            request.setAttribute("controller", "interview");
+            
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            NotificationDAO nDao = new NotificationDAO();
+            List<NotificationDTO> notify = nDao.select(google.getEmail());
+            request.setAttribute("listNotification", notify);
+            request.setAttribute("count", nDao.count(google.getEmail()));
+            
+            List<MajorDTO> listMajor = MajorDAO.listAll();
+            request.setAttribute("listMajor", listMajor);
+            
+            String op = request.getParameter("op");
+            request.setAttribute("action", op);
+            switch (op) {
+                //Chuyen den giao dien set schedule
+                case "set_schedule":
+                    set_schedule_view(request, response);
+                    break;
+                    //Xu ly filter
+                case "set_schedule_filtered":
+                    set_schedule_filtered(request, response);
+                    break;
+                    //Xu ly xep lich phong van
+                case "set_schedule_handler":
+                    set_schedule_handler(request, response);
+                    break;
+                    //View interview process cho candidate
+                case "interview_process":
+                    interview_process(request, response);
+                    break;
+                    //View interview schedule cho interviewer
+                case "interview_schedule":
+                    interview_schedule(request, response);
+                    break;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

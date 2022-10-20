@@ -27,6 +27,27 @@
         <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
+        <style>
+            /* unvisited link */
+            .notify a:link {
+                color: red;
+            }
+
+            /* visited link */
+            .notify a:visited {
+                color: green;
+            }
+
+            /* mouse over link */
+            .notify a:hover {
+                color: hotpink;
+            }
+
+            /* selected link */
+            .notify a:active {
+                color: blue;
+            }
+        </style>
     </head>
     <body>
         <div>
@@ -232,8 +253,14 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="header__cart">
-                                <ul>
-                                    <li><i class="fa fa-bell"></i></li>
+                                <ul><c:if test="${not empty info}">
+                                        <li> 
+                                            <a href="<c:url value="/user?op=listNotification"/>">
+                                                <i class="fa fa-bell"></i>
+                                                <sup style="position: absolute;font-size: 10pt; top: 15px; right: 0px;color: red"><strong>${count}</strong></sup>
+                                            </a>
+                                        </li>
+                                    </c:if>
                                 </ul>
                             </div>
                         </div>

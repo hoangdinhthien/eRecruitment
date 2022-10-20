@@ -7,7 +7,10 @@ package controllers;
 
 import config.Config;
 import daos.MajorDAO;
+import daos.NotificationDAO;
+import dtos.GoogleDTO;
 import dtos.MajorDTO;
+import dtos.NotificationDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -19,6 +22,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -39,13 +43,21 @@ public class HomeController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String action =  request.getParameter("op");
-            request.setAttribute("controller", "home");
-            request.setAttribute("action", action);
+//            HttpSession session = request.getSession();
+//            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+//            NotificationDAO nDao = new NotificationDAO();
+//            List<NotificationDTO> notify = nDao.select(google.getEmail());
+//            request.setAttribute("listNotification", notify);
+
             MajorDAO majorDao = new MajorDAO();
             List<MajorDTO> listMajor;
             listMajor = majorDao.listAll();
             request.setAttribute("listMajor", listMajor);
+
+            String action = request.getParameter("op");
+            request.setAttribute("controller", "home");
+            request.setAttribute("action", action);
+
             switch (action) {
                 case "index":
                     request.getRequestDispatcher(Config.LAYOUT).forward(request, response);

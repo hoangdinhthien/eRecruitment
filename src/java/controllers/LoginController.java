@@ -1,14 +1,16 @@
-
 package controllers;
 
-
 import config.Config;
+import daos.MajorDAO;
+import daos.NotificationDAO;
 import daos.UserDAO;
 import dtos.GoogleDTO;
+import dtos.MajorDTO;
+import dtos.NotificationDTO;
 import dtos.UserDTO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -21,13 +23,11 @@ import javax.servlet.http.HttpSession;
 import utils.GoogleUtils;
 import utils.MailUtils;
 
-
 /**
  *
  * @author Thien
  */
-
- @WebServlet(name = "LoginController", urlPatterns = {"/login"})
+@WebServlet(name = "LoginController", urlPatterns = {"/login"})
 public class LoginController extends HttpServlet {
 
     /**
@@ -41,25 +41,34 @@ public class LoginController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("controller", "login");
-        String op = request.getParameter("op");
-        request.setAttribute("action", op);
-        switch (op) {
-            //Sau khi click login with google
-            case "login":
-                login(request, response);
-                break;
-            //Sau khi click logout
-            case "logout":
-                logout(request, response);
-                break;
-            case "verification":
-                verification(request, response);
-                break;
-            case "verification_handler":
-                verification_handler(request, response);
-                break;
+        try {
+            request.setAttribute("controller", "login");
+            List<MajorDTO> listMajor = MajorDAO.listAll();
+            request.setAttribute("listMajor", listMajor);
 
+            String op = request.getParameter("op");
+            request.setAttribute("action", op);
+            switch (op) {
+                //Sau khi click login with google
+                case "login":
+                    login(request, response);
+                    break;
+                //Sau khi click logout
+                case "logout":
+                    logout(request, response);
+                    break;
+                case "verification":
+                    verification(request, response);
+                    break;
+                case "verification_handler":
+                    verification_handler(request, response);
+                    break;
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -100,6 +109,12 @@ public class LoginController extends HttpServlet {
                     //Neu khong phai la user moi thi phai check role
                     session.setAttribute("role", u.getRole());
                 }
+                //Lay thong bao
+                NotificationDAO nDao = new NotificationDAO();
+                List<NotificationDTO> notify = nDao.select(google.getEmail());
+                request.setAttribute("listNotification", notify);
+                request.setAttribute("count", nDao.count(google.getEmail()));
+                //Luu thong bao vao session
                 session.setAttribute("info", google);
                 //luu thong tin dang nhap vao session cho chac
 
@@ -154,10 +169,10 @@ public class LoginController extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            String code= request.getParameter("code");
-            String inputCode= request.getParameter("inputCode").trim();
+            String code = request.getParameter("code");
+            String inputCode = request.getParameter("inputCode").trim();
             if (!code.equals(inputCode)) {
-                
+
                 request.setAttribute("message", "Wrong code!");
                 request.setAttribute("inputCode", inputCode);
                 request.setAttribute("code", code);

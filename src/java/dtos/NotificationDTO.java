@@ -5,30 +5,37 @@
  */
 package dtos;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  *
  * @author ACER
  */
 public class NotificationDTO {
+
     private int nId;
     private String email;
     private String title;
     private String content;
+    private String linkTitle;
     private String link;
     private Date date;
+    private String timeAgo;
+    private boolean isRead;
 
     public NotificationDTO() {
     }
 
-    public NotificationDTO(int nId, String email, String title, String content, String link, Date date) {
+    public NotificationDTO(int nId, String email, String title, String content, String linkTitle, String link, Date date, String timeAgo, boolean isRead) {
         this.nId = nId;
         this.email = email;
         this.title = title;
         this.content = content;
+        this.linkTitle = linkTitle;
         this.link = link;
         this.date = date;
+        this.timeAgo = timeAgo;
+        this.isRead = isRead;
     }
 
     public int getnId() {
@@ -63,6 +70,14 @@ public class NotificationDTO {
         this.content = content;
     }
 
+    public String getLinkTitle() {
+        return linkTitle;
+    }
+
+    public void setLinkTitle(String linkTitle) {
+        this.linkTitle = linkTitle;
+    }
+
     public String getLink() {
         return link;
     }
@@ -79,6 +94,21 @@ public class NotificationDTO {
         this.date = date;
     }
 
-    
+    public String getTimeAgo() {
+        return timeAgo;
+    }
+
+    public void setTimeAgo(String timeAgo) {
+        this.timeAgo = timeAgo;
+    }
+
+    public boolean isIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
+    }
+
     
 }
