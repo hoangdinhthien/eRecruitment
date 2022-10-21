@@ -135,7 +135,6 @@ public class UserController extends HttpServlet {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
     public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             session = request.getSession();
@@ -257,7 +256,6 @@ public class UserController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);

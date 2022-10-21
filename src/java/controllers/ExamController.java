@@ -316,7 +316,6 @@ public class ExamController extends HttpServlet {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

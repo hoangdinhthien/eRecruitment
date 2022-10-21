@@ -1,5 +1,6 @@
 package controllers;
 
+
 import config.Config;
 import daos.MajorDAO;
 import daos.NotificationDAO;

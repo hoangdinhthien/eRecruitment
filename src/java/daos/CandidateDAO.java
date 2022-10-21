@@ -45,7 +45,6 @@ public class CandidateDAO {
         con.close();
         return list;
     }
-
     public static CandidateDTO searchCandidateByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, c.isStatus, u.[name], u.[phone] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
@@ -65,7 +64,6 @@ public class CandidateDAO {
         con.close();
         return c;
     }
-
     public static CandidateDTO searchCandidateById(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, u.[name] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "

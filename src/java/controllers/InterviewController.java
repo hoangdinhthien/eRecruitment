@@ -351,7 +351,6 @@ public class InterviewController extends HttpServlet {
                 //Lay ten candidate
                 i.setCan_name(can.getName());
             }
-
             //Pagination
             String page = request.getParameter("page");
             int intpage = 1;

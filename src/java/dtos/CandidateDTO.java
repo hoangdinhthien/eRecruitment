@@ -10,7 +10,6 @@ package dtos;
  * @author Thien's
  */
 public class CandidateDTO {
-
     private String id;
     private String jobId;
     private int majorId;
@@ -118,5 +117,4 @@ public class CandidateDTO {
     public void setName(String name) {
         this.name = name;
     }
-
 }

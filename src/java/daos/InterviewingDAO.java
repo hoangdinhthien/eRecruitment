@@ -39,7 +39,6 @@ public class InterviewingDAO {
         return rs != 0;
     }
 
-
     public static boolean deleteInterview(String can_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("delete from [eRecruitment].[dbo].[Interviewing] where [can_id]=?");
@@ -122,6 +121,7 @@ public class InterviewingDAO {
         con.close();
         return rs != 0;
     }
+
     public static boolean checkInterviewRecord(String can_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm;
@@ -132,7 +132,7 @@ public class InterviewingDAO {
         while (rs.next()) {
             InterviewingDTO i = new InterviewingDTO();
             i.setComment(rs.getString("inter_comment"));
-            if(i.getComment().equals("null")){
+            if (i.getComment().equals("null")) {
                 return false;
             }
         }
