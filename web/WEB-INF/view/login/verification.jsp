@@ -20,7 +20,7 @@
         <h2>Account Verification</h2>
 
         <p>Please input verification code:</p>
-        <form action="<c:url value="/login"/>">
+        <form action="<c:url value="/login"/>" method="post">
             G - <input type="text" name="inputCode" value="${inputCode}" required>
             <input type="hidden" name="code" value="${code}">
             <button type="submit" name="op" value="verification_handler">Submit</button>

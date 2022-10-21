@@ -15,7 +15,6 @@
 
     </head>
     <body>
-
         <main class=" user-profile">
             <h2>My profile</h2>
             <div class="container">

@@ -60,10 +60,34 @@
     <body>
 
         <h1 style="text-align: center">Question bank</h1>
-        <button class="btn btn-danger"onclick="document.querySelector('dialog').showModal()" >Create Exam </button>
-        <a href="<c:url value="/exam?op=Add"/>"
-           <button class="btn btn-danger" >Add question</button>
-        </a>
+        <div class="container">
+            <button class="btn btn-danger"onclick="document.querySelector('dialog').showModal()" >Create Exam </button>
+            <a href="<c:url value="/exam?op=Add"/>"
+               <button class="btn btn-danger" >Add question</button>
+            </a>
+            <div class="row">
+                <div class="col-sm">                   
+                </div>
+                <div class="col-lg-3">                   
+                    <li class="dropdown dropdown-1">
+                        <div>
+                            <span>Major</span>
+                            <span class="arrow_carrot-down"></span>
+                        </div>
+                        <ul class="dropdown_menu dropdown_menu-1">
+                            <c:forEach var="major" items="${listMajor}">
+                                <li class="dropdown_item-1">
+                                    <a href="<c:url value='/exam?op=QuestionBank&major=${major.major_id}'/>">${major.major_name}</a></li>
+                                </c:forEach>
+                        </ul>
+                    </li>
+                </div>
+                <div class="col-sm">                   
+                </div>
+            </div>
+        </div>
+               
+               
         <div>
             <dialog>
                 <div class="modal-content">
@@ -95,16 +119,7 @@
             </dialog>
         </div>
         <div class="container">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown button
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </div>
+           
             <div class="list-question">
                 <c:forEach items="${listQuestion}" var="question" varStatus="loop">
                     <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
@@ -126,7 +141,7 @@
                                         <div class="input-group-text">
                                             <c:if test="${option.isCorrect}"> <input class="form-check-label" type="radio" checked/> </c:if>
                                             </div>
-                                            <input type="text" id="disabledTextInput" class="form-control" placeholder="${option.content}">
+                                                <input type="text" id="disabledTextInput" class="form-control"  value="${option.content}">
                                     </div>
                                 </c:if>
                             </c:forEach>

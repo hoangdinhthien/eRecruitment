@@ -9,9 +9,12 @@ import config.Config;
 
 import daos.ExamDAO;
 import daos.MajorDAO;
+import daos.NotificationDAO;
 import daos.OptionDAO;
 import daos.QuestionDAO;
+import dtos.GoogleDTO;
 import dtos.MajorDTO;
+import dtos.NotificationDTO;
 import dtos.OptionDTO;
 import dtos.QuestionDTO;
 import java.io.IOException;
@@ -26,6 +29,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -45,45 +49,58 @@ public class ExamController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        String controller = (String) request.getAttribute("controller");
+        try {
+            //        String controller = (String) request.getAttribute("controller");
 //        String action = (String) request.getAttribute("action");
-        request.setAttribute("controller", "exam");
-        String op = request.getParameter("op");
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            NotificationDAO nDao = new NotificationDAO();
+            List<NotificationDTO> notify = nDao.select(google.getEmail());
+            request.setAttribute("listNotification", notify);
+            request.setAttribute("count", nDao.count(google.getEmail()));
+            List<MajorDTO> listMajor = MajorDAO.listAll();
+            request.setAttribute("listMajor", listMajor);
+
+            request.setAttribute("controller", "exam");
+            String op = request.getParameter("op");
 //        request.setAttribute("action", op);
-        System.out.println("Action : " + op);
-        switch (op) {
-            case "QuestionBank": {
-                questionBank(request, response);
-                break;
+            System.out.println("Action : " + op);
+            switch (op) {
+                case "QuestionBank": {
+                    questionBank(request, response);
+                    break;
+                }
+                case "Update": {
+                    update(request, response);
+                    break;
+                }
+                case "Add": {
+                    create(request, response);
+                    break;
+                }
+                case "Create": {
+                    createHandler(request, response);
+                    break;
+                }
+                case "UpdateHandler": {
+                    updateHandler(request, response);
+                    break;
+                }
+                case "CreateExam": {
+                    createExam(request, response);
+                    break;
+                }
+                case "takeExam": {
+                    takeExam(request, response);
+                    break;
+                }
+                case "result": {
+                    result(request, response);
+                    break;
+                }
             }
-            case "Update": {
-                update(request, response);
-                break;
-            }
-            case "Add": {
-                create(request, response);
-                break;
-            }
-            case "Create": {
-                createHandler(request, response);
-                break;
-            }
-            case "UpdateHandler": {
-                updateHandler(request, response);
-                break;
-            }
-            case "CreateExam": {
-                createExam(request, response);
-                break;
-            }
-            case "takeExam": {
-                takeExam(request, response);
-                break;
-            }
-            case "result": {
-                result(request, response);
-                break;
-            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -102,9 +119,6 @@ public class ExamController extends HttpServlet {
             }
             OptionDAO opDao = new OptionDAO();
             List<OptionDTO> listOption = opDao.listAll();
-            MajorDAO majorDao = new MajorDAO();
-            List<MajorDTO> listMajor = majorDao.listAll();
-            request.setAttribute("listMajor", listMajor);
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
             request.setAttribute("action", "questionBank");
@@ -117,17 +131,9 @@ public class ExamController extends HttpServlet {
 
     protected void create(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            System.out.println("Create function");
-            MajorDAO majorDao = new MajorDAO();
-            List<MajorDTO> listMajor = majorDao.listAll();
-            System.out.println("Create function 1");
-            request.setAttribute("listMajor", listMajor);
-            request.setAttribute("action", "create");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        System.out.println("Create function 1");
+        request.setAttribute("action", "create");
+        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
     }
 
     protected void createHandler(HttpServletRequest request, HttpServletResponse response)
@@ -169,8 +175,6 @@ public class ExamController extends HttpServlet {
         try {
 //            String controller = (String) request.getAttribute("controller");
             String q_id = request.getParameter("q_id");
-            MajorDAO majorDao = new MajorDAO();
-            List<MajorDTO> listMajor = majorDao.listAll();
             QuestionDAO qDao = new QuestionDAO();
             QuestionDTO q = qDao.selectOne(q_id);
             OptionDAO opDao = new OptionDAO();
@@ -178,7 +182,6 @@ public class ExamController extends HttpServlet {
             System.out.println(q);
             System.out.println(listOption);
             request.setAttribute("question", q);
-            request.setAttribute("listMajor", listMajor);
             request.setAttribute("listOption", listOption);
             request.setAttribute("action", "update");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -270,7 +273,7 @@ public class ExamController extends HttpServlet {
             String eId = eDao.getExam(canId);
             System.out.println(eId);
             if (eId == null) {
-                System.out.println("Nul");
+                System.out.println("Null");
             } else {
                 QuestionDAO qDao = new QuestionDAO();
                 List<QuestionDTO> listQuestion = qDao.listOneExam(eId);
@@ -313,7 +316,6 @@ public class ExamController extends HttpServlet {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

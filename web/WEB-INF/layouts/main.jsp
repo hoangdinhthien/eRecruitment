@@ -27,6 +27,27 @@
         <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
+        <style>
+            /* unvisited link */
+            .notify a:link {
+                color: red;
+            }
+
+            /* visited link */
+            .notify a:visited {
+                color: green;
+            }
+
+            /* mouse over link */
+            .notify a:hover {
+                color: hotpink;
+            }
+
+            /* selected link */
+            .notify a:active {
+                color: blue;
+            }
+        </style>
     </head>
     <body>
         <div>
@@ -34,6 +55,7 @@
             <div id="preloder">
                 <div class="loader"></div>
             </div>
+
             <!-- Humberger End -->
 
             <!-- Header Section Begin -->
@@ -184,8 +206,16 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="header__cart">
-                                <ul>
-                                    <li><i class="fa fa-bell"></i></li>
+                                <ul><c:if test="${not empty info}">
+                                        <li> 
+                                            <a href="<c:url value="/user?op=listNotification"/>">
+                                                <i class="fa fa-bell">
+                                                <c:if test="${count!=0}">
+                                                    <sup style="position: absolute;font-size: 13pt; top: 5px; right: 0px;color: red; "><strong>${count}</strong></sup>
+                                                </c:if></i>
+                                            </a>
+                                        </li>
+                                    </c:if>
                                 </ul>
                             </div>
                         </div>
