@@ -14,6 +14,7 @@
         <group>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/JobsDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/InterviewerDTO.java</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/ApplyController.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/create.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/interview/set_schedule.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/InterviewingDTO.java</file>
@@ -32,6 +33,7 @@
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/QuestionDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/layouts/main.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/UserController.java</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/user/update.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/UserDTO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/questionBank.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/InterviewerDAO.java</file>
@@ -44,6 +46,7 @@
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/JobsController.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/CandidateDTO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/css/thien.css</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/NotificationDTO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/job/add_job.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/result.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/user/info.jsp</file>

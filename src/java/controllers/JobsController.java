@@ -48,12 +48,12 @@ public class JobsController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try  {
-            HttpSession session = request.getSession();
-            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            NotificationDAO nDao = new NotificationDAO();
-            List<NotificationDTO> notify = nDao.select(google.getEmail());
-            request.setAttribute("listNotification", notify);
-            request.setAttribute("count", nDao.count(google.getEmail()));
+//            HttpSession session = request.getSession();
+//            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+//            NotificationDAO nDao = new NotificationDAO();
+//            List<NotificationDTO> notify = nDao.select(google.getEmail());
+//            request.setAttribute("listNotification", notify);
+//            request.setAttribute("count", nDao.count(google.getEmail()));
             
             List<MajorDTO> listMajor = MajorDAO.listAll();
             request.setAttribute("listMajor", listMajor);
