@@ -10,6 +10,7 @@ package dtos;
  * @author Thien's
  */
 public class CandidateDTO {
+
     private String id;
     private String jobId;
     private int majorId;
@@ -18,12 +19,13 @@ public class CandidateDTO {
     private String cv;
     private String phone;
     private int isStatus;
+    private float score;
     private String status;
 
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String id, String jobId, int majorId, String email, String name, String cv, String phone, int isStatus, String status) {
+    public CandidateDTO(String id, String jobId, int majorId, String email, String name, String cv, String phone, int isStatus, float score, String status) {
         this.id = id;
         this.jobId = jobId;
         this.majorId = majorId;
@@ -32,8 +34,18 @@ public class CandidateDTO {
         this.cv = cv;
         this.phone = phone;
         this.isStatus = isStatus;
+        this.score = score;
         this.status = status;
     }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+
 
     public String getStatus() {
         return status;
@@ -43,7 +55,6 @@ public class CandidateDTO {
         this.status = Status;
     }
 
-
     public String getPhone() {
         return phone;
     }
@@ -51,7 +62,6 @@ public class CandidateDTO {
     public void setPhone(String phone) {
         this.phone = phone;
     }
-
 
     public String getId() {
         return id;
@@ -108,6 +118,5 @@ public class CandidateDTO {
     public void setName(String name) {
         this.name = name;
     }
-    
-    
+
 }

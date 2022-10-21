@@ -34,59 +34,6 @@
             <div id="preloder">
                 <div class="loader"></div>
             </div>
-            <!-- Humberger Begin -->
-            <div class="humberger__menu__overlay"></div>
-            <div class="humberger__menu__wrapper">
-                <div class="humberger__menu__logo">
-                    <a href="<c:url value="/home?op=index"/>"><img src="img/logo.png" alt=""></a>
-                </div>
-                <div class="humberger__menu__cart">
-                    <ul>
-                        <li><i class="fa fa-bell"></i></li>
-                    </ul>
-                </div>
-                <div class="humberger__menu__widget">
-                    <div class="header__top__right__auth">
-                        <a href="#" class="popup" onclick="popUp1()"><i class="fa fa-user"></i> Login
-                            <span class="popuptext" id="myPopup1">A Simple Popup!</span>
-                        </a>
-                    </div>
-                </div>
-                <nav class="humberger__menu__nav mobile-menu">
-                    <ul>
-                        <li class="active"><a href="<c:url value="/home?op=index"/>">Home</a></li>
-                        <li><a href="./shop-grid.html">Jobs</a></li>
-
-                        <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
-                            <li >
-                                <a href="#"> Other </a>
-                                <ul class="header__menu__dropdown">
-                                    <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
-                                    <li><a href="<c:url value="/exam?op=takeExam&canId=C001"/>">Test Exam</a></li>
-                                    <!--<li><a href="#">Shoping Cart</a></li>-->
-                                </ul>
-                            </li>
-                        </c:if>
-
-
-                        <li><a href="./blog.html">About Us</a></li>
-                        <li><a href="./contact.html">Contact</a></li>
-                    </ul>
-                </nav>
-                <div id="mobile-menu-wrap"></div>
-                <div class="header__top__right__social">
-                    <a href="#"><i class="fa fa-facebook"></i></a>
-                    <a href="#"><i class="fa fa-twitter"></i></a>
-                    <a href="#"><i class="fa fa-linkedin"></i></a>
-                    <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                </div>
-                <div class="humberger__menu__contact">
-                    <ul>
-                        <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
-                        <li>Free Shipping for all Order of $99</li>
-                    </ul>
-                </div>
-            </div>
             <!-- Humberger End -->
 
             <!-- Header Section Begin -->
@@ -223,9 +170,14 @@
                                             </ul>
                                         </li>
                                     </c:if>
-
-
-                                    <li><a href="#">About Us</a></li>
+                                        <li><a href="<c:url value="/apply?op=index"/>">Upload File</a></li>
+                                    <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
+                                        <ul class="header__menu__dropdown">
+                                            <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
+                                            <li><a class="link" href="<c:url value="/apply?op=list0"/>">Newest Applications</a></li>
+                                            <li><a class="link" href="<c:url value="/apply?op=listPending"/>">Pending Applications</a></li>
+                                            <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
+                                        </ul>
                                     <li><a href="#">Contact</a></li>
                                 </ul>
                             </nav>

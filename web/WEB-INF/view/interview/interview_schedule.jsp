@@ -8,7 +8,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<link href="<c:url value="/css/thien.css"/>" rel="stylesheet" type="text/css"/>
 <!DOCTYPE html>
 <html>
     <head>

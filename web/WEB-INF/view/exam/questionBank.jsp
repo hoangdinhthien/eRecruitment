@@ -62,7 +62,7 @@
         <h1 style="text-align: center">Question bank</h1>
         <button class="btn btn-danger"onclick="document.querySelector('dialog').showModal()" >Create Exam </button>
         <a href="<c:url value="/exam?op=Add"/>"
-            <button class="btn btn-danger" >Add question</button>
+           <button class="btn btn-danger" >Add question</button>
         </a>
         <div>
             <dialog>
@@ -95,6 +95,16 @@
             </dialog>
         </div>
         <div class="container">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Dropdown button
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+            </div>
             <div class="list-question">
                 <c:forEach items="${listQuestion}" var="question" varStatus="loop">
                     <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
