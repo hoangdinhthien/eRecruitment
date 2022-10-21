@@ -59,7 +59,7 @@
             <form action="<c:url value="/exam"/>"  method="post">
                 <div class="list-question">
                     <input type="hidden" name="op" value="result" />
-                    <input type="hidden" name="eId" value="E01" />
+                    <input type="hidden" name="canId" value="${canId}" />
                     <c:forEach items="${listQuestion}" var="question" varStatus="loop">
                         <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
                             <span class="question-title">${loop.count}. Question : ${question.questiontxt} </span>

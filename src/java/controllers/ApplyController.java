@@ -517,7 +517,7 @@ public class ApplyController extends HttpServlet {
             CandidateDAO tf = new CandidateDAO();
             tf.delete(can_id);
             //Cho hiện lại danh sách 
-            response.sendRedirect("upload?op=upload_index");
+            response.sendRedirect("/upload?op=upload_index");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -536,7 +536,7 @@ public class ApplyController extends HttpServlet {
             System.out.println("status :" + cd.getIsStatus());
 
             //Cho hiện lại danh sách 
-            response.sendRedirect("apply?op=listAll");
+            listAll(request, response);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

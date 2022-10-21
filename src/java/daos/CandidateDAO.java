@@ -838,9 +838,10 @@ public class CandidateDAO {
         return major;
     }
     
-    public void confirmTakingExam(String id) throws ClassNotFoundException, SQLException {
+    public void result(double score, String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Update [Candidate] set [isStatus] = 2 where [can_id] = ? ");
+        PreparedStatement stm = con.prepareStatement("Update [Candidate] set [score] = ? , [isStatus] = 2 where [can_id] = ? ");
+        stm.setDouble(1, score);
         stm.setString(2, id);
         stm.executeUpdate();
         con.close();
@@ -860,4 +861,6 @@ public class CandidateDAO {
         con.close();
         return check;
     }
+    
 }
+

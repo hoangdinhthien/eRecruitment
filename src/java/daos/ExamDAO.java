@@ -89,7 +89,7 @@ public class ExamDAO {
     public void confirmTakingExam(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Update [Examination] set [status] = 1 where [can_id] = ? ");
-        stm.setString(2, canId);
+        stm.setString(1, canId);
         stm.executeUpdate();
         con.close();
     }
@@ -120,3 +120,4 @@ public class ExamDAO {
         return check;
     }
 }
+    
