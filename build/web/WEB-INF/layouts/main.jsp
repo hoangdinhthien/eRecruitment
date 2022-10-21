@@ -27,6 +27,7 @@
         <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
+        <link rel="stylesheet" href="css/notification.css" type="text/css">
         <style>
             /* unvisited link */
             .notify a:link {
@@ -92,6 +93,7 @@
 
                         <li><a href="./blog.html">About Us</a></li>
                         <li><a href="./contact.html">Contact</a></li>
+
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -253,16 +255,27 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="header__cart">
-                                <ul><c:if test="${not empty info}">
-                                        <li> 
-                                            <a href="<c:url value="/user?op=listNotification"/>">
-                                                <i class="fa fa-bell">
-                                                <c:if test="${count!=0}">
-                                                    <sup style="position: absolute;font-size: 13pt; top: 5px; right: 0px;color: red; "><strong>${count}</strong></sup>
-                                                </c:if></i>
-                                            </a>
-                                        </li>
-                                    </c:if>
+                                <!--                                <ul>
+                                <c:if test="${not empty info}">
+                                    <li> 
+                                        <a href="<c:url value="/user?op=listNotification"/>">
+                                            <i class="fa fa-bell">
+                                    <c:if test="${count!=0}">
+                                        <sup style="position: absolute;font-size: 13pt; top: 5px; right: 0px;color: red; "><strong>${count}</strong></sup>
+                                    </c:if></i>
+                                </a>
+                            </li>
+                                </c:if>
+                            </ul>-->
+                                <ul>
+                                    <li>
+                                        <a id="notification-link"><i class="fa fa-bell"></i></a>
+                                    <div id="notification-container">
+                                        <div id="notification-title">Notifications</div>
+                                        <div id="notification-body"></div>
+                                        <div id="notification-footer"><a href=" ">See all</a></div>
+                                    </div>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -407,5 +420,6 @@
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/main.js"></script>
         <script src="js/popUp.js"></script>
+        <script src="js/notification.js"></script>
     </body>
 </html>
