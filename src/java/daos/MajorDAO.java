@@ -20,15 +20,13 @@ import utils.DBUtils;
  * @author ACER
  */
 public class MajorDAO {
-    public List<MajorDTO> listAll() throws SQLException, ClassNotFoundException{
+
+    public static List<MajorDTO> listAll() throws SQLException, ClassNotFoundException {
         List<MajorDTO> list = null;
-        System.out.println("list 1");
         Connection con = DBUtils.makeConnection();
-        System.out.println("list 1.1");
         Statement stm = con.createStatement();
-        System.out.println("list 1.2");
-        ResultSet rs = stm.executeQuery("select * from [Major] ");
-        System.out.println("list 2");
+        ResultSet rs = stm.executeQuery("select [major_id],[major_name] from [Major]");
+
         list = new ArrayList();
         while (rs.next()) {
             MajorDTO major = new MajorDTO();
@@ -36,11 +34,10 @@ public class MajorDAO {
             major.setMajor_name(rs.getString("major_name"));
             list.add(major);
         }
-        
-        System.out.println("list 3");
         con.close();
         return list;
     }
+
     public MajorDTO selectOne(String id) throws SQLException, ClassNotFoundException {
         MajorDTO major = new MajorDTO();
         Connection con = DBUtils.makeConnection();

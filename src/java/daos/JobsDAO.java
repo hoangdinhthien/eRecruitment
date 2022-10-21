@@ -23,7 +23,7 @@ public class JobsDAO {
 
     public static List<JobsDTO> search_job(String job_name) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Jobs] where job_name like ? order by [post_date] desc");
+        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Job] where job_name like ? order by [post_date] desc");
         stm.setString(1, "%" + job_name + "%");
         ResultSet rs = stm.executeQuery();
         List<JobsDTO> list = new ArrayList<>();
@@ -45,7 +45,7 @@ public class JobsDAO {
 
     public static List<JobsDTO> list_job() throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Jobs] order by [post_date] desc ");
+        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Job] order by [post_date] desc ");
         ResultSet rs = stm.executeQuery();
         List<JobsDTO> list = new ArrayList<>();
         while (rs.next()) {
@@ -70,7 +70,7 @@ public class JobsDAO {
         try {
             con = DBUtils.makeConnection();
             if (con != null) {
-                String sql = "Insert into Jobs(job_id,job_name,major_id,job_description,level_id,job_vacancy,salary,post_date)"
+                String sql = "Insert into Job(job_id,job_name,major_id,job_description,level_id,job_vacancy,salary,post_date)"
                         + "Values(?,?,?,?,?,?,?,?)";
                 stm = con.prepareStatement(sql);
                 stm.setString(1, j.getJob_id());
@@ -100,7 +100,7 @@ public class JobsDAO {
 
 public static List<JobsDTO> filter_job(int fmajor, int flevel, int fsalary) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        String sql = "Select * from [dbo].[Jobs] ";
+        String sql = "Select * from [dbo].[Job] ";
         if (fmajor != 0 || flevel != 0 || fsalary != 0) {
             sql = sql + " where ";
             if (fmajor != 0){

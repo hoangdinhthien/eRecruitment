@@ -11,4 +11,11 @@ dist/
 nbdist/
 .nb-gradle/
 
+
 # End of https://www.toptal.com/developers/gitignore/api/netbeans
+nbproject/genfiles.properties
+nbproject/genfiles.properties
+nbproject/private/private.properties
+nbproject/project.properties
+nbproject/private/private.properties
+nbproject/private/private.xml

@@ -15,14 +15,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Thien's
+ * @author Thien
  */
+@WebServlet(name = "HomeController", urlPatterns = {"/home"})
 public class HomeController extends HttpServlet {
 
     /**
@@ -37,10 +39,12 @@ public class HomeController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String controller = (String) request.getAttribute("controller");
-            String action = (String) request.getAttribute("action");
+            String action =  request.getParameter("op");
+            request.setAttribute("controller", "home");
+            request.setAttribute("action", action);
             MajorDAO majorDao = new MajorDAO();
-            List<MajorDTO> listMajor = majorDao.listAll();
+            List<MajorDTO> listMajor;
+            listMajor = majorDao.listAll();
             request.setAttribute("listMajor", listMajor);
             switch (action) {
                 case "index":
@@ -51,6 +55,7 @@ public class HomeController extends HttpServlet {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 

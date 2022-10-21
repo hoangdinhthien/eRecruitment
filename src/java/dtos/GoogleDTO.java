@@ -1,15 +1,7 @@
 package dtos;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-
 /**
  *
- * @author Thien's
+ * @author Thien
  */
 public class GoogleDTO {
     
@@ -19,23 +11,19 @@ public class GoogleDTO {
   private String name;
   private String given_name;
   private String family_name;
-  private String link;
-  private String phone;
   private String picture;
 
 
     public GoogleDTO() {
     }
 
-    public GoogleDTO(String id, String email, boolean verified_email, String name, String given_name, String family_name, String link, String phone, String picture) {
+    public GoogleDTO(String id, String email, boolean verified_email, String name, String given_name, String family_name, String picture) {
         this.id = id;
         this.email = email;
         this.verified_email = verified_email;
         this.name = name;
         this.given_name = given_name;
         this.family_name = family_name;
-        this.phone = phone;
-        this.link = link;
         this.picture = picture;
     }
 
@@ -95,20 +83,5 @@ public class GoogleDTO {
         this.picture = picture;
     }
 
-    public String getLink() {
-        return link;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-  
   
 }
