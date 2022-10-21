@@ -79,9 +79,17 @@ public class ExamDAO {
 
     public void giveExam(String id, int major ) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("INSERT INTO [Examination] values ( ? , ?  )");
+        PreparedStatement stm = con.prepareStatement("INSERT INTO [Examination] ([exam_id],[can_id]) values ( ? , ?  )");
         stm.setString(1, selectExam(major));
         stm.setString(2, id);
+        stm.executeUpdate();
+        con.close();
+    }
+    
+    public void confirmTakingExam(String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Update [Examination] set [status] = 1 where [can_id] = ? ");
+        stm.setString(2, canId);
         stm.executeUpdate();
         con.close();
     }
@@ -97,5 +105,18 @@ public class ExamDAO {
         }
         con.close();
         return eId;
+    }
+    
+    public boolean check(String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Select [status] from [Examination] where [can_id] = ? ");
+        stm.setString(1, canId);
+        ResultSet rs = stm.executeQuery();
+        boolean check = false;
+        if (rs.next()) {
+            check = rs.getBoolean("status");
+        }
+        con.close();
+        return check;
     }
 }

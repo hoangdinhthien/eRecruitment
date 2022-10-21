@@ -2,8 +2,13 @@ package controllers;
 
 import config.Config;
 import daos.CandidateDAO;
-import daos.UserDAO;
+import daos.ExamDAO;
+import daos.MajorDAO;
+import daos.NotificationDAO;
 import dtos.CandidateDTO;
+import dtos.GoogleDTO;
+import dtos.MajorDTO;
+import dtos.NotificationDTO;
 
 import dtos.UserDTO;
 import java.io.File;
@@ -53,145 +58,158 @@ public class ApplyController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
-        request.setAttribute("controller", "apply");
-        String op = request.getParameter("op");
-        request.setAttribute("action", op);
-        switch (op) {
-            case "index":
-                upload(request, response);
-                break;
-            // Upload File
-            case "uploadFile":
-                uploadFile(request, response);
-                break;
-            case "downloadFile":
-                downloadFile(request, response);
-                break;
-            // Custom
-            case "deleteFile":
-                deleteFile(request, response);
-                break;
-            case "yesup":
-                yesup(request, response);
-                break;
-            // Display Applications
-            case "listAll":
-                listAll(request, response);
-                break;
-            case "list0":
-                list0(request, response);
-                break;
-            case "listPending":
-                listPending(request, response);
-                break;
-            case "list4":
-                list4(request, response);
-                break;
 
-            // Sort STATUS ALL
-            case "sortByStatusASCAll":
-                sortByStatusASCAll(request, response);
-                break;
-            case "sortByStatusDESCAll":
-                sortByStatusDESCAll(request, response);
-                break;
-            //==== SORT JOB_ID ALL
-            case "sortByJobASCAll":
-                sortByJobASCAll(request, response);
-                break;
-            case "sortByJobDESCAll":
-                sortByJobDESCAll(request, response);
-                break;
-            //==== SORT CAN_ID ALL
-            case "sortByCanASCAll":
-                sortByCanASCAll(request, response);
-                break;
-            case "sortByCanDESCAll":
-                sortByCanDESCAll(request, response);
-                break;
-            //==== SORT EXAM SCORE ALL
-            case "sortByScoreASCAll":
-                sortByScoreASCAll(request, response);
-                break;
-            case "sortByScoreDESCAll":
-                sortByScoreDESCAll(request, response);
-                break;
-            //==== SORT JOB_ID RECRUIT
-            case "sortByJobASCRecruit":
-                sortByJobASCRecruit(request, response);
-                break;
-            case "sortByJobDESCRecruit":
-                sortByJobDESCRecruit(request, response);
-                break;
-            //==== SORT CAN_ID RECRUIT
-            case "sortByCanASCRecruit":
-                sortByCanASCRecruit(request, response);
-                break;
-            case "sortByCanDESCRecruit":
-                sortByCanDESCRecruit(request, response);
-                break;
-            //==== SORT EXAM SCORE RECRUIT
-            case "sortByScoreASCRecruit":
-                sortByScoreASCRecruit(request, response);
-                break;
-            case "sortByScoreDESCRecruit":
-                sortByScoreDESCRecruit(request, response);
-                break;
-            //==== SORT JOB NEWEST
-            case "sortByJobASCNewest":
-                sortByJobASCNewest(request, response);
-                break;
-            case "sortByJobDESCNewest":
-                sortByJobDESCNewest(request, response);
-                break;
-            //==== SORT STATUS PENDING
-            case "sortByStatusASCPending":
-                sortByStatusASCPending(request, response);
-                break;
-            case "sortByStatusDESCPending":
-                sortByStatusDESCPending(request, response);
-                break;
-            //==== SORT JOB PENDING
-            case "sortByJobASCPending":
-                sortByJobASCPending(request, response);
-                break;
-            case "sortByJobDESCPending":
-                sortByJobDESCPending(request, response);
-                break;
-            //==== SORT SCORE PENDING
-            case "sortByScoreASCPending":
-                sortByScoreASCPending(request, response);
-                break;
-            case "sortByScoreDESCPending":
-                sortByScoreDESCPending(request, response);
-                break;
-            //==== SORT CAN_ID PENDING
-            case "sortByCanASCPending":
-                sortByCanASCPending(request, response);
-                break;
-            case "sortByCanDESCPending":
-                sortByCanDESCPending(request, response);
-                break;
-            //==== FILTER STATUS 012345 ALL
-            case "filterStatus0All":
-                filterStatus0All(request, response);
-                break;
-            case "filterStatus1All":
-                filterStatus1All(request, response);
-                break;
-            case "filterStatus2All":
-                filterStatus2All(request, response);
-                break;
-            case "filterStatus3All":
-                filterStatus3All(request, response);
-                break;
-            case "filterStatus4All":
-                filterStatus4All(request, response);
-                break;
-            case "filterStatus5All":
-                filterStatus5All(request, response);
-                break;
+        try {
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            NotificationDAO nDao = new NotificationDAO();
+            List<NotificationDTO> notify = nDao.select(google.getEmail());
+            request.setAttribute("listNotification", notify);
+            request.setAttribute("count", nDao.count(google.getEmail()));
+            List<MajorDTO> listMajor = MajorDAO.listAll();
+            request.setAttribute("listMajor", listMajor);
+            request.setAttribute("controller", "apply");
+            String op = request.getParameter("op");
+            request.setAttribute("action", op);
+            switch (op) {
+                case "index":
+                    upload(request, response);
+                    break;
+                // Upload File
+                case "uploadFile":
+                    uploadFile(request, response);
+                    break;
+                case "downloadFile":
+                    downloadFile(request, response);
+                    break;
+                // Custom
+                case "deleteFile":
+                    deleteFile(request, response);
+                    break;
+                case "yesup":
+                    yesup(request, response);
+                    break;
+                // Display Applications
+                case "listAll":
+                    listAll(request, response);
+                    break;
+                case "list0":
+                    list0(request, response);
+                    break;
+                case "listPending":
+                    listPending(request, response);
+                    break;
+                case "list4":
+                    list4(request, response);
+                    break;
 
+                // Sort STATUS ALL
+                case "sortByStatusASCAll":
+                    sortByStatusASCAll(request, response);
+                    break;
+                case "sortByStatusDESCAll":
+                    sortByStatusDESCAll(request, response);
+                    break;
+                //==== SORT JOB_ID ALL
+                case "sortByJobASCAll":
+                    sortByJobASCAll(request, response);
+                    break;
+                case "sortByJobDESCAll":
+                    sortByJobDESCAll(request, response);
+                    break;
+                //==== SORT CAN_ID ALL
+                case "sortByCanASCAll":
+                    sortByCanASCAll(request, response);
+                    break;
+                case "sortByCanDESCAll":
+                    sortByCanDESCAll(request, response);
+                    break;
+                //==== SORT EXAM SCORE ALL
+                case "sortByScoreASCAll":
+                    sortByScoreASCAll(request, response);
+                    break;
+                case "sortByScoreDESCAll":
+                    sortByScoreDESCAll(request, response);
+                    break;
+                //==== SORT JOB_ID RECRUIT
+                case "sortByJobASCRecruit":
+                    sortByJobASCRecruit(request, response);
+                    break;
+                case "sortByJobDESCRecruit":
+                    sortByJobDESCRecruit(request, response);
+                    break;
+                //==== SORT CAN_ID RECRUIT
+                case "sortByCanASCRecruit":
+                    sortByCanASCRecruit(request, response);
+                    break;
+                case "sortByCanDESCRecruit":
+                    sortByCanDESCRecruit(request, response);
+                    break;
+                //==== SORT EXAM SCORE RECRUIT
+                case "sortByScoreASCRecruit":
+                    sortByScoreASCRecruit(request, response);
+                    break;
+                case "sortByScoreDESCRecruit":
+                    sortByScoreDESCRecruit(request, response);
+                    break;
+                //==== SORT JOB NEWEST
+                case "sortByJobASCNewest":
+                    sortByJobASCNewest(request, response);
+                    break;
+                case "sortByJobDESCNewest":
+                    sortByJobDESCNewest(request, response);
+                    break;
+                //==== SORT STATUS PENDING
+                case "sortByStatusASCPending":
+                    sortByStatusASCPending(request, response);
+                    break;
+                case "sortByStatusDESCPending":
+                    sortByStatusDESCPending(request, response);
+                    break;
+                //==== SORT JOB PENDING
+                case "sortByJobASCPending":
+                    sortByJobASCPending(request, response);
+                    break;
+                case "sortByJobDESCPending":
+                    sortByJobDESCPending(request, response);
+                    break;
+                //==== SORT SCORE PENDING
+                case "sortByScoreASCPending":
+                    sortByScoreASCPending(request, response);
+                    break;
+                case "sortByScoreDESCPending":
+                    sortByScoreDESCPending(request, response);
+                    break;
+                //==== SORT CAN_ID PENDING
+                case "sortByCanASCPending":
+                    sortByCanASCPending(request, response);
+                    break;
+                case "sortByCanDESCPending":
+                    sortByCanDESCPending(request, response);
+                    break;
+                //==== FILTER STATUS 012345 ALL
+                case "filterStatus0All":
+                    filterStatus0All(request, response);
+                    break;
+                case "filterStatus1All":
+                    filterStatus1All(request, response);
+                    break;
+                case "filterStatus2All":
+                    filterStatus2All(request, response);
+                    break;
+                case "filterStatus3All":
+                    filterStatus3All(request, response);
+                    break;
+                case "filterStatus4All":
+                    filterStatus4All(request, response);
+                    break;
+                case "filterStatus5All":
+                    filterStatus5All(request, response);
+                    break;
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -511,6 +529,9 @@ public class ApplyController extends HttpServlet {
             String can_id = request.getParameter("can_id"); // lấy id        
             CandidateDAO tf = new CandidateDAO();
             tf.updateup(can_id);
+            int major =  tf.getMajor(can_id);
+            ExamDAO eDao = new ExamDAO();
+            eDao.giveExam(can_id, major);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
 

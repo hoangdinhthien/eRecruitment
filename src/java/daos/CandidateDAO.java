@@ -824,4 +824,40 @@ public class CandidateDAO {
         con.close();
 
     }
+    
+    public int getMajor (String canId) throws ClassNotFoundException, SQLException{
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select [Job].[major_id] from [Candidate] INNER JOIN [Job] ON   [Candidate].[job_id] = [Job].[job_id] where [Candidate].[can_id] = ? ");
+        stm.setString(1, canId);
+        ResultSet rs = stm.executeQuery();
+        int major = 0;
+        if (rs.next()){
+            major = rs.getInt("major_id");
+        }
+        con.close();
+        return major;
+    }
+    
+    public void confirmTakingExam(String id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Update [Candidate] set [isStatus] = 2 where [can_id] = ? ");
+        stm.setString(2, id);
+        stm.executeUpdate();
+        con.close();
+    }
+    
+    public boolean check(String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Select [isStatus] from [Candidate] where [can_id] = ? ");
+        stm.setString(1, canId);
+        ResultSet rs = stm.executeQuery();
+        boolean check = false;
+        if (rs.next()) {
+            if (rs.getInt("isStatus") == 2){
+                check = true;
+            }
+        }
+        con.close();
+        return check;
+    }
 }

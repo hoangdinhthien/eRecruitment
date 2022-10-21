@@ -272,13 +272,19 @@ public class ExamController extends HttpServlet {
             ExamDAO eDao = new ExamDAO();
             String eId = eDao.getExam(canId);
             System.out.println(eId);
-            if (eId == null) {
-                System.out.println("Null");
+            if (eId == null || eDao.check(canId)) {
+                if (eId == null) {
+                    request.setAttribute("message", "You don't have any exam. ");
+                } else {
+                    request.setAttribute("message", "You have taken this exam. ");
+                }
+                request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);
             } else {
                 QuestionDAO qDao = new QuestionDAO();
                 List<QuestionDTO> listQuestion = qDao.listOneExam(eId);
                 OptionDAO opDao = new OptionDAO();
                 List<OptionDTO> listOption = opDao.listOneQExam(eId);
+                eDao.confirmTakingExam(canId);
 //            System.out.println(listOption);
                 request.setAttribute("listQuestion", listQuestion);
                 request.setAttribute("listOption", listOption);
@@ -316,6 +322,7 @@ public class ExamController extends HttpServlet {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
