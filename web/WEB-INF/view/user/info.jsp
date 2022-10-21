@@ -65,13 +65,15 @@
             <span class="account-management-item">-Edit your info <button onclick="document.querySelector('dialog').showModal()" >Update </button></span>
             <dialog >
                 <p>Update Infomation</p>
-                <form action="<c:url value="/user/updateHandler.do"/>">
+                <form action="<c:url value="/user"/>">
                     <input type="hidden" value="${user.email}" name="email"/>
                     <input class="input" type="text" value="${user.name}" name="name" placeholder="Name"/><br/>
                     <input class="input" type="text" value="${user.phone}" name="phone" placeholder="Phone Number" pattern="[0]{1}[1-9]{1}[0-9]{8}"/><br/>
                     <input class="input" type="text" value="${user.address}" name="address" placeholder="address"/><br/>
+                    <input type="hidden" name="op" value="updatehandler"/>
                     <button type="submit" >Update</button>
                 </form> 
+                <button onclick="document.querySelector('dialog').close()" class="btn btn-secondary"  >Cancel</button>
             </dialog>
         </div>
 

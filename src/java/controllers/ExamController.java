@@ -6,6 +6,7 @@
 package controllers;
 
 import config.Config;
+import daos.CandidateDAO;
 
 import daos.ExamDAO;
 import daos.MajorDAO;
@@ -271,15 +272,27 @@ public class ExamController extends HttpServlet {
             System.out.println(canId);
             ExamDAO eDao = new ExamDAO();
             String eId = eDao.getExam(canId);
+            System.out.println("Step 1");
             System.out.println(eId);
-            if (eId == null) {
-                System.out.println("Null");
+            if (eId == null || eDao.check(canId)) {
+                System.out.println("Step 2");
+                if (eId == null) {
+                    request.setAttribute("message", "You don't have any exam. ");
+                } else {
+                    request.setAttribute("message", "You have taken this exam. ");
+                }
+                request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);
             } else {
+                System.out.println("Step 3");
                 QuestionDAO qDao = new QuestionDAO();
                 List<QuestionDTO> listQuestion = qDao.listOneExam(eId);
+                System.out.println("Step 4");
                 OptionDAO opDao = new OptionDAO();
                 List<OptionDTO> listOption = opDao.listOneQExam(eId);
+                eDao.confirmTakingExam(canId); 
+                System.out.println("Step 5");
 //            System.out.println(listOption);
+                request.setAttribute("canId", canId);
                 request.setAttribute("listQuestion", listQuestion);
                 request.setAttribute("listOption", listOption);
                 request.getRequestDispatcher("/WEB-INF/view/exam/exam.jsp").forward(request, response);
@@ -293,29 +306,39 @@ public class ExamController extends HttpServlet {
             throws ServletException, IOException {
         try {
             String canId = request.getParameter("canId");
-            String eId = request.getParameter("eId");
-            QuestionDAO qDao = new QuestionDAO();
-            double count = qDao.countByExam(eId);
-            OptionDAO opDao = new OptionDAO();
-            double correct = 0;
-            for (int i = 1; i <= count; i++) {
-                int answer = Integer.parseInt(request.getParameter("answer" + i));
-                if (answer != 0) {
-                    if (opDao.isCorrect(answer)) {
-                        correct++;
+            CandidateDAO cDao = new CandidateDAO();
+            boolean check = cDao.check(canId);
+            if (!check) {
+                ExamDAO eDao = new ExamDAO();
+                String eId = eDao.getExam(canId);
+                QuestionDAO qDao = new QuestionDAO();
+                double count = qDao.countByExam(eId);
+                OptionDAO opDao = new OptionDAO();
+                double correct = 0;
+                for (int i = 1; i <= count; i++) {
+                    int answer = Integer.parseInt(request.getParameter("answer" + i));
+                    if (answer != 0) {
+                        if (opDao.isCorrect(answer)) {
+                            correct++;
+                        }
+                        System.out.println(answer + " : " + opDao.isCorrect(answer));
                     }
-                    System.out.println(answer + " : " + opDao.isCorrect(answer));
-                }
 
+                }
+                System.out.println(correct + " " + count + " " + ((correct / count)));
+                double mark = (double) ((correct / count) * 10);
+                System.out.println("Mark : " + mark);
+                cDao.result(mark, canId);
+                request.setAttribute("message", "You have finish the exam. ");
+            }else{
+                request.setAttribute("message", "You have taken this exam. ");
             }
-            System.out.println(correct + " " + count + " " + ((correct / count)));
-            double mark = (double) ((correct / count) * 10);
-            System.out.println("Mark : " + mark);
             request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

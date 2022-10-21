@@ -824,4 +824,44 @@ public class CandidateDAO {
         con.close();
 
     }
+    
+    public int getMajor (String canId) throws ClassNotFoundException, SQLException{
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select [Job].[major_id] from [Candidate] INNER JOIN [Job] ON   [Candidate].[job_id] = [Job].[job_id] where [Candidate].[can_id] = ? ");
+        stm.setString(1, canId);
+        ResultSet rs = stm.executeQuery();
+        int major = 0;
+        if (rs.next()){
+            major = rs.getInt("major_id");
+        }
+        con.close();
+        return major;
+    }
+    
+    public void result(double score, String id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Update [Candidate] set [score] = ? , [isStatus] = 2 where [can_id] = ? ");
+        stm.setDouble(1, score);
+        stm.setString(2, id);
+        stm.executeUpdate();
+        System.out.println("Update " + score +" "+ id );
+        con.close();
+    }
+    
+    public boolean check(String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Select [isStatus] from [Candidate] where [can_id] = ? ");
+        stm.setString(1, canId);
+        ResultSet rs = stm.executeQuery();
+        boolean check = false;
+        if (rs.next()) {
+            if (rs.getInt("isStatus") == 2){
+                check = true;
+            }
+        }
+        con.close();
+        return check;
+    }
+    
 }
+

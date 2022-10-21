@@ -27,6 +27,7 @@
         <link rel="stylesheet" href="css/owl.carousel.min.css" type="text/css">
         <link rel="stylesheet" href="css/slicknav.min.css" type="text/css">
         <link rel="stylesheet" href="css/style.css" type="text/css">
+        <link rel="stylesheet" href="css/notification.css" type="text/css">
         <style>
             /* unvisited link */
             .notify a:link {
@@ -183,7 +184,7 @@
                                     <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
 
                                     <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
-                                        <li ><a href="#"> Other </a>
+                                        <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
                                             <ul class="header__menu__dropdown">
                                                 <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
                                                 <li><a href="<c:url value="/exam?op=takeExam&canId=C001"/>">Test Exam</a></li>
@@ -203,21 +204,50 @@
                                 </ul>
                             </nav>
                         </div>
-                        <div class="col-lg-3">
-                            <div class="header__cart">
-                                <ul><c:if test="${not empty info}">
+                        <c:if test="${not empty info}">
+                            <div class="col-lg-3">
+                                <div class="header__cart">
+                                    <!--                                <ul>
+                                    <c:if test="${not empty info}">
                                         <li> 
                                             <a href="<c:url value="/user?op=listNotification"/>">
                                                 <i class="fa fa-bell">
-                                                    <c:if test="${count!=0}">
-                                                        <sup style="position: absolute;font-size: 13pt; top: 5px; right: 0px;color: red; "><strong>${count}</strong></sup>
-                                                    </c:if></i>
-                                            </a>
-                                        </li>
+                                        <c:if test="${count!=0}">
+                                            <sup style="position: absolute;font-size: 13pt; top: 5px; right: 0px;color: red; "><strong>${count}</strong></sup>
+                                        </c:if></i>
+                                    </a>
+                                </li>
                                     </c:if>
-                                </ul>
+                                </ul>-->
+                                    <ul>
+                                        <li>
+                                            <a id="notification-link"><i class="fa fa-bell"></i></a>
+                                            <div id="notification-container">
+                                                <div id="notification-title">Notifications</div>
+                                                <div id="notification-body">
+                                                    <c:forEach items="${listNotification}" var="notification">
+                                                        ${notification.title}<br/>
+                                                        (${notification.timeAgo}) <br/>
+                                                        <c:if test="${notification.linkTitle != null && notification.link != null}">
+                                                            <a href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>">${notification.linkTitle}</a>
+                                                        </c:if><br/>
+                                                        <c:if test="${notification.isRead}">
+                                                            Readed | <a href="<c:url value="/user?op=delete&nId=${notification.nId}"/>">Delete</a>
+                                                        </c:if>
+                                                        <c:if test="${!notification.isRead}">
+                                                            New | <a href="<c:url value="/user?op=read&nId=${notification.nId}"/>">Mark as read</a>
+                                                        </c:if>
+
+                                                        <hr/>
+                                                    </c:forEach>
+                                                </div>
+                                                <div id="notification-footer"><a href="<c:url value="/user?op=listNotification"/>">See All</a></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        </c:if>
                     </div>
                     <div class="humberger__open">
                         <i class="fa fa-bars"></i>
@@ -361,5 +391,6 @@
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/main.js"></script>
         <script src="js/popUp.js"></script>
+        <script src="js/notification.js"></script>
     </body>
 </html>
