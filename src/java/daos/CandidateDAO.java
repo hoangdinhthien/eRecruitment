@@ -844,6 +844,7 @@ public class CandidateDAO {
         stm.setDouble(1, score);
         stm.setString(2, id);
         stm.executeUpdate();
+        System.out.println("Update " + score +" "+ id );
         con.close();
     }
     
