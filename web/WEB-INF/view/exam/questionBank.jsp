@@ -77,7 +77,7 @@
                         <ul class="dropdown_menu dropdown_menu-1">
                             <c:forEach var="major" items="${listMajor}">
                                 <li class="dropdown_item-1">
-                                    <a href="<c:url value='/home?op=index'/>">${major.major_name}</a></li>
+                                    <a href="<c:url value='/exam?op=QuestionBank&major=${major.major_id}'/>">${major.major_name}</a></li>
                                 </c:forEach>
                         </ul>
                     </li>
@@ -119,16 +119,7 @@
             </dialog>
         </div>
         <div class="container">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown button
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </div>
+           
             <div class="list-question">
                 <c:forEach items="${listQuestion}" var="question" varStatus="loop">
                     <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
@@ -150,7 +141,7 @@
                                         <div class="input-group-text">
                                             <c:if test="${option.isCorrect}"> <input class="form-check-label" type="radio" checked/> </c:if>
                                             </div>
-                                            <input type="text" id="disabledTextInput" class="form-control" placeholder="${option.content}">
+                                                <input type="text" id="disabledTextInput" class="form-control"  value="${option.content}">
                                     </div>
                                 </c:if>
                             </c:forEach>

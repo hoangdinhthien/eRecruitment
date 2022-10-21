@@ -119,10 +119,19 @@ public class NotificationDAO {
         return count;
     }
 
-    public void delete(String email) throws ClassNotFoundException, SQLException {
+    public void deleteRead(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("delete from [Notification] where [email] = ? and  [isRead] = 1 ");
         stm.setString(1, email);
+        stm.executeUpdate();
+        con.close();
+
+    }
+    
+    public void delete(int id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("delete from [Notification] where [nId] = ? and  [isRead] = 1 ");
+        stm.setInt(1, id);
         stm.executeUpdate();
         con.close();
 

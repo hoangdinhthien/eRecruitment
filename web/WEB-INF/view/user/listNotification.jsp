@@ -17,7 +17,7 @@
         <c:choose>
             <c:when test="${listNotification != null}">
                 <a href="<c:url value="/user?op=readAll"/>">Mark all as read</a> | 
-                <a href="<c:url value="/user?op=delete"/>">Delete all that read</a> <hr/>
+                <a href="<c:url value="/user?op=deleteRead"/>">Delete all that read</a> <hr/>
                 <c:forEach items="${listNotification}" var="notification">
                     ${notification.title}<br/>
                     ${notification.content}<br/>
@@ -26,7 +26,7 @@
                         <a href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>">${notification.linkTitle}</a>
                     </c:if><br/>
                     <c:if test="${notification.isRead}">
-                        Readed
+                        Readed | <a href="<c:url value="/user?op=delete&nId=${notification.nId}"/>">Delete</a>
                     </c:if>
                     <c:if test="${!notification.isRead}">
                         New | <a href="<c:url value="/user?op=read&nId=${notification.nId}"/>">Mark as read</a>

@@ -94,8 +94,13 @@ public class UserController extends HttpServlet {
                     toLink(request, response);
                     break;
                 }
+                case "deleteRead": {
+                    deleteRead(request, response);
+                    break;
+                }
                 case "delete": {
                     delete(request, response);
+                    break;
                 }
             }
         } catch (ClassNotFoundException ex) {
@@ -213,10 +218,23 @@ public class UserController extends HttpServlet {
 
     public void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            int nId = Integer.parseInt(request.getParameter("nId"));
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.delete(nId);
+            request.getRequestDispatcher("/user?op=listNotification").forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void deleteRead(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             NotificationDAO nDao = new NotificationDAO();
-            nDao.delete(google.getEmail());
+            nDao.deleteRead(google.getEmail());
             request.getRequestDispatcher("/user?op=listNotification").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
