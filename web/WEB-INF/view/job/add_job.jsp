@@ -53,7 +53,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Job Description</span>
-                        <input class="form-control" type="text" name="job_description"/>
+                        <textarea class="form-control" type="text" name="job_description" rows="1" cols="5"></textarea>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Level ID:</span>

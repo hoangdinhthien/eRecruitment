@@ -1,6 +1,5 @@
 package controllers;
 
-
 import config.Config;
 import daos.MajorDAO;
 import daos.NotificationDAO;
@@ -141,7 +140,7 @@ public class LoginController extends HttpServlet {
                     + "<p style=\"font-size: 20px; font-weight:bold;\">G - "
                     + verifyCode
                     + "</p></br>"
-                    + "<p>This code has effect on 10 minutes. If this is not you please skip this message!</p>";
+                    + "<p>If this is not you please skip this message!</p>";
             MailUtils.send(to, subject, body);
             session.setAttribute("google", google);
             request.setAttribute("code", verifyCode);
@@ -157,21 +156,38 @@ public class LoginController extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("google");
-            String code = request.getParameter("code");
-            String inputCode = request.getParameter("inputCode").trim();
-            if (!code.equals(inputCode)) {
-                request.setAttribute("message", "Wrong code!");
-                request.setAttribute("inputCode", inputCode);
-                request.setAttribute("code", code);
+            boolean send = Boolean.parseBoolean(request.getParameter("send"));
+            if (send) {
+                //Random 1 day 6 chu so bat ki
+                int verifyCode = (int) Math.floor(((Math.random() * 899999) + 100000));
+                String to = google.getEmail();
+                String subject = "3HTD: Verify Your Account";
+                String body = "<h3>You receive this email because you has chosen verify via this email address.</h3></br>"
+                        + "<p>This is your verification code:</p></br>"
+                        + "<p style=\"font-size: 20px; font-weight:bold;\">G - "
+                        + verifyCode
+                        + "</p></br>"
+                        + "<p>If this is not you please skip this message!</p>";
+                MailUtils.send(to, subject, body);
+                request.setAttribute("code", verifyCode);
                 request.setAttribute("action", "verification");
             } else {
-                UserDAO.addBasicInfo(new UserDTO(google.getEmail(), google.getName(), 5));
-                session.removeAttribute("google");
-                //Mac dinh user moi la member
-                session.setAttribute("role", "Member");
-                session.setAttribute("info", google);
-                request.setAttribute("controller", "home");
-                request.setAttribute("action", "index");
+                String code = request.getParameter("code");
+                String inputCode = request.getParameter("inputCode").trim();
+                if (!code.equals(inputCode)) {
+                    request.setAttribute("message", "Wrong code!");
+                    request.setAttribute("inputCode", inputCode);
+                    request.setAttribute("code", code);
+                    request.setAttribute("action", "verification");
+                } else {
+                    UserDAO.addBasicInfo(new UserDTO(google.getEmail(), google.getName(), 5));
+                    session.removeAttribute("google");
+                    //Mac dinh user moi la member
+                    session.setAttribute("role", "Member");
+                    session.setAttribute("info", google);
+                    request.setAttribute("controller", "home");
+                    request.setAttribute("action", "index");
+                }
             }
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (Exception ex) {

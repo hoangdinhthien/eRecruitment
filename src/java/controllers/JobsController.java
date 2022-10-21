@@ -176,6 +176,9 @@ public class JobsController extends HttpServlet {
                 request.setAttribute("listMajor", listMajor);
                 request.setAttribute("list", list);
                 request.setAttribute("action", "search");
+                request.setAttribute("major_id", fmajor);
+                request.setAttribute("level_id", flevel);
+                request.setAttribute("salary", fsalary);
                 request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);

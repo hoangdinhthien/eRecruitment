@@ -11,7 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Verification</title>
-        
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -24,7 +24,10 @@
             G - <input type="text" name="inputCode" value="${inputCode}" required>
             <input type="hidden" name="code" value="${code}">
             <button type="submit" name="op" value="verification_handler">Submit</button>
-        </form>
+        </form><br/>
+        <a href="<c:url value="/login?op=verification_handler&send=true"/>">
+            Don't see your email? Send again &#8594
+        </a><br/>
         <i style="color: red;">${message}</i>
     </body>
 </html>

@@ -191,7 +191,7 @@
                                             </ul>
                                         </li>
                                     </c:if>
-                                        <li><a href="<c:url value="/apply?op=index"/>">Upload File</a></li>
+                                    <li><a href="<c:url value="/apply?op=index"/>">Upload File</a></li>
                                     <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
                                         <ul class="header__menu__dropdown">
                                             <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
@@ -199,7 +199,7 @@
                                             <li><a class="link" href="<c:url value="/apply?op=listPending"/>">Pending Applications</a></li>
                                             <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
                                         </ul>
-                                    <li><a href="#">Contact</a></li>
+                                    <!--<li><a href="#">Contact</a></li>-->
                                 </ul>
                             </nav>
                         </div>
@@ -209,9 +209,9 @@
                                         <li> 
                                             <a href="<c:url value="/user?op=listNotification"/>">
                                                 <i class="fa fa-bell">
-                                                <c:if test="${count!=0}">
-                                                    <sup style="position: absolute;font-size: 13pt; top: 5px; right: 0px;color: red; "><strong>${count}</strong></sup>
-                                                </c:if></i>
+                                                    <c:if test="${count!=0}">
+                                                        <sup style="position: absolute;font-size: 13pt; top: 5px; right: 0px;color: red; "><strong>${count}</strong></sup>
+                                                    </c:if></i>
                                             </a>
                                         </li>
                                     </c:if>
@@ -239,9 +239,11 @@
                                 </div>
                                 <ul class="dropdown_menu dropdown_menu-1">
                                     <c:forEach var="major" items="${listMajor}" varStatus="loop">
-                                        <li class="dropdown_item-${loop.count}">
-                                            <a href="<c:url value='/home?op=index'/>">${major.major_name}</a>
-                                        </li>
+                                        <a href="<c:url value="/job?major_id=${major.major_id}&level_id=0&salary=0&op=filter_job"/>" style="text-decoration: none">
+                                            <li class="dropdown_item-${loop.count}">
+                                                ${major.major_name}
+                                            </li>
+                                        </a>
                                     </c:forEach>
                                 </ul>
                             </li>
