@@ -41,6 +41,7 @@ CREATE TABLE [Notification]
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] not null,
 	[title] NVARCHAR(100) not null,
 	[content] text not null,
+	[link_title] NVARCHAR(100),
 	[link] NVARCHAR(200),
 	[date] datetime not null,
 	[isRead] bit DEFAULT (0) not null
@@ -302,6 +303,7 @@ CREATE TABLE [Interviewing]
 	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] INT,
 	[inter_comment] text,
+	[status] bit DEFAULT (0) not null,
 	UNIQUE ([inter_id],[can_id])
 )
 GO
