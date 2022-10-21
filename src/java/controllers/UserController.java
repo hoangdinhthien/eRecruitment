@@ -157,10 +157,11 @@ public class UserController extends HttpServlet {
             session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             String email = google.getEmail();
+            String name = request.getParameter("name");
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             UserDAO uDao = new UserDAO();
-            uDao.update(email, phone, address);
+            uDao.update(email, name, phone, address);
             UserDTO user = uDao.find(email);
             System.out.println("");
             request.setAttribute("user", user);

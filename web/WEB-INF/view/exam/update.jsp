@@ -90,9 +90,10 @@
                     <input type="button" id="addButton" value="Add" onclick="add(${numOfOption})" <c:if test="${numOfOption == 10}"> disabled="true" </c:if>/>
                     <input type="button" id="removeButton" value="Remove" onclick="remove(${numOfOption})" <c:if test="${numOfOption <= 2}"> disabled="true" </c:if>/>
                         <input type="hidden" name="op" value="UpdateHandler"/>
-                        <input type="submit"/>
+                        <input type="submit" value="Update"/>
                     </div>
                 </form>
+                        <a href="<c:url value="/exam?op=QuestionBank"/>"><button>Cancel</button></a>
             </div>
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
