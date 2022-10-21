@@ -27,7 +27,12 @@ public class ExamDAO {
             i++;
         }
         i++;
-        String newId = "E0" + i;
+        String newId = null;
+        if (i < 10) {
+            newId = "E0" + i;
+        } else {
+            newId = "E" + i;
+        }
         PreparedStatement pstm = con.prepareStatement("select * from [Exam] where [exam_id] = ?");
         pstm.setString(1, newId);
         rs = pstm.executeQuery();
