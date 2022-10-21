@@ -18,8 +18,6 @@
         Name: ${info.name}<br/>
         Given Name: ${info.given_name}<br/>
         Family Name: ${info.family_name}<br/>
-        Link: ${info.link}<br/>
-        phone: ${info.phone}<br/>
         Picture: <img alt="" src="${info.picture}"><br/>
     </body>
 </html>

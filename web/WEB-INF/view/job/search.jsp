@@ -19,39 +19,67 @@
             <input type="text" name="search" value=""/><br/>
             <button type="submit" name="op" value="search">Search</button>
         </form>-->
-        <form action="<c:url value="/job"/>">
-            <ul style="position: relative">
-                <li style="display: inline-block;margin-right:  50px"><select name="major_id">
-                        <option value="0">All</option>
-                        <option value="1">Marketing</option>
-                        <option value="2">Logistic</option>
-                        <option value="3">Data Science and Analytics</option>
-                        <option value="4">Information Technology</option>
-                        <option value="5">Graphic Design</option>
-                        <option value="6">Engineering</option>
-                        <option value="7">Risk Manager</option>
-                        <option value="8">Economic Finance</option>
-                        <option value="9">Business Intelligence and Development</option>
-                        <option value="10">Operations</option>
-                    </select></li>
-                    <li style="display: inline-block;margin-right:  50px"><select name="level_id">
-                        <option value="0">All</option>
-                        <option value="1">Intern</option>
-                        <option value="2">Fresher</option>
-                        <option value="3">Junior</option>
-                        <option value="4">Senior</option>
-                        <option value="5">Manager</option>
-                        <option value="6">Leader</option>
-                    </select></li>
-                    <li style="display: inline-block;margin-right:  100px"><select name="salary">
-                        <option value="0">All</option>
-                        <option value="1"> less than 1000 </option>
-                        <option value="2"> 1000 to 5000</option>
-                        <option value="3"> more than 5000</option>
-                    </select></li>
-                    <li style="display: inline-block;position: absolute;top: 5px"><button type="submit" name="op" value="filter_job">Search</button></li>
-            </ul>
-        </form>
+        <div class="container">
+
+            <form action="<c:url value="/job"/>">
+                <ul style="position: relative">
+                    <div style="display: flex;">
+                        <div class="input-group">
+
+                            <li class="input-group-text">
+                                Major
+                            </li>   
+                            <li style="list-style-type: none;">
+                                <select name="major_id" >
+                                    <option value="0">All</option>
+                                    <option value="1">Marketing</option>
+                                    <option value="2">Logistic</option>
+                                    <option value="3">Data Science and Analytics</option>
+                                    <option value="4">Information Technology</option>
+                                    <option value="5">Graphic Design</option>
+                                    <option value="6">Engineering</option>
+                                    <option value="7">Risk Manager</option>
+                                    <option value="8">Economic Finance</option>
+                                    <option value="9">Business Intelligence and Development</option>
+                                    <option value="10">Operations</option>
+                                </select>
+                            </li>
+                        </div>
+                        <div class="input-group">
+
+                            <li class="input-group-text">
+                                Level:  
+                            </li>   
+                            <li style="list-style-type: none;">
+                                <select name="level_id">
+                                    <option value="0">All</option>
+                                    <option value="1">Intern</option>
+                                    <option value="2">Fresher</option>
+                                    <option value="3">Junior</option>
+                                    <option value="4">Senior</option>
+                                    <option value="5">Manager</option>
+                                    <option value="6">Leader</option>
+                                </select>
+                            </li>
+                        </div>
+                        <div class="input-group">
+                            <li class="input-group-text">
+                                Salary:  
+                            </li>   
+                            <li style="list-style-type: none;">
+                                <select name="salary">
+                                    <option value="0">All</option>
+                                    <option value="1"> less than 1000 </option>
+                                    <option value="2"> 1000 to 5000</option>
+                                    <option value="3"> more than 5000</option>
+                                </select>
+                            </li>
+                        </div>
+                    </div>
+                    <span style="display: inline-block;position: absolute;top: 5px;right:0"><button type="submit" name="op" value="filter_job">Search</button></span>
+                </ul>
+            </form>
+        </div>
         <c:if test="${empty list}">
             <h3>No result!</h3>
         </c:if>
