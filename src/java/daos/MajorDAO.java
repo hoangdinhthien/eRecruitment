@@ -25,7 +25,7 @@ public class MajorDAO {
         List<MajorDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select [major_id],[major_name] from [Major]");
+        ResultSet rs = stm.executeQuery("SELECT [major_id],[major_name] FROM [Major]");
 
         list = new ArrayList();
         while (rs.next()) {
@@ -41,7 +41,7 @@ public class MajorDAO {
     public MajorDTO selectOne(String id) throws SQLException, ClassNotFoundException {
         MajorDTO major = new MajorDTO();
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Major] where [major_id] = ?");
+        PreparedStatement stm = con.prepareStatement("SELECT major_id, major_name FROM [Major] WHERE [major_id] = ?");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         if (rs.next()) {

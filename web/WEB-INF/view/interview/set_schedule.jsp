@@ -23,7 +23,8 @@
     <body>
         <div class="container">
             <form action="<c:url value="/interview"/>" style="float: left; width: 100%;text-align: left;">
-                <select name="major_id">
+                <select name="major_id" title="Select">
+                    <option disabled="" selected="">Please choose a major</option>
                     <c:forEach var="major" items="${listOfMajor}">
                         <c:choose>
                             <c:when test="${not empty chosenMajor}">
@@ -36,7 +37,7 @@
                         </c:choose>
                     </c:forEach>
                 </select>
-                <button class="set-can-btn" type="submit" name="op" value="set_schedule_filtered">Filter</button>
+                <button title="Filter" class="set-can-btn" type="submit" name="op" value="set_schedule_filtered">Filter</button>
             </form>
             <c:if test="${empty sublist}">
                 <h3>No result!</h3>
@@ -87,7 +88,12 @@
                                             <input type='checkbox' name='iId' value='${inter.id}'>
                                             <label for="iId">${inter.name}</label><br>
                                         </c:forEach>
-                                        <i style="color:red; float: left">*Please choose 2 interviewers</i>
+                                        <c:if test="${empty message || message == 'Set schedule successfully!'}">
+                                            <i style="color:red; float: left">*Please choose 2 interviewers</i>
+                                        </c:if>
+                                        <c:if test="${not empty message && message != 'Set schedule successfully!' }">
+                                            <i style="color:red; text-align: left">*${message}</i>
+                                        </c:if>
                                     </div>
                                 </div>
                                 <c:forEach var="can" items="${sublist}">
@@ -101,13 +107,15 @@
                         </div>
                     </div>
                 </div>
-                <ul class="pagination" style="margin-top: 30px">
-                    <c:forEach var="p" items="${noOfPage}" varStatus="loop">
-                        <li class="${page == loop.count?'active':''}">
-                            <a href="<c:url value="/interview?op=set_schedule_filtered&major_id=${chosenMajor}&page=${loop.count}"/>">${loop.count}</a>
-                        </li>
-                    </c:forEach>
-                </ul>
+                <c:if test="${noOfPage.size() > 1}">
+                    <ul class="pagination" style="margin-top: 30px">
+                        <c:forEach var="p" items="${noOfPage}" varStatus="loop">
+                            <li class="${page == loop.count?'active':''}">
+                                <a href="<c:url value="/interview?op=set_schedule_filtered&major_id=${chosenMajor}&page=${loop.count}"/>">${loop.count}</a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </c:if>
             </c:if>
             <c:if test="${not empty message}">
                 <script>
@@ -127,6 +135,10 @@
                 document.getElementById("myForm").style.display = "none";
             }
             $(document).ready(function () {
+                $("button[title|='Filter']").prop('disabled', true);
+                $("select[title|='Select']").change(function () {
+                    $("button[title|='Filter']").prop('disabled', false);
+                });
                 $("button[title|='Set']").prop('disabled', true);
                 $("input[type='checkbox']").change(function () {
                     var max_allowed = 2;

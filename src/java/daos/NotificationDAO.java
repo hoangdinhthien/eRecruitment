@@ -27,9 +27,10 @@ import utils.DBUtils;
  */
 public class NotificationDAO {
 
-    public List<NotificationDTO> select(String email) throws ClassNotFoundException, SQLException {
+    public static List<NotificationDTO> select(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Notification] where [email] = ? order by [date] desc ");
+        PreparedStatement stm = con.prepareStatement("SELECT nId, email, title, content, link_title, link, date, isRead "
+                + "FROM [Notification] WHERE [email] = ? ORDER BY [date] DESC ");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         List<NotificationDTO> list = null;
@@ -63,9 +64,10 @@ public class NotificationDAO {
         }
     }
 
-    public void add(String email, String title, String content, String linkTitle, String link) throws ClassNotFoundException, SQLException {
+    public static void add(String email, String title, String content, String linkTitle, String link) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("insert into [Notification] ( [email], [title], [content], [link_title], [link], [date] , [isRead]) values ( ? , ? , ? , ? , ? , ? , 0)");
+        PreparedStatement stm = con.prepareStatement("INSERT INTO [Notification] ( [email], [title], [content], [link_title], [link], [date] , [isRead]) "
+                + "VALUES ( ? , ? , ? , ? , ? , ? , 0)");
         stm.setString(1, email);
         stm.setString(2, title);
         stm.setString(3, content);
@@ -78,25 +80,25 @@ public class NotificationDAO {
         con.close();
     }
 
-    public void read(int id) throws ClassNotFoundException, SQLException {
+    public static void read(int id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("update [Notification] set [isRead] = 1 where [nId] = ? ");
+        PreparedStatement stm = con.prepareStatement("UPDATE [Notification] SET [isRead] = 1 WHERE [nId] = ? ");
         stm.setInt(1, id);
         stm.executeUpdate();
         con.close();
     }
 
-    public void readAll(String email) throws ClassNotFoundException, SQLException {
+    public static void readAll(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("update [Notification] set [isRead] = 1 where [email] = ? ");
+        PreparedStatement stm = con.prepareStatement("UPDATE [Notification] SET [isRead] = 1 WHERE [email] = ? ");
         stm.setString(1, email);
         stm.executeUpdate();
         con.close();
     }
 
-    public String getLink(int id) throws ClassNotFoundException, SQLException {
+    public static String getLink(int id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select [link] from [Notification] where [nId] = ? ");
+        PreparedStatement stm = con.prepareStatement("SELECT [link] FROM [Notification] WHERE [nId] = ? ");
         stm.setInt(1, id);
         ResultSet rs = stm.executeQuery();
         if (rs.next()) {
@@ -106,9 +108,9 @@ public class NotificationDAO {
         }
     }
 
-    public int count(String email) throws ClassNotFoundException, SQLException {
+    public static int count(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select COUNT(*) as count from [Notification] where [email] = ? and [isRead] = 0 ");
+        PreparedStatement stm = con.prepareStatement("SELECT COUNT(*) AS count FROM [Notification] WHERE [email] = ? AND [isRead] = 0 ");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         int count = 0;
@@ -119,25 +121,25 @@ public class NotificationDAO {
         return count;
     }
 
-    public void deleteRead(String email) throws ClassNotFoundException, SQLException {
+    public static void deleteRead(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("delete from [Notification] where [email] = ? and  [isRead] = 1 ");
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Notification] WHERE [email] = ? AND  [isRead] = 1 ");
         stm.setString(1, email);
         stm.executeUpdate();
         con.close();
 
     }
     
-    public void delete(int id) throws ClassNotFoundException, SQLException {
+    public static void delete(int id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("delete from [Notification] where [nId] = ? and  [isRead] = 1 ");
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Notification] WHERE [nId] = ? AND  [isRead] = 1 ");
         stm.setInt(1, id);
         stm.executeUpdate();
         con.close();
 
     }
 
-    public String timeAgo(Date currentDate, Date pastDate) {
+    public static String timeAgo(Date currentDate, Date pastDate) {
         long milliSecPerMinute = 60 * 1000; //Milliseconds Per Minute
         long milliSecPerHour = milliSecPerMinute * 60; //Milliseconds Per Hour
         long milliSecPerDay = milliSecPerHour * 24; //Milliseconds Per Day

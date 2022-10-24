@@ -41,17 +41,6 @@
                         <c:forEach var="i" items="${sublist}" varStatus="loop">
                             <div style="border-radius: 10px;border: 3px solid pink; padding-bottom: 0;margin-bottom: 50px;">
                                 <div class="set-can" style="padding-top: 30px ; padding-bottom: 80px;">
-                                    <div class="form-popup-cv form-container-cv" id="myBox${loop.count}">
-                                        <button type="button" class="btn cancel" onclick="closeForm(${loop.count})">Close</button>
-                                        <embed
-                                            type="application/pdf"
-                                            src=""
-                                            frameBorder="0"
-                                            scrolxling="auto"
-                                            height="500px"
-                                            width="80%"
-                                            >
-                                    </div>
                                     <ul class="">
                                         <li style="text-align: left">${i.can_name}</li>
                                         <li><fmt:formatDate value="${i.date}" pattern="dd-MM-yyyy HH:mm"/></li>
@@ -83,6 +72,7 @@
                                                                style="width: 5%"> &nbsp; /100
                                                         <input type="hidden" name="id" value="${i.id}">
                                                         <input type="hidden" name="can_id" value="${i.can_id}">
+                                                        <input type="hidden" name="date" value="${i.date}">
                                                         <input type="hidden" name="op" value="record">
                                                         <button type="submit" class="interview-record-btn">Submit</button>
                                                     </form>
@@ -92,6 +82,17 @@
                                         </div>
                                     </c:if> 
                                     <button class="interview-table-content-btn" onclick="openForm(${loop.count})">View CV</button>
+                                    <div class="form-popup-cv form-container-cv" id="myBox${loop.count}">
+                                        <button type="button" class="btn cancel" onclick="closeForm(${loop.count})">Close</button>
+                                        <img src="<c:url value="/cvs/${i.can_cv}"/>" alt=""
+                                             style="    height: 90%; 
+                                             width: 90%; 
+                                             float: left;
+                                             object-fit: fill;
+                                             position: absolute;
+                                             bottom: 20px;
+                                             left: 45px"/>
+                                    </div>
                                 </div>
                                 <c:if test="${i.status=='Hasn\'t Interviewed'}">
                                     <div class="interview-record set-can" style="text-align: left;">
@@ -101,6 +102,7 @@
                                                    style="width: 5%"> &nbsp; /100
                                             <input type="hidden" name="id" value="${i.id}">
                                             <input type="hidden" name="can_id" value="${i.can_id}">
+                                            <input type="hidden" name="date" value="${i.date}">
                                             <input type="hidden" name="op" value="record">
                                             <button type="submit" class="interview-record-btn">Submit</button>
                                         </form>
@@ -111,13 +113,15 @@
                     </nav>
                 </div>
             </c:if>
-            <ul class="pagination" style="margin-top: 30px">
-                <c:forEach var="p" items="${noOfPage}" varStatus="loop">
-                    <li class="${page == loop.count?'active':''}">
-                        <a href="<c:url value="/interview?op=interview_schedule&page=${loop.count}"/>">${loop.count}</a>
-                    </li>
-                </c:forEach>
-            </ul>
+            <c:if test="${noOfPage.size() > 1}">
+                <ul class="pagination" style="margin-top: 30px">
+                    <c:forEach var="p" items="${noOfPage}" varStatus="loop">
+                        <li class="${page == loop.count?'active':''}">
+                            <a href="<c:url value="/interview?op=interview_schedule&page=${loop.count}"/>">${loop.count}</a>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </c:if>
             <c:if test="${empty interview}">
                 <h2>There's no interview's schedule!</h2>
             </c:if>

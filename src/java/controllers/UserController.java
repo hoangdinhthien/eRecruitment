@@ -122,7 +122,7 @@ public class UserController extends HttpServlet {
             session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             UserDAO uDao = new UserDAO();
-            UserDTO user = uDao.find(google.getEmail());
+            UserDTO user = uDao.searchUserByEmail(google.getEmail());
             RoleDAO rDao = new RoleDAO();
             List<RoleDTO> listRole = rDao.selectAll();
             request.setAttribute("listRole", listRole);
@@ -141,7 +141,7 @@ public class UserController extends HttpServlet {
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
 
             UserDAO uDao = new UserDAO();
-            UserDTO user = uDao.find(google.getEmail());
+            UserDTO user = uDao.searchUserByEmail(google.getEmail());
             request.setAttribute("user", user);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
 
@@ -162,7 +162,7 @@ public class UserController extends HttpServlet {
             String address = request.getParameter("address");
             UserDAO uDao = new UserDAO();
             uDao.update(email, name, phone, address);
-            UserDTO user = uDao.find(email);
+            UserDTO user = uDao.searchUserByEmail(email);
             System.out.println("");
             request.setAttribute("user", user);
             request.setAttribute("action", "info");

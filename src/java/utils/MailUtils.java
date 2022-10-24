@@ -24,22 +24,25 @@ import javax.mail.internet.MimeMessage;
  */
 public class MailUtils {
 
+
+
     public static void send(String to, String subject, String body) throws Exception {
+        //Getting the current date
+        Date dateMili = new Date();
+        //This method returns the time in millis
+        long timeMilli = dateMili.getTime();
         Properties props = System.getProperties();
+        final String login = "nguyenhuuthien9a1nbk@gmail.com";//usermail
+        final String pwd = "kdjuoojwugittneb";//”password o day”;
+        
         props.setProperty("mail.transport.protocol", "smtp");
         props.setProperty("mail.host", "smtp.gmail.com");
-//        props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
         props.put("mail.debug", "true");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.socketFactory.fallback", "false");
 
-//        props.put("mail.smtp.host", smtpServer);
-//        props.put("mail.smtp.port", "587");
-//        props.put("mail.smtp.starttls.enable", "true");
-        final String login = "nguyenhuuthien9a1nbk@gmail.com";//”nth001@gmail.com”;//usermail
-        final String pwd = "kdjuoojwugittneb";//”password cua ban o day”;
         Authenticator pa = null; //default: no authentication
         if (login != null && pwd != null) { //authentication required?
             props.put("mail.smtp.auth", "true");
@@ -67,6 +70,8 @@ public class MailUtils {
         msg.setContent(body, "text/html");
         Transport.send(msg);
         System.out.println("Message sent OK.");
-
+        dateMili = new Date();
+        long currentTime = dateMili.getTime() - timeMilli;
+        System.out.println("This is time to sent a message: " + currentTime);
     }
 }

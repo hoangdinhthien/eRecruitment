@@ -84,7 +84,7 @@ public class CandidateDAO {
 
     public static boolean updateCandidateStatus(String id, int isStatus) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("update [dbo].[Candidate] set isStatus=? where can_id=?");
+        PreparedStatement stm = con.prepareStatement("UPDATE [dbo].[Candidate] SET isStatus=? WHERE can_id=?");
         stm.setInt(1, isStatus);
         stm.setString(2, id);
         int rs = stm.executeUpdate();

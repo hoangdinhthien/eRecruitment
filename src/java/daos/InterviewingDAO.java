@@ -27,7 +27,7 @@ public class InterviewingDAO {
 
     public static boolean addInterview(InterviewingDTO ig) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("insert into [dbo].[Interviewing](inter_id, can_id, date, location,[isStatus]) values(?,?,?,?,?)");
+        PreparedStatement stm = con.prepareStatement("INSERT INTO [dbo].[Interviewing](inter_id, can_id, date, location,[isStatus]) VALUES(?,?,?,?,?)");
         stm.setString(1, ig.getInter_id());
         stm.setString(2, ig.getCan_id());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -41,7 +41,7 @@ public class InterviewingDAO {
 
     public static boolean deleteInterview(String can_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("delete from [eRecruitment].[dbo].[Interviewing] where [can_id]=?");
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [eRecruitment].[dbo].[Interviewing] WHERE [can_id]=?");
         stm.setString(1, can_id);
         int rs = stm.executeUpdate();
         con.close();
@@ -50,8 +50,35 @@ public class InterviewingDAO {
 
     public static List<InterviewingDTO> searchInterviewByInterviewerId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select  i.id, i.inter_id, i.can_id, i.[date], i.[location], i.[inter_score], i.[inter_comment], i.isStatus, c.[can_cv]"
-                + " from [dbo].[Interviewing] i join  [dbo].[Candidate] c on i.[can_id]=c.[can_id] where inter_id=? order by i.isStatus asc");
+        PreparedStatement stm = con.prepareStatement("SELECT  i.id, i.inter_id, i.can_id, i.[date], i.[location], i.[inter_score], i.[inter_comment], i.isStatus, c.[can_cv]"
+                + " FROM [dbo].[Interviewing] i JOIN  [dbo].[Candidate] c ON i.[can_id]=c.[can_id] WHERE inter_id=? ORDER BY i.isStatus ASC");
+        stm.setString(1, id);
+        ResultSet rs = stm.executeQuery();
+        List<InterviewingDTO> list = new LinkedList();
+        while (rs.next()) {
+            InterviewingDTO i = new InterviewingDTO();
+            i.setId(rs.getInt("id"));
+            i.setInter_id(rs.getString("inter_id"));
+            i.setCan_id(rs.getString("can_id"));
+            i.setDate(rs.getDate("date"));
+            i.setLocation(rs.getString("location"));
+            i.setScore(rs.getInt("inter_score"));
+            i.setComment(rs.getString("inter_comment"));
+            if (rs.getInt("isStatus") == 3) {
+                i.setStatus("Hasn't Interviewed");
+            } else if (rs.getInt("isStatus") == 4) {
+                i.setStatus("Has Interviewed");
+            }
+            i.setCan_cv(rs.getString("can_cv"));
+            list.add(i);
+        }
+        con.close();
+        return list;
+    }
+    public static List<InterviewingDTO> searchHasNotInterviewedInterviewByInterviewerId(String id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT  i.id, i.inter_id, i.can_id, i.[date], i.[location], i.[inter_score], i.[inter_comment], i.isStatus, c.[can_cv]"
+                + " FROM [dbo].[Interviewing] i JOIN  [dbo].[Candidate] c ON i.[can_id]=c.[can_id] WHERE inter_id=? AND i.[isStatus] = 3 ORDER BY i.isStatus ASC");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         List<InterviewingDTO> list = new LinkedList();
@@ -79,9 +106,9 @@ public class InterviewingDAO {
     public static List<InterviewingDTO> searchInterviewByCandidateId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm;
-        stm = con.prepareStatement(" Select Min(i.id) as id, Min(i.can_id) as can_id, Min(i.inter_id) as inter_id, Min(i.[location]) as location, "
-                + "Min(i.[inter_score]) as inter_score, Min(i.[date]) as [date], c.[isStatus] "
-                + "from  [dbo].[Interviewing] i join  [dbo].[Candidate] c on i.[can_id]=c.[can_id] where i.[can_id]=? Group By c.[isStatus]");
+        stm = con.prepareStatement(" SELECT MIN(i.id) AS id, MIN(i.can_id) AS can_id, MIN(i.inter_id) AS inter_id, MIN(i.[location]) AS location, "
+                + "MIN(i.[inter_score]) AS inter_score, MIN(i.[date]) AS [date], c.[isStatus] "
+                + "FROM  [dbo].[Interviewing] i JOIN  [dbo].[Candidate] c ON i.[can_id]=c.[can_id] WHERE i.[can_id]=? GROUP BY c.[isStatus]");
 
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
@@ -112,7 +139,7 @@ public class InterviewingDAO {
 
     public static boolean addInterviewRecord(InterviewingDTO ig) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("update [dbo].[Interviewing] set [inter_score] = ?, [inter_comment] = ?,[isStatus]=? where id= ?");
+        PreparedStatement stm = con.prepareStatement("UPDATE [dbo].[Interviewing] SET [inter_score] = ?, [inter_comment] = ?, [isStatus]=? WHERE id= ?");
         stm.setInt(1, ig.getScore());
         stm.setString(2, ig.getComment());
         stm.setInt(3, ig.getIsStatus());
@@ -125,7 +152,7 @@ public class InterviewingDAO {
     public static boolean checkInterviewRecord(String can_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm;
-        stm = con.prepareStatement(" Select ISNULL([inter_comment],'null') as inter_comment from [eRecruitment].[dbo].[Interviewing] where can_id=?");
+        stm = con.prepareStatement("SELECT ISNULL([inter_comment],'null') AS inter_comment FROM [eRecruitment].[dbo].[Interviewing] WHERE can_id=?");
 
         stm.setString(1, can_id);
         ResultSet rs = stm.executeQuery();
@@ -140,11 +167,12 @@ public class InterviewingDAO {
         return true;
     }
 
-    public static boolean searchInterviewByDate(Date date) throws ClassNotFoundException, SQLException {
+    public static boolean checkInterviewDate(Date date, int isStatus) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select id, inter_id, can_id, date, location, inter_score from [dbo].[Interviewing] where date=?");
+        PreparedStatement stm = con.prepareStatement("SELECT id, inter_id, can_id, date, location, inter_score FROM [dbo].[Interviewing] WHERE date=? and isStatus=?");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         stm.setString(1, sdf.format(date));
+        stm.setInt(2, isStatus);
         ResultSet rs = stm.executeQuery();
         if (rs.next()) {
             return true;

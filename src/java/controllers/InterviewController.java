@@ -6,12 +6,14 @@ import daos.InterviewerDAO;
 import daos.InterviewingDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
+import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.InterviewerDTO;
 import dtos.InterviewingDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
+import dtos.UserDTO;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -223,7 +225,7 @@ public class InterviewController extends HttpServlet {
             SimpleDateFormat mailf = new SimpleDateFormat("dd-MM-yyyy");
             time = period.get(time);
             int index = 0;
-            if (!InterviewingDAO.searchInterviewByDate(sdf.parse(date + " " + time))) {
+            if (!InterviewingDAO.checkInterviewDate(sdf.parse(date + " " + time), 3)) {
                 for (String c : cId) { // Chay vong lay candidate's id
                     for (String i : iId) { //Chay vong lap lay interviewer's id 
                         InterviewingDTO ig = new InterviewingDTO();
@@ -232,7 +234,7 @@ public class InterviewController extends HttpServlet {
                         ig.setDate(sdf.parse(date + " " + time));
                         ig.setLocation("3HTD Company");
                         ig.setIsStatus(3);
-                        List<InterviewingDTO> listOfInterview = InterviewingDAO.searchInterviewByInterviewerId(i);
+                        List<InterviewingDTO> listOfInterview = InterviewingDAO.searchHasNotInterviewedInterviewByInterviewerId(i);
 
                         //Gioi han so interview cua 1 interviewer
                         if (listOfInterview.size() < 16) {
@@ -266,7 +268,17 @@ public class InterviewController extends HttpServlet {
                             + "<p>Sincerely</p>"
                             + "<p>3HTD</p>";
                     MailUtils.send(to, subject, body);
-                    System.out.println(mailf.format(sdf.parse(date + " " + time)));
+                    NotificationDAO.add(to, "Interview schedule",
+                            "<p>You have an interview. Please take the interview</p>"
+                            + "<p>On: <strong>"
+                            + time.substring(0, time.lastIndexOf(":"))
+                            + "</strong>  <strong>"
+                            + mailf.format(sdf.parse(date + " " + time))
+                            + "</strong> - "
+                            + " At: "
+                            + "<strong>3HTD Company</strong>"
+                            + "</p>",
+                            "Interview process", "/interview?op=interview_process&email=${info.email}");
                 }
                 for (String i : iId) {
                     InterviewerDTO inter = InterviewerDAO.searchInterviewerById(i);
@@ -286,6 +298,17 @@ public class InterviewController extends HttpServlet {
                             + "<p>Sincerely</p>"
                             + "<p>3HTD</p>";
                     MailUtils.send(to, subject, body);
+                    NotificationDAO.add(to, "A new interview schedule",
+                            "<p>You have interview schedule</p>"
+                            + "<p>On: <strong>"
+                            + time.substring(0, time.lastIndexOf(":"))
+                            + "</strong>  <strong>"
+                            + mailf.format(sdf.parse(date + " " + time))
+                            + "</strong> - "
+                            + " At: "
+                            + "<strong>3HTD Company</strong>"
+                            + "</p>",
+                            "Interview schedule", "/interview?op=interview_schedule&email=${info.email}");
                 }
                 //Add interview thanh cong
                 request.setAttribute("message", "Set schedule successfully!");
@@ -394,6 +417,9 @@ public class InterviewController extends HttpServlet {
             String can_id = request.getParameter("can_id");
             String comment = request.getParameter("comment");
             int score = Integer.parseInt(request.getParameter("score"));
+            String dateStr = request.getParameter("date");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = sdf.parse(dateStr);
             InterviewingDTO ig = new InterviewingDTO();
             ig.setId(id);
             ig.setComment(comment);
@@ -407,10 +433,32 @@ public class InterviewController extends HttpServlet {
             } else { //Update fail
                 request.setAttribute("message", "Adding fail. Please try again!");// Gui thong bao fail
             }
+            if (!InterviewingDAO.checkInterviewDate(date, 3)) { //Neu da xong 1 buoi interview thi thong bao cho hr manager
+                List<UserDTO> users = UserDAO.searchUserByRole("Admin");
+                for (UserDTO u : users) {
+                    //Gui thong bao
+                    NotificationDAO.add(u.getEmail(), "Evaluate Interview Process",
+                            "There are some interviews' record need to be evaluated. Please check and giving decision as soon as you available to take a look.",
+                            "", "");
+                    //Gui mail
+                    String to = u.getEmail();
+                    String subject = "3HTD: Evaluate Interview Process";
+                    String body = "<p>Dear <strong>" + u.getName() + "</strong>, </p><br/>"
+                            + "<p>There are some interviews' record need to be evaluated. Checkings and giving decision as soon as you available to take a look.</p>"
+                            + "<p>Please get it on time.</p><br/>"
+                            + "<p>Sincerely</p>"
+                            + "<p>3HTD</p>";
+                    MailUtils.send(to, subject, body);
+                }
+            }
             request.getRequestDispatcher("interview?op=interview_schedule").forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
