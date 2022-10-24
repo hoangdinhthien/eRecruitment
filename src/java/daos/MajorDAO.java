@@ -25,7 +25,7 @@ public class MajorDAO {
         List<MajorDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select [major_id],[major_name] from [Major]");
+        ResultSet rs = stm.executeQuery("SELECT [major_id],[major_name] FROM [Major]");
 
         list = new ArrayList();
         while (rs.next()) {
