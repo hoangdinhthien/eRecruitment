@@ -56,25 +56,31 @@ public class InterviewingDAO {
         ResultSet rs = stm.executeQuery();
         List<InterviewingDTO> list = new LinkedList();
         while (rs.next()) {
-            InterviewingDTO i = new InterviewingDTO();
-            i.setId(rs.getInt("id"));
-            i.setInter_id(rs.getString("inter_id"));
-            i.setCan_id(rs.getString("can_id"));
-            i.setDate(rs.getDate("date"));
-            i.setLocation(rs.getString("location"));
-            i.setScore(rs.getInt("inter_score"));
-            i.setComment(rs.getString("inter_comment"));
-            if (rs.getInt("isStatus") == 3) {
-                i.setStatus("Hasn't Interviewed");
-            } else if (rs.getInt("isStatus") == 4) {
-                i.setStatus("Has Interviewed");
+            try {
+                InterviewingDTO i = new InterviewingDTO();
+                i.setId(rs.getInt("id"));
+                i.setInter_id(rs.getString("inter_id"));
+                i.setCan_id(rs.getString("can_id"));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                i.setDate(sdf.parse(rs.getString("date")));
+                i.setLocation(rs.getString("location"));
+                i.setScore(rs.getInt("inter_score"));
+                i.setComment(rs.getString("inter_comment"));
+                if (rs.getInt("isStatus") == 3) {
+                    i.setStatus("Hasn't Interviewed");
+                } else if (rs.getInt("isStatus") == 4) {
+                    i.setStatus("Has Interviewed");
+                }
+                i.setCan_cv(rs.getString("can_cv"));
+                list.add(i);
+            } catch (ParseException ex) {
+                Logger.getLogger(InterviewingDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            i.setCan_cv(rs.getString("can_cv"));
-            list.add(i);
         }
         con.close();
         return list;
     }
+
     public static List<InterviewingDTO> searchHasNotInterviewedInterviewByInterviewerId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT  i.id, i.inter_id, i.can_id, i.[date], i.[location], i.[inter_score], i.[inter_comment], i.isStatus, c.[can_cv]"
@@ -83,21 +89,26 @@ public class InterviewingDAO {
         ResultSet rs = stm.executeQuery();
         List<InterviewingDTO> list = new LinkedList();
         while (rs.next()) {
-            InterviewingDTO i = new InterviewingDTO();
-            i.setId(rs.getInt("id"));
-            i.setInter_id(rs.getString("inter_id"));
-            i.setCan_id(rs.getString("can_id"));
-            i.setDate(rs.getDate("date"));
-            i.setLocation(rs.getString("location"));
-            i.setScore(rs.getInt("inter_score"));
-            i.setComment(rs.getString("inter_comment"));
-            if (rs.getInt("isStatus") == 3) {
-                i.setStatus("Hasn't Interviewed");
-            } else if (rs.getInt("isStatus") == 4) {
-                i.setStatus("Has Interviewed");
+            try {
+                InterviewingDTO i = new InterviewingDTO();
+                i.setId(rs.getInt("id"));
+                i.setInter_id(rs.getString("inter_id"));
+                i.setCan_id(rs.getString("can_id"));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                i.setDate(sdf.parse(rs.getString("date")));
+                i.setLocation(rs.getString("location"));
+                i.setScore(rs.getInt("inter_score"));
+                i.setComment(rs.getString("inter_comment"));
+                if (rs.getInt("isStatus") == 3) {
+                    i.setStatus("Hasn't Interviewed");
+                } else if (rs.getInt("isStatus") == 4) {
+                    i.setStatus("Has Interviewed");
+                }
+                i.setCan_cv(rs.getString("can_cv"));
+                list.add(i);
+            } catch (ParseException ex) {
+                Logger.getLogger(InterviewingDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-            i.setCan_cv(rs.getString("can_cv"));
-            list.add(i);
         }
         con.close();
         return list;

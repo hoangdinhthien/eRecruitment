@@ -304,7 +304,7 @@ CREATE TABLE [Interviewing]
 	[location] NVARCHAR(100) NOT NULL,
 	[inter_score] INT,
 	[inter_comment] text,
-	[isStatus] bit DEFAULT (0) not null,
+	[isStatus] int DEFAULT (0) not null,
 	UNIQUE ([inter_id],[can_id])
 )
 GO

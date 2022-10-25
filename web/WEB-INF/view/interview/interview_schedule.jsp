@@ -72,7 +72,7 @@
                                                                style="width: 5%"> &nbsp; /100
                                                         <input type="hidden" name="id" value="${i.id}">
                                                         <input type="hidden" name="can_id" value="${i.can_id}">
-                                                        <input type="hidden" name="date" value="${i.date}">
+                                                        <input type="hidden" name="date" value="<fmt:formatDate value="${i.date}" pattern="yyyy-MM-dd HH:mm:ss"/>">
                                                         <input type="hidden" name="op" value="record">
                                                         <button type="submit" class="interview-record-btn">Submit</button>
                                                     </form>
@@ -102,7 +102,7 @@
                                                    style="width: 5%"> &nbsp; /100
                                             <input type="hidden" name="id" value="${i.id}">
                                             <input type="hidden" name="can_id" value="${i.can_id}">
-                                            <input type="hidden" name="date" value="${i.date}">
+                                            <input type="hidden" name="date" value="<fmt:formatDate value="${i.date}" pattern="yyyy-MM-dd HH:mm:ss"/>">
                                             <input type="hidden" name="op" value="record">
                                             <button type="submit" class="interview-record-btn">Submit</button>
                                         </form>
