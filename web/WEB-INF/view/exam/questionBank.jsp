@@ -87,8 +87,8 @@
                 </div>
             </div>
         </div>
-               
-               
+
+
         <div>
             <dialog>
                 <div class="modal-content">
@@ -120,7 +120,6 @@
             </dialog>
         </div>
         <div class="container">
-           
             <div class="list-question">
                 <c:forEach items="${listQuestion}" var="question" varStatus="loop">
                     <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
@@ -142,7 +141,7 @@
                                         <div class="input-group-text">
                                             <c:if test="${option.isCorrect}"> <input class="form-check-label" type="radio" checked/> </c:if>
                                             </div>
-                                                <input type="text" id="disabledTextInput" class="form-control"  value="${option.content}">
+                                            <input type="text" id="disabledTextInput" class="form-control"  value="${option.content}">
                                     </div>
                                 </c:if>
                             </c:forEach>

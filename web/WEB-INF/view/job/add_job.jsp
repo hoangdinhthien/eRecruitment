@@ -11,12 +11,50 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-
+        <script>
+            function validateForm() {
+                var x = document.forms["myForm"]["job_id"].value;
+                var y = document.forms["myForm"]["job_name"].value;
+                var z = document.forms["myForm"]["job_vacancy"].value;
+                var a = document.forms["myForm"]["job_description"].value;
+                var b = document.forms["myForm"]["salary"].value;
+                if (x == "" || x == null) {
+                    alert("ID must be filled out");
+                    return false;
+                }
+                if (y == "" || y == null) {
+                    alert("Name must be filled out");
+                    return false;
+                }
+                if (z == "" || z == null) {
+                    alert("Vacancy must be filled out");
+                    return false;
+                }
+                if (a == "" || a == null) {
+                    alert("Description must be filled out");
+                    return false;
+                }
+                if (b == "" || b == null) {
+                    alert("Salary must be filled out");
+                    return false;
+                }
+                if (!/^[a-zA-Z]*$/g.test(document.myForm.job_name.value)) {
+                    alert("Invalid job name");
+                    document.myForm.job_name.focus();
+                    return false;
+                }
+                if (!/^[a-zA-Z]*$/g.test(document.myForm.job_description.value)) {
+                    alert("Invalid job description");
+                    document.myForm.job_description.focus();
+                    return false;
+                }
+            }
+        </script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     </head>
     <body>
@@ -74,44 +112,5 @@
                 </form>
             </div>
         </div>
-        <script>
-            function validateForm() {
-                var x = document.forms["myForm"]["job_id"].value;
-                var y = document.forms["myForm"]["job_name"].value;
-                var z = document.forms["myForm"]["job_vacancy"].value;
-                var a = document.forms["myForm"]["job_description"].value;
-                var b = document.forms["myForm"]["salary"].value;
-                if (x == "" || x == null) {
-                    alert("ID must be filled out");
-                    return false;
-                }
-                if (y == "" || y == null) {
-                    alert("Name must be filled out");
-                    return false;
-                }
-                if (z == "" || z == null) {
-                    alert("Vacancy must be filled out");
-                    return false;
-                }
-                if (a == "" || a == null) {
-                    alert("Description must be filled out");
-                    return false;
-                }
-                if (b == "" || b == null) {
-                    alert("Salary must be filled out");
-                    return false;
-                }
-                if (!/^[a-zA-Z]*$/g.test(document.myForm.job_name.value)) {
-                    alert("Invalid job name");
-                    document.myForm.job_name.focus();
-                    return false;
-                }
-                if (!/^[a-zA-Z]*$/g.test(document.myForm.job_description.value)) {
-                    alert("Invalid job description");
-                    document.myForm.job_description.focus();
-                    return false;
-                }
-            }
-        </script>
     </body>
 </html>

@@ -5,8 +5,11 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<<<<<<< HEAD
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+=======
+>>>>>>> origin/origin/Hieu
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,6 +17,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+<<<<<<< HEAD
         <c:choose>
             <c:when test="${listNotification != null}">
                 <a href="<c:url value="/user?op=readAll"/>">Mark all as read</a> | 
@@ -40,5 +44,8 @@
                     <h2>You don't have any notifications</h2>
                 </c:otherwise>
         </c:choose>
+=======
+        <h1>Hello World!</h1>
+>>>>>>> origin/origin/Hieu
     </body>
 </html>
