@@ -48,7 +48,6 @@
                 $("div[title|= 'lastDiv']").css("margin-left", "15px");
             });
         </script>
-        <a class="link" href="<c:url value="/job?op=add_job"/>">Add a new job</a>
         <!--<form action="<c:url value="/job"/>">
             Search: 
             <input type="text" name="search" value=""/><br/>
