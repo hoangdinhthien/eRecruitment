@@ -863,5 +863,18 @@ public class CandidateDAO {
         return check;
     }
     
+    
+    public  String getEmailByCanId (String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [email] FROM [dbo].[Candidate] WHERE [can_id] = ? ");
+        stm.setString(1, canId);
+        ResultSet rs = stm.executeQuery();
+        String email  = null;
+        if (rs.next()) {
+            email = (rs.getString("email"));
+        }
+        con.close();
+        return email;
+    }
 }
 

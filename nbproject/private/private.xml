@@ -11,52 +11,6 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/JobsDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/InterviewerDTO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/ApplyController.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/create.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/interview/set_schedule.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/InterviewingDTO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/LoginController.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/interview/interview_schedule.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/MajorDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/InterviewingDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/web.xml</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/UserDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/job/search.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/JobsDTO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/css/style.css</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/update.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/NotificationDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/interview/interview_process.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/QuestionDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/layouts/main.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/UserController.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/user/update.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/UserDTO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/questionBank.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/InterviewerDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/ExamDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/home/index.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/CandidateDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/OptionDAO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/InterviewController.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/login/login.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/JobsController.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/CandidateDTO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/css/thien.css</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/NotificationDTO.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/job/add_job.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/result.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/user/info.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/index.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/HomeController.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/login/verification.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/ExamController.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/user/listNotification.jsp</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/utils/MailUtils.java</file>
-            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/exam.jsp</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
