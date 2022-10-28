@@ -5,6 +5,7 @@
  */
 package daos;
 
+import dtos.ExamDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,7 +51,22 @@ public class ExamDAO {
         return newId;
     }
 
-    public String selectExam(int major) throws ClassNotFoundException, SQLException {
+    public ExamDTO selectExam(String exam_id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select [exam_id], [exam_name], [major_id] from [Exam] where [exam_id] = ? ");
+        stm.setString(1, exam_id);
+        ResultSet rs = stm.executeQuery();
+        ExamDTO e = new ExamDTO();
+        if (rs.next()) {
+            e.setExam_id(rs.getString("exam_id"));
+            e.setExam_name(rs.getString("exam_name"));
+            e.setMajor_id(rs.getInt("major_id"));
+        }
+        con.close();
+        return e;
+    }
+
+    public String selectExamId(int major) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("select [exam_id] from [Exam] where [major_id] = ? order by [exam_id] desc");
         stm.setInt(1, major);
@@ -85,7 +101,7 @@ public class ExamDAO {
     public void giveExam(String id, int major ) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("INSERT INTO [Examination] ([exam_id],[can_id]) values ( ? , ?  )");
-        stm.setString(1, selectExam(major));
+        stm.setString(1, selectExamId(major));
         stm.setString(2, id);
         stm.executeUpdate();
         con.close();

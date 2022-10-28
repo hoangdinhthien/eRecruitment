@@ -15,18 +15,25 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-        
+        <link rel="stylesheet" href="css/style.css" type="text/css">
         <style>
             .result{
                 text-align: center;
                 padding: 25px 0;
             }
         </style>
-        
+
     </head>
     <body>
 
         <div class="container">
+            <c:if test="${testInfo!=null}">
+                <h3>Test name: ${testInfo.exam_id}</h3>
+                <h5>Candidate ID: ${canId} | Major: <c:forEach items="${listMajor}" var="major"><c:if test="${major.major_id==testInfo.major_id}">${major.major_name}</c:if></c:forEach></h5><br/>
+                <a href="<c:url value="/exam?op=takeExam&canId=${canId}"/>">
+                    <button class=" btn btn-info">Atemp exam</button>
+                </a>
+            </c:if>
             <div class="result">
                 <h2>${message}</h2>
                 <a class="return-home-btn" href="<c:url value="/home?op=index"/>">

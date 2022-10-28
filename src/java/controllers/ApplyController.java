@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import utils.DBUtils;
+import utils.MailUtils;
 
 @WebServlet(name = "ApplyController", urlPatterns = {"/apply"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10,
@@ -85,6 +86,9 @@ public class ApplyController extends HttpServlet {
                 // Custom
                 case "deleteFile":
                     deleteFile(request, response);
+                    break;
+                case "yesRecruit":
+                    yesRecruit(request, response);
                     break;
                 case "yesup":
                     yesup(request, response);
@@ -523,18 +527,45 @@ public class ApplyController extends HttpServlet {
         }
     }
 
+    protected void yesRecruit(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException {
+        try {
+            String can_id = request.getParameter("can_id"); // lấy id        
+            CandidateDAO tf = new CandidateDAO();
+            tf.updateup(can_id);
+            CandidateDTO cd = new CandidateDTO();
+            System.out.println("status :" + cd.getIsStatus());
+            String email = tf.getEmailByCanId(can_id);
+            NotificationDAO nDao = new NotificationDAO();
+//            nDao.add(email, "Aplication "+ can_id +" have been accepted",
+//                    "You Aplication have been accepted by the HR department. There is a entry Exam that need to be done before the interviewing.",
+//                    "Click here to take the exam.",
+//                    "/exam?op=takeExam&canId=C001" + can_id);
+            //Cho hiện lại danh sách 
+            listAll(request, response);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     protected void yesup(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             String can_id = request.getParameter("can_id"); // lấy id        
             CandidateDAO tf = new CandidateDAO();
             tf.updateup(can_id);
-            int major =  tf.getMajor(can_id);
+            int major = tf.getMajor(can_id);
             ExamDAO eDao = new ExamDAO();
             eDao.giveExam(can_id, major);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
-
+            String email = tf.getEmailByCanId(can_id);
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.add(email, "Aplication "+ can_id +" have been accepted",
+                    "You Aplication have been accepted by the HR department. There is a entry Exam that need to be done before the interviewing.",
+                    "Click here to take the exam.",
+                    "/exam?op=confirmExam&canId=" + can_id);
+            MailUtils mail = new MailUtils();
             //Cho hiện lại danh sách 
             listAll(request, response);
         } catch (SQLException ex) {
