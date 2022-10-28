@@ -268,14 +268,19 @@
                                 </c:if>
                             </ul>-->
                                 <ul>
-                                    <li>
-                                        <a id="notification-link"><i class="fa fa-bell"></i></a>
-                                    <div id="notification-container">
-                                        <div id="notification-title">Notifications</div>
-                                        <div id="notification-body"></div>
-                                        <div id="notification-footer"><a href=" ">See all</a></div>
-                                    </div>
-                                    </li>
+                                    <c:if test="${not empty info}">
+                                        <li>
+                                            <a id="notification-link"><i class="fa fa-bell"></i></a>
+                                                <c:if test="${count!=0}">
+                                                <span id="notification_count">5</span>
+                                            </c:if>
+                                            <div id="notification-container">
+                                                <div id="notification-title">Notifications</div>
+                                                <div id="notification-body"></div>
+                                                <div id="notification-footer"><a href=" ">See all</a></div>
+                                            </div>
+                                        </li>
+                                    </c:if>
                                 </ul>
                             </div>
                         </div>
