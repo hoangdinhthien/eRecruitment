@@ -25,6 +25,7 @@
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/update.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/NotificationDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/interview/interview_process.jsp</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/apply/list_Recruit.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/UserController.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/user/update.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/questionBank.jsp</file>
@@ -57,6 +58,7 @@
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/JobsController.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/CandidateDTO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/css/thien.css</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/apply/list_All.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/exam/result.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/user/info.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/login/verification.jsp</file>

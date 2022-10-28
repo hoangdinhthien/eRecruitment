@@ -32,19 +32,19 @@
                         <li><a href="apply?op=sortByCanDESCRecruit">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <li><a href="<c:url value="/apply?op=sortByJobASCRecruit"/>"> Sort by Job Id </a>
+                <%--<li><a href="<c:url value="/apply?op=sortByJobASCRecruit"/>"> Sort by Job Id </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByJobASCRecruit">Job Id Ascending</a></li>
                         <li><a href="apply?op=sortByJobDESCRecruit">Job Id Descending</a></li>
                     </ul>
-                </li>
+                </li>--%>
                 <li><a href="<c:url value="/apply?op=sortByScoreASCRecruit"/>"> Sort by Exam Score </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByScoreASCRecruit">Score Ascending</a></li>
                         <li><a href="apply?op=sortByScoreDESCRecruit">Score Descending</a></li>
                     </ul>
                 </li>
-                
+
             </ul>
         </nav>
         <br><br>
@@ -54,7 +54,7 @@
                 <c:when test="${ not empty list4 }">
                     <thead>
                         <tr>
-                            <th>No.</th><th>Can_id</th><th>Job_id</th>
+                            <th>No.</th><th>Can_id</th><th>Job Name</th>
                             <th>Email</th><th>File Upload</th>
                             <th>Exam Score</th>
                             <th>Interview Score</th>
@@ -68,17 +68,19 @@
                             <tr>
                                 <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
                                 <td>${can.id}</td>
-                                <td>${can.jobId}</td>
+                                <%--<td>${can.jobId}</td>--%>
+                                <td>${can.jobname.job_name}</td>
                                 <td>${can.email}</td>
                                 <td>${can.cv}</td>
                                 <td>${can.score}</td>
-                                <td><c:choose>
-                                        <c:when test="${can.isStatus==5}">
-                                            Hired
-                                        </c:when></c:choose>
+                                <td>${can.interid.score}</td>
+                                <!--                                <td><c:choose>
+                                    <c:when test="${can.isStatus==5}">
+                                        Hired
+                                    </c:when></c:choose></td>-->
                                     <td style="text-align: center">
                                         <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                    <a href="apply?op=yesRecruit&can_id=${can.id}">Accept</a> |
+                                    <a href="apply?op=yesup&can_id=${can.id}">Accept</a> |
                                     <a href="apply?op=deleteFile&can_id=${can.id}">Reject</a> 
                                 </td>
 

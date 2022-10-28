@@ -10,28 +10,22 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
     </head>
     <body>
-        <form action="apply" method="post" enctype="multipart/form-data">
+        <form action="<c:url value='apply'/>" method="post"  enctype="multipart/form-data" >
+
             <table width="400px" align="center" border=2>
                 <tr>
                     <td align="center" colspan="2">Form Details</td>
                 </tr>
                 <tr>
-                    <td>Select File :</td>
-                    <td>
-                        <input type="file" required="" name="file">
-                    </td>
-                </tr>
-                <tr style="text-align: center">
-                <c:if test="${requestScope.msg!=null}">
-                    <h3><c:out value="${requestScope.msg}"></c:out></h3>
-                </c:if><br>
-                <br>
-                <c:if test="${sessionScope.fileName!=null}">
-                    <c:set var="file" scope="session" value="${sessionScope.fileName}"/>
-                </c:if>
+                <input type="hidden" value="uploadFile" name="op">
+                <input type="hidden" value="${job_id}" name="job_id">
+                <td>Select File :</td>
+                <td>
+
+                    <input type="file" required="" name="file">
+                </td>
                 </tr>
                 <tr>
                     <td></td>

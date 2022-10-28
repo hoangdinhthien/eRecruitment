@@ -10,6 +10,7 @@ package dtos;
  * @author Thien's
  */
 public class CandidateDTO {
+
     private String id;
     private String jobId;
     private int majorId;
@@ -20,8 +21,37 @@ public class CandidateDTO {
     private int isStatus;
     private float score;
     private String status;
+    private InterviewingDTO interid;
+    private JobsDTO jobname;
 
     public CandidateDTO() {
+    }
+
+    public CandidateDTO(String id, JobsDTO jobname, String cv, float score, int isStatus) {
+        this.id = id;
+        this.jobname = jobname;
+        this.cv = cv;
+        this.score = score;
+        this.isStatus = isStatus;
+    }
+
+    public CandidateDTO(String id, JobsDTO jobname, String cv, String email, float score, int isStatus) {
+        this.id = id;
+        this.jobname = jobname;
+        this.cv = cv;
+        this.email = email;
+        this.score = score;
+        this.isStatus = isStatus;
+    }
+
+    public CandidateDTO(String id, JobsDTO jobname, String cv, String email, float score, InterviewingDTO interid, int isStatus) {
+        this.id = id;
+        this.jobname = jobname;
+        this.cv = cv;
+        this.email = email;
+        this.score = score;
+        this.interid = interid;
+        this.isStatus = isStatus;
     }
 
     public CandidateDTO(String id, String jobId, int majorId, String email, String name, String cv, String phone, int isStatus, float score, String status) {
@@ -44,7 +74,6 @@ public class CandidateDTO {
     public void setScore(float score) {
         this.score = score;
     }
-
 
     public String getStatus() {
         return status;
@@ -116,5 +145,21 @@ public class CandidateDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public InterviewingDTO getInterid() {
+        return interid;
+    }
+
+    public void setInterid(InterviewingDTO interid) {
+        this.interid = interid;
+    }
+
+    public JobsDTO getJobname() {
+        return jobname;
+    }
+
+    public void setJobname(JobsDTO jobname) {
+        this.jobname = jobname;
     }
 }

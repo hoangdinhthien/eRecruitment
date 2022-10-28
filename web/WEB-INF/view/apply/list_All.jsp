@@ -27,7 +27,7 @@
             <nav class="header__menu" >
                 <ul>
                     <li>
-                        
+
                         <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
                            background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
                            width: 100px"
@@ -35,6 +35,7 @@
                            type="button" 
                            > 
                             Status 
+                            <span class="arrow_carrot-down"></span>
                         </a>
                         <ul class="header__menu__dropdown">
                             <li><a href="apply?op=filterStatus0All">Waiting</a></li>
@@ -48,17 +49,24 @@
                 </ul>
             </nav>
             <!--===SEARCH===-->
-            <form action="<c:url value="/home/search.do"/>" class="d-flex w-50 m-3">
+            <form action="<c:url value="/apply"/>">
+                <input  type="text" name="search" placeholder="Search Job" value="${search}">
+
+                <button class="btn btn-success" style="border-color: #66D7A7;background: #66D7A7; "
+                        type="submit" class="site-btn" name="op" value="search">SEARCH</button>
+            </form>
+<!--            <form action="<c:url value="apply?op=search"/>" class="d-flex w-50 m-3">
+
                 <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"> <i class="fa fa-search"></i></span>
-                    <input class="form-control me-2"  placeholder="Nhập thông tin.." type="search" name="Search"
-                           value="${Search}"/>
+                    <input class="form-control me-2"  placeholder="Nhập thông tin.." type="search" name="search"
+                           value="${search}"/>
                 </div>
                 <button class="btn btn-success" style=" color: #ffffff !important; border-color: #66D7A7;background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500"  
                         type="submit">
                     Search
                 </button>
-            </form>
+            </form>-->
         </div>
         <br>
         <nav class="header__menu">
@@ -69,12 +77,12 @@
                         <li><a href="apply?op=sortByCanDESCAll">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <li><a href="<c:url value="/apply?op=sortByJobASCAll"/>"> Sort by Job Id </a>
+                <%--<li><a href="<c:url value="/apply?op=sortByJobASCAll"/>"> Sort by Job Id </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByJobASCAll">Job Id Ascending</a></li>
                         <li><a href="apply?op=sortByJobDESCAll">Job Id Descending</a></li>
                     </ul>
-                </li>
+                </li> --%>
                 <li><a href="<c:url value="/apply?op=sortByScoreASCAll"/>"> Sort by Exam Score </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByScoreASCAll">Score Ascending</a></li>
@@ -97,7 +105,7 @@
                 <c:when test="${not empty listAll}">
                     <thead>
                         <tr>
-                            <th>No.</th><th>Can_id</th><th>Job_id</th>
+                            <th>No.</th><th>Can_id</th><th>Job Name</th>
                             <th>Email</th><th>File Upload</th>
                             <th>Exam Score</th>
                             <!--                    <th>Interview Score</th>-->
@@ -109,11 +117,10 @@
                         <tr>
                             <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
                             <td>${can.id}</td>
-                            <td>${can.jobId}</td>
+                            <td>${can.jobname.job_name}</td>
                             <td>${can.email}</td>
                             <td>${can.cv}</td>
                             <td>${can.score}</td>
-                            <!--<td>${ing.score}</td>-->
                             <td><c:choose>
                                     <c:when test="${can.isStatus==0}">
                                         Hasn't Accepted
@@ -133,10 +140,11 @@
                                     <c:when test="${can.isStatus==5}">
                                         Hired
                                     </c:when>
-                                </c:choose></td>
+                                </c:choose>
+                            </td>
                             <td style="text-align: center">
-                                <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                <a href="apply?op=yesup&can_id=${can.id}">Accept</a> 
+                                <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>
+<!--                                <a href="apply?op=yesup&can_id=${can.id}">Accept</a> -->
                                 <!--<a href="apply?op=deleteFile&can_id=${can.id}">Reject</a>--> 
                             </td>
                         </tr>

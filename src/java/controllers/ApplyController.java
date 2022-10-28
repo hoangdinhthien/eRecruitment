@@ -2,14 +2,13 @@ package controllers;
 
 import config.Config;
 import daos.CandidateDAO;
-import daos.ExamDAO;
-import daos.MajorDAO;
-import daos.NotificationDAO;
+import daos.InterviewingDAO;
+import daos.JobsDAO;
+import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
-import dtos.MajorDTO;
-import dtos.NotificationDTO;
-
+import dtos.InterviewingDTO;
+import dtos.JobsDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,11 +22,9 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import utils.DBUtils;
-import utils.MailUtils;
 
 @WebServlet(name = "ApplyController", urlPatterns = {"/apply"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10,
@@ -58,177 +54,175 @@ public class ApplyController extends HttpServlet {
     public static String fileName = null;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException, ClassNotFoundException, SQLException {
+        request.setAttribute("controller", "apply");
+        String op = request.getParameter("op");
+        request.setAttribute("action", op);
+        switch (op) {
+            case "index":
+                upload(request, response);
+                break;
+            // Upload File
+            case "uploadFile":
+                uploadFile(request, response);
+                break;
+            case "downloadFile":
+                downloadFile(request, response);
+                break;
+            // Custom
+            case "deleteFile":
+                deleteFile(request, response);
+                break;
+            case "yesupNewest":
+                yesupNewest(request, response);
+                break;
+            case "yesupRecruit":
+                yesupRecruit(request, response);
+                break;
+            // Display Applications
+            case "listAll":
+                listAll(request, response);
+                break;
+            case "listApplicationByEmail":
+                listApplicationByEmail(request, response);
+                break;
+            case "list0":
+                list0(request, response);
+                break;
+            case "listInprocess":
+                listInprocess(request, response);
+                break;
+            case "list4":
+                list4(request, response);
+                break;
 
+            // Sort STATUS ALL
+            case "sortByStatusASCAll":
+                sortByStatusASCAll(request, response);
+                break;
+            case "sortByStatusDESCAll":
+                sortByStatusDESCAll(request, response);
+                break;
+            //==== SORT CAN_ID ALL
+            case "sortByCanASCAll":
+                sortByCanASCAll(request, response);
+                break;
+            case "sortByCanDESCAll":
+                sortByCanDESCAll(request, response);
+                break;
+            //==== SORT EXAM SCORE ALL
+            case "sortByScoreASCAll":
+                sortByScoreASCAll(request, response);
+                break;
+            case "sortByScoreDESCAll":
+                sortByScoreDESCAll(request, response);
+                break;
+            //==== SORT CAN_ID RECRUIT
+            case "sortByCanASCRecruit":
+                sortByCanASCRecruit(request, response);
+                break;
+            case "sortByCanDESCRecruit":
+                sortByCanDESCRecruit(request, response);
+                break;
+            //==== SORT EXAM SCORE RECRUIT
+            case "sortByScoreASCRecruit":
+                sortByScoreASCRecruit(request, response);
+                break;
+            case "sortByScoreDESCRecruit":
+                sortByScoreDESCRecruit(request, response);
+                break;
+//            ==== SORT CAN NEWEST
+            case "sortByCanASCNewest":
+                sortByCanASCNewest(request, response);
+                break;
+            case "sortByCanDESCNewest":
+                sortByCanDESCNewest(request, response);
+                break;
+            //==== SORT STATUS Inprocess
+            case "sortByStatusASCInprocess":
+                sortByStatusASCInprocess(request, response);
+                break;
+            case "sortByStatusDESCInprocess":
+                sortByStatusDESCInprocess(request, response);
+                break;
+            //==== SORT SCORE Inprocess
+            case "sortByScoreASCInprocess":
+                sortByScoreASCInprocess(request, response);
+                break;
+            case "sortByScoreDESCInprocess":
+                sortByScoreDESCInprocess(request, response);
+                break;
+            //==== SORT CAN_ID Inprocess
+            case "sortByCanASCInprocess":
+                sortByCanASCInprocess(request, response);
+                break;
+            case "sortByCanDESCInprocess":
+                sortByCanDESCInprocess(request, response);
+                break;
+            //==== FILTER STATUS 012345 ALL
+            case "filterStatus0All":
+                filterStatus0All(request, response);
+                break;
+            case "filterStatus1All":
+                filterStatus1All(request, response);
+                break;
+            case "filterStatus2All":
+                filterStatus2All(request, response);
+                break;
+            case "filterStatus3All":
+                filterStatus3All(request, response);
+                break;
+            case "filterStatus4All":
+                filterStatus4All(request, response);
+                break;
+            case "filterStatus5All":
+                filterStatus5All(request, response);
+                break;
+            // Search Job_id
+            case "search":
+                search(request, response);
+                break;
+        }
+    }
+
+    // LIST BY ACCOUNT EMAIL
+    protected void listApplicationByEmail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException, SQLException {
+//        try {
+        String email = request.getParameter("email");
         try {
-            HttpSession session = request.getSession();
-            if (session.getAttribute("info") == null) {
-                response.sendRedirect("https://accounts.google.com/o/oauth2/auth?scope=email  "
-                        + "profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force");
-            } else {
+            List<CandidateDTO> sea = CandidateDAO.search2(email);
+            request.setAttribute("listEmail", sea);
+            request.setAttribute("controller", "user");
+            request.setAttribute("action", "info");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (ServletException | IOException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-                GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-                NotificationDAO nDao = new NotificationDAO();
-                List<NotificationDTO> notify = nDao.select(google.getEmail());
-                request.setAttribute("listNotification", notify);
-                request.setAttribute("count", nDao.count(google.getEmail()));
-                List<MajorDTO> listMajor = MajorDAO.listAll();
-                request.setAttribute("listMajor", listMajor);
-                request.setAttribute("controller", "apply");
-                String op = request.getParameter("op");
-                request.setAttribute("action", op);
-                switch (op) {
-                    case "index":
-                        upload(request, response);
-                        break;
-                    // Upload File
-                    case "uploadFile":
-                        uploadFile(request, response);
-                        break;
-                    case "downloadFile":
-                        downloadFile(request, response);
-                        break;
-                    // Custom
-                    case "deleteFile":
-                        deleteFile(request, response);
-                        break;
-                    case "yesRecruit":
-                        yesRecruit(request, response);
-                        break;
-                    case "yesup":
-                        yesup(request, response);
-                        break;
-                    // Display Applications
-                    case "listAll":
-                        listAll(request, response);
-                        break;
-                    case "list0":
-                        list0(request, response);
-                        break;
-                    case "listPending":
-                        listPending(request, response);
-                        break;
-                    case "list4":
-                        list4(request, response);
-                        break;
+    public static void search(HttpServletRequest request, HttpServletResponse response)
+            throws ClassNotFoundException, SQLException {
+        String search = request.getParameter("search");
+        try {
 
-                    // Sort STATUS ALL
-                    case "sortByStatusASCAll":
-                        sortByStatusASCAll(request, response);
-                        break;
-                    case "sortByStatusDESCAll":
-                        sortByStatusDESCAll(request, response);
-                        break;
-                    //==== SORT JOB_ID ALL
-                    case "sortByJobASCAll":
-                        sortByJobASCAll(request, response);
-                        break;
-                    case "sortByJobDESCAll":
-                        sortByJobDESCAll(request, response);
-                        break;
-                    //==== SORT CAN_ID ALL
-                    case "sortByCanASCAll":
-                        sortByCanASCAll(request, response);
-                        break;
-                    case "sortByCanDESCAll":
-                        sortByCanDESCAll(request, response);
-                        break;
-                    //==== SORT EXAM SCORE ALL
-                    case "sortByScoreASCAll":
-                        sortByScoreASCAll(request, response);
-                        break;
-                    case "sortByScoreDESCAll":
-                        sortByScoreDESCAll(request, response);
-                        break;
-                    //==== SORT JOB_ID RECRUIT
-                    case "sortByJobASCRecruit":
-                        sortByJobASCRecruit(request, response);
-                        break;
-                    case "sortByJobDESCRecruit":
-                        sortByJobDESCRecruit(request, response);
-                        break;
-                    //==== SORT CAN_ID RECRUIT
-                    case "sortByCanASCRecruit":
-                        sortByCanASCRecruit(request, response);
-                        break;
-                    case "sortByCanDESCRecruit":
-                        sortByCanDESCRecruit(request, response);
-                        break;
-                    //==== SORT EXAM SCORE RECRUIT
-                    case "sortByScoreASCRecruit":
-                        sortByScoreASCRecruit(request, response);
-                        break;
-                    case "sortByScoreDESCRecruit":
-                        sortByScoreDESCRecruit(request, response);
-                        break;
-                    //==== SORT JOB NEWEST
-                    case "sortByJobASCNewest":
-                        sortByJobASCNewest(request, response);
-                        break;
-                    case "sortByJobDESCNewest":
-                        sortByJobDESCNewest(request, response);
-                        break;
-                    //==== SORT STATUS PENDING
-                    case "sortByStatusASCPending":
-                        sortByStatusASCPending(request, response);
-                        break;
-                    case "sortByStatusDESCPending":
-                        sortByStatusDESCPending(request, response);
-                        break;
-                    //==== SORT JOB PENDING
-                    case "sortByJobASCPending":
-                        sortByJobASCPending(request, response);
-                        break;
-                    case "sortByJobDESCPending":
-                        sortByJobDESCPending(request, response);
-                        break;
-                    //==== SORT SCORE PENDING
-                    case "sortByScoreASCPending":
-                        sortByScoreASCPending(request, response);
-                        break;
-                    case "sortByScoreDESCPending":
-                        sortByScoreDESCPending(request, response);
-                        break;
-                    //==== SORT CAN_ID PENDING
-                    case "sortByCanASCPending":
-                        sortByCanASCPending(request, response);
-                        break;
-                    case "sortByCanDESCPending":
-                        sortByCanDESCPending(request, response);
-                        break;
-                    //==== FILTER STATUS 012345 ALL
-                    case "filterStatus0All":
-                        filterStatus0All(request, response);
-                        break;
-                    case "filterStatus1All":
-                        filterStatus1All(request, response);
-                        break;
-                    case "filterStatus2All":
-                        filterStatus2All(request, response);
-                        break;
-                    case "filterStatus3All":
-                        filterStatus3All(request, response);
-                        break;
-                    case "filterStatus4All":
-                        filterStatus4All(request, response);
-                        break;
-                    case "filterStatus5All":
-                        filterStatus5All(request, response);
-                        break;
-
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            List<CandidateDTO> sea = CandidateDAO.search(search);
+            request.setAttribute("listAll", sea);
+            request.setAttribute("action", "list_All");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (ServletException | IOException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     protected void upload(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
+            String jobId = request.getParameter("job_id");
             CandidateDAO tf = new CandidateDAO();
             List<CandidateDTO> list = tf.selectAll();
             System.out.println(list);
+            request.setAttribute("job_id", jobId);
             request.setAttribute("list", list);
             request.setAttribute("action", "index_apply");
 //        request.setAttribute("controller", "upload");
@@ -247,12 +241,10 @@ public class ApplyController extends HttpServlet {
             System.out.println(list);
             request.setAttribute("listAll", list);
             request.setAttribute("action", "list_All");
-//        request.setAttribute("controller", "upload");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     protected void list0(HttpServletRequest request, HttpServletResponse response)
@@ -269,14 +261,14 @@ public class ApplyController extends HttpServlet {
         }
     }
 
-    protected void listPending(HttpServletRequest request, HttpServletResponse response)
+    protected void listInprocess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
             List<CandidateDTO> list = tf.hrstatus14();
-            System.out.println("listPending: " + list);
-            request.setAttribute("listPending", list);
-            request.setAttribute("action", "list_Pending");
+            System.out.println("listInprocess: " + list);
+            request.setAttribute("listInprocess", list);
+            request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
@@ -332,37 +324,35 @@ public class ApplyController extends HttpServlet {
     }
 
     //==== SORT JOB ALL
-    protected void sortByJobASCAll(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
-        try {
-            CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByJobASCAll();
-            request.setAttribute("listAll", sortPen);
-            request.setAttribute("action", "list_All");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
-        } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    protected void sortByJobDESCAll(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
-        try {
-            CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByJobDESCAll();
-            request.setAttribute("listAll", sortPen);
-            request.setAttribute("action", "list_All");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
-        } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
+//    protected void sortByJobASCAll(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException, ClassNotFoundException {
+//        try {
+//            CandidateDAO tf = new CandidateDAO();
+//            List<CandidateDTO> sortPen = tf.sortByJobASCAll();
+//            request.setAttribute("listAll", sortPen);
+//            request.setAttribute("action", "list_All");
+//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+//            System.out.println("Inprocess" + sortPen);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+//    protected void sortByJobDESCAll(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException, ClassNotFoundException {
+//        try {
+//            CandidateDAO tf = new CandidateDAO();
+//            List<CandidateDTO> sortPen = tf.sortByJobDESCAll();
+//            request.setAttribute("listAll", sortPen);
+//            request.setAttribute("action", "list_All");
+//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+//            System.out.println("Inprocess" + sortPen);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     //===== FILE
     protected void uploadFile(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException, ClassNotFoundException, SQLException {
         response.setContentType("text/html;charset=UTF-8");
         try {
             out = response.getWriter();
@@ -379,79 +369,78 @@ public class ApplyController extends HttpServlet {
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            String path
-                    = //                    folderName +
-                    fileName;
+            String path = /*folderName +*/ fileName;
             UserDTO userDTO = new UserDTO();
             userDTO.getEmail();
 
             System.out.println("fileName:" + fileName);
             System.out.println("path:" + path);
 
-            //============
-            // Mã của can_id : Cxxx
-            // Mã của job_id : Jxxx
-            int num = 6;
-            String can_id = "C00" + num;
-            String job_id = "J00"
-                    + num;
-            String gmail
-                    = "member"
-                    + //                     num +
-                    "4@gmail.com";
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            if (google != null) {
 
-            InputStream is = filePart.getInputStream();
-            Files.copy(is, Paths.get(uploadPath + fileName), StandardCopyOption.REPLACE_EXISTING);
-            try {
-                con = DBUtils.makeConnection();
-                System.out.println("Connection done [Upload]");
+                System.out.println("Info");
+                UserDAO uDao = new UserDAO();
+                UserDTO user = uDao.searchUserByEmail(google.getEmail());
+                System.out.println("Email :" + user.getEmail());
 
-                String sql = "insert into candidate(can_id,job_id,email,can_cv,isStatus) "
-                        + "values(?,?,?,?,?)";
+                String job_id = request.getParameter("job_id");
+                JobsDAO uj = new JobsDAO();
+//                JobsDTO jobid = uj.find(job_id);
+//                System.out.println("Job_id : " + jobid.getJob_id());
 
-                ps = con.prepareStatement(sql);
-                ps.setString(1, can_id);
-                //1 email - 1 job_id
-                ps.setString(2, job_id);
-                System.out.println("Email: " + userDTO.getEmail());
-//                ps.setString(3, "2@gmail.com");
-                System.out.println("Email" + gmail);
-                ps.setString(3, gmail);
-                System.out.println(gmail);
-                ps.setString(4, path);
-                ps.setInt(5, 0);
-
-                int status = ps.executeUpdate();
-                if (status > 0) {
-                    session.setAttribute("fileName", fileName);
-                    String msg = "" + fileName + "file uploaded successfully...";
-                    request.setAttribute("msg", msg);
-
-//Đường tới /upload/success.jsp
-                    request.setAttribute("controller", "apply");
-                    request.setAttribute("action", "index_apply");
-                    request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-//                    RequestDispatcher rd = request.getRequestDispatcher("/success.jsp");
-//                    rd.forward(request, response);
-//=====
-                    System.out.println("File upload successfully");
-                    System.out.println("Uploaded Path: " + uploadPath);
-                }
-            } catch (SQLException ex) {
-                out.println("Exception: " + ex);
-                System.out.println("Exception1: " + ex);
-
-            } finally {
+                //============
+                // Mã của can_id : Cxxx
+                // Mã của job_id : Jxxx
+                CandidateDAO cd = new CandidateDAO();
+                String can_id = cd.newId();
+                InputStream is = filePart.getInputStream();
+                Files.copy(is, Paths.get(uploadPath + fileName), StandardCopyOption.REPLACE_EXISTING);
                 try {
-                    if (ps != null) {
-                        ps.close();
+                    con = DBUtils.makeConnection();
+                    System.out.println("Connection done [Upload]");
+                    String sql = "insert into candidate(can_id,job_id,email,can_cv,isStatus) "
+                            + "values(?,?,?,?,?)";
+                    ps = con.prepareStatement(sql);
+                    ps.setString(1, can_id);
+                    //1 email - 1 job_id
+                    ps.setString(2, job_id);
+                    ps.setString(3, user.getEmail());
+                    ps.setString(4, path);
+                    ps.setInt(5, 0);
+
+                    int status = ps.executeUpdate();
+                    if (status > 0) {
+                        session.setAttribute("fileName", fileName);
+                        String msg = "" + fileName + " file uploaded successfully...";
+                        request.setAttribute("msg", msg);
+                        List<JobsDTO> list = JobsDAO.list_job();
+                        request.setAttribute("controller", "job");
+                        request.setAttribute("list", list);
+                        request.setAttribute("action", "search");
+                        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                        System.out.println("File upload successfully");
+                        System.out.println("Uploaded Path: " + uploadPath);
                     }
-                    if (con != null) {
-                        con.close();
+                } catch (SQLException ex) {
+                    out.println("Exception: " + ex);
+                    System.out.println("Exception1: " + ex);
+
+                } finally {
+                    try {
+                        if (ps != null) {
+                            ps.close();
+                        }
+                        if (con != null) {
+                            con.close();
+                        }
+                    } catch (SQLException e) {
+                        out.println(e);
                     }
-                } catch (SQLException e) {
-                    out.println(e);
                 }
+            } else {
+                System.out.println("Error when connect to account");
             }
 
         } catch (IOException | ServletException e) {
@@ -527,13 +516,13 @@ public class ApplyController extends HttpServlet {
             CandidateDAO tf = new CandidateDAO();
             tf.delete(can_id);
             //Cho hiện lại danh sách 
-            response.sendRedirect("/upload?op=upload_index");
+            response.sendRedirect("upload?op=upload_index");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    protected void yesRecruit(HttpServletRequest request, HttpServletResponse response)
+    protected void yesupNewest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             String can_id = request.getParameter("can_id"); // lấy id        
@@ -541,39 +530,25 @@ public class ApplyController extends HttpServlet {
             tf.updateup(can_id);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
-            String email = tf.getEmailByCanId(can_id);
-            NotificationDAO nDao = new NotificationDAO();
-//            nDao.add(email, "Aplication "+ can_id +" have been accepted",
-//                    "You Aplication have been accepted by the HR department. There is a entry Exam that need to be done before the interviewing.",
-//                    "Click here to take the exam.",
-//                    "/exam?op=takeExam&canId=C001" + can_id);
+
             //Cho hiện lại danh sách 
-            listAll(request, response);
+            response.sendRedirect("apply?op=list0");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    protected void yesup(HttpServletRequest request, HttpServletResponse response)
+    protected void yesupRecruit(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             String can_id = request.getParameter("can_id"); // lấy id        
             CandidateDAO tf = new CandidateDAO();
             tf.updateup(can_id);
-            int major = tf.getMajor(can_id);
-            ExamDAO eDao = new ExamDAO();
-            eDao.giveExam(can_id, major);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
-            String email = tf.getEmailByCanId(can_id);
-            NotificationDAO nDao = new NotificationDAO();
-            nDao.add(email, "Aplication " + can_id + " have been accepted",
-                    "You Aplication have been accepted by the HR department. There is a entry Exam that need to be done before the interviewing.",
-                    "Click here to take the exam.",
-                    "/exam?op=confirmExam&canId=" + can_id);
-            MailUtils mail = new MailUtils();
+
             //Cho hiện lại danh sách 
-            listAll(request, response);
+            response.sendRedirect("apply?op=listAll");
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -588,7 +563,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("listAll", sortPen);
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -602,7 +577,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("listAll", sortPen);
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -617,7 +592,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("listAll", sortPen);
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -631,157 +606,153 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("listAll", sortPen);
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    //==== SORT STATUS PENDING
-    protected void sortByStatusASCPending(HttpServletRequest request, HttpServletResponse response)
+    //==== SORT STATUS Inprocess
+    protected void sortByStatusASCInprocess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByStatusASCPending();
-            request.setAttribute("listPending", sortPen);
-            request.setAttribute("action", "list_Pending");
+            List<CandidateDTO> sortPen = tf.sortByStatusASCInprocess();
+            request.setAttribute("listInprocess", sortPen);
+            request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    protected void sortByStatusDESCPending(HttpServletRequest request, HttpServletResponse response)
+    protected void sortByStatusDESCInprocess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByStatusDESCPending();
-            request.setAttribute("listPending", sortPen);
-            request.setAttribute("action", "list_Pending");
+            List<CandidateDTO> sortPen = tf.sortByStatusDESCInprocess();
+            request.setAttribute("listInprocess", sortPen);
+            request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    //==== SORT JOB PENDING
-    protected void sortByJobASCPending(HttpServletRequest request, HttpServletResponse response)
+    //==== SORT JOB Inprocess
+//    protected void sortByJobASCInprocess(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException, ClassNotFoundException {
+//        try {
+//            CandidateDAO tf = new CandidateDAO();
+//            List<CandidateDTO> sortPen = tf.sortByJobASCInprocess();
+//            request.setAttribute("listInprocess", sortPen);
+//            request.setAttribute("action", "list_Inprocess");
+//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+//            System.out.println("Inprocess" + sortPen);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+//    protected void sortByJobDESCInprocess(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException, ClassNotFoundException {
+//        try {
+//            CandidateDAO tf = new CandidateDAO();
+//            List<CandidateDTO> sortPen = tf.sortByJobDESCInprocess();
+//            request.setAttribute("listInprocess", sortPen);
+//            request.setAttribute("action", "list_Inprocess");
+//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+//            System.out.println("Inprocess" + sortPen);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+    //==== SORT CAN_ID Inprocess
+    protected void sortByCanASCInprocess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByJobASCPending();
-            request.setAttribute("listPending", sortPen);
-            request.setAttribute("action", "list_Pending");
+            List<CandidateDTO> sortPen = tf.sortByCanASCInprocess();
+            request.setAttribute("listInprocess", sortPen);
+            request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    protected void sortByJobDESCPending(HttpServletRequest request, HttpServletResponse response)
+    protected void sortByCanDESCInprocess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByJobDESCPending();
-            request.setAttribute("listPending", sortPen);
-            request.setAttribute("action", "list_Pending");
+            List<CandidateDTO> sortPen = tf.sortByCanDESCInprocess();
+            request.setAttribute("listInprocess", sortPen);
+            request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    //==== SORT CAN_ID PENDING
-    protected void sortByCanASCPending(HttpServletRequest request, HttpServletResponse response)
+    //==== SORT SCORE Inprocess
+    protected void sortByScoreASCInprocess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByCanASCPending();
-            request.setAttribute("listPending", sortPen);
-            request.setAttribute("action", "list_Pending");
+            List<CandidateDTO> sortPen = tf.sortByScoreASCInprocess();
+            request.setAttribute("listInprocess", sortPen);
+            request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    protected void sortByCanDESCPending(HttpServletRequest request, HttpServletResponse response)
+    protected void sortByScoreDESCInprocess(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByCanDESCPending();
-            request.setAttribute("listPending", sortPen);
-            request.setAttribute("action", "list_Pending");
+            List<CandidateDTO> sortPen = tf.sortByScoreDESCInprocess();
+            request.setAttribute("listInprocess", sortPen);
+            request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
-        } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    //==== SORT SCORE PENDING
-    protected void sortByScoreASCPending(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
-        try {
-            CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByScoreASCPending();
-            request.setAttribute("listPending", sortPen);
-            request.setAttribute("action", "list_Pending");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
-        } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    protected void sortByScoreDESCPending(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
-        try {
-            CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortPen = tf.sortByScoreDESCPending();
-            request.setAttribute("listPending", sortPen);
-            request.setAttribute("action", "list_Pending");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Pending" + sortPen);
+            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     //==== SORT JOB RECRUIT
-    protected void sortByJobASCRecruit(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
-        try {
-            CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortRecruit = tf.sortByJobASCRecruit();
-            System.out.println(sortRecruit);
-            request.setAttribute("list", sortRecruit);
-            request.setAttribute("action", "list_Recruit");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    protected void sortByJobDESCRecruit(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
-        try {
-            CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortRecruit = tf.sortByJobDESCRecruit();
-            System.out.println(sortRecruit);
-            request.setAttribute("list", sortRecruit);
-            request.setAttribute("action", "list_Recruit");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
+//    protected void sortByJobASCRecruit(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException, ClassNotFoundException {
+//        try {
+//            CandidateDAO tf = new CandidateDAO();
+//            List<CandidateDTO> sortRecruit = tf.sortByJobASCRecruit();
+//            System.out.println(sortRecruit);
+//            request.setAttribute("list", sortRecruit);
+//            request.setAttribute("action", "list_Recruit");
+//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+//    protected void sortByJobDESCRecruit(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException, ClassNotFoundException {
+//        try {
+//            CandidateDAO tf = new CandidateDAO();
+//            List<CandidateDTO> sortRecruit = tf.sortByJobDESCRecruit();
+//            System.out.println(sortRecruit);
+//            request.setAttribute("list", sortRecruit);
+//            request.setAttribute("action", "list_Recruit");
+//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     //==== SORT CAN_ID RECRUIT
     protected void sortByCanASCRecruit(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
@@ -789,7 +760,7 @@ public class ApplyController extends HttpServlet {
             CandidateDAO tf = new CandidateDAO();
             List<CandidateDTO> sortRecruit = tf.sortByCanASCRecruit();
             System.out.println(sortRecruit);
-            request.setAttribute("list", sortRecruit);
+            request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
@@ -803,7 +774,7 @@ public class ApplyController extends HttpServlet {
             CandidateDAO tf = new CandidateDAO();
             List<CandidateDTO> sortRecruit = tf.sortByCanDESCRecruit();
             System.out.println(sortRecruit);
-            request.setAttribute("list", sortRecruit);
+            request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
@@ -818,7 +789,7 @@ public class ApplyController extends HttpServlet {
             CandidateDAO tf = new CandidateDAO();
             List<CandidateDTO> sortRecruit = tf.sortByScoreASCRecruit();
             System.out.println(sortRecruit);
-            request.setAttribute("list", sortRecruit);
+            request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
@@ -832,7 +803,7 @@ public class ApplyController extends HttpServlet {
             CandidateDAO tf = new CandidateDAO();
             List<CandidateDTO> sortRecruit = tf.sortByScoreDESCRecruit();
             System.out.println(sortRecruit);
-            request.setAttribute("list", sortRecruit);
+            request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
@@ -841,11 +812,11 @@ public class ApplyController extends HttpServlet {
     }
 
     //==== SORT JOB NEWEST
-    protected void sortByJobASCNewest(HttpServletRequest request, HttpServletResponse response)
+    protected void sortByCanASCNewest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sortRecruit = tf.sortByJobASCNewest();
+            List<CandidateDTO> sortRecruit = tf.sortByCanASCNewest();
             System.out.println(sortRecruit);
             request.setAttribute("list0", sortRecruit);
             request.setAttribute("action", "list_Newest");
@@ -855,11 +826,11 @@ public class ApplyController extends HttpServlet {
         }
     }
 
-    protected void sortByJobDESCNewest(HttpServletRequest request, HttpServletResponse response)
+    protected void sortByCanDESCNewest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> sort = tf.sortByJobDESCNewest();
+            List<CandidateDTO> sort = tf.sortByCanDESCNewest();
             request.setAttribute("list0", sort);
             request.setAttribute("action", "list_Newest");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -965,6 +936,8 @@ public class ApplyController extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -985,6 +958,8 @@ public class ApplyController extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

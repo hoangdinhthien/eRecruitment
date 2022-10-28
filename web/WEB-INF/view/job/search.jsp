@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -58,7 +59,7 @@
             <c:if test="${not empty info && role == 'HR Staff'}">
                 <a class="link" href="<c:url value="/job?op=add_job"/>">Add a new job</a>
             </c:if>
-                
+
             <form action="<c:url value="/job"/>">
                 <ul style="position: relative">
                     <div style="display: flex;">
@@ -121,6 +122,17 @@
         <c:if test="${empty list}">
             <h3>No result!</h3>
         </c:if>
+        <br>
+        <a style="text-align: center">
+            <c:if test="${requestScope.msg!=null}">
+                <h3><c:out value="${requestScope.msg}"></c:out>
+                    </h3>
+            </c:if><br>
+            <br>
+            <c:if test="${sessionScope.fileName!=null}">
+                <c:set var="file" scope="session" value="${sessionScope.fileName}"/>
+            </c:if>
+        </a>
         <c:if test="${not empty list}">
             <div class="container" style="margin-top: 5%">
                 <c:forEach var="job" items="${list}" varStatus="loop">
@@ -155,6 +167,13 @@
                                 <p style="text-align: left;">
                                     Post Date: ${job.post_date} <br/>
                                 </p>
+                                <p style="text-align: right;">
+                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                       width: 100px" <c:choose>
+                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
+                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                       </c:choose>>Apply</a>
                             </div>
                         </div>
 
@@ -190,6 +209,14 @@
                                         <p style="text-align: left;color: black">
                                             Post Date: ${job.post_date} <br/>
                                         </p>
+                                        <p style="text-align: right; margin-bottom: 0;">
+                                            <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                               width: 100px" <c:choose>
+                                                   <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
+                                                   <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                               </c:choose>>Apply</a>
+                                        </p>
                                     </div>
                                 </div>
                             </c:if>
@@ -223,6 +250,14 @@
                                         </div>
                                         <p style="text-align: left;color: black">
                                             Post Date: ${job.post_date} <br/>
+                                        </p>
+                                        <p style="text-align: right;">
+                                            <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                               width: 100px" <c:choose>
+                                                   <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
+                                                   <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                               </c:choose>>Apply</a>
                                         </p>
                                     </div>
                                 </div>

@@ -199,22 +199,22 @@
                                     <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
 
                                     <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
-                                        <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
+                                        <li><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
                                             <ul class="header__menu__dropdown">
                                                 <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
-                                                <li><a href="<c:url value="/exam?op=confirmExam&canId=C001"/>">Test Exam</a></li>
+                                                <li><a href="<c:url value="/exam?op=takeExam&canId=C014"/>">Test Exam</a></li>
                                                 <!--<li><a href="#">Shoping Cart</a></li>-->
                                             </ul>
                                         </li>
+                                        <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
+                                            <ul class="header__menu__dropdown">
+                                                <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
+                                                <li><a class="link" href="<c:url value="/apply?op=list0"/>">Newest Applications</a></li>
+                                                <li><a class="link" href="<c:url value="/apply?op=listInprocess"/>">In-Progress Applications</a></li>
+                                                <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
+                                            </ul>
+                                        </li>
                                     </c:if>
-                                    <li><a href="<c:url value="/apply?op=index"/>">Upload File</a></li>
-                                    <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
-                                        <ul class="header__menu__dropdown">
-                                            <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
-                                            <li><a class="link" href="<c:url value="/apply?op=list0"/>">Newest Applications</a></li>
-                                            <li><a class="link" href="<c:url value="/apply?op=listPending"/>">Pending Applications</a></li>
-                                            <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
-                                        </ul>
                                     <!--<li><a href="#">Contact</a></li>-->
                                 </ul>
                             </nav>
@@ -297,7 +297,7 @@
                             <div class="hero__search">
                                 <div class="hero__search__form">
                                     <form action="<c:url value="/job"/>">
-                                        <input type="text" name="search" placeholder="What do yo u need?">
+                                        <input type="text" name="search" placeholder="What do you need?">
                                         <button type="submit" class="site-btn" name="op" value="search">SEARCH</button>
                                     </form>
                                 </div>
