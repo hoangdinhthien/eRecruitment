@@ -12,7 +12,6 @@ import java.util.Date;
  * @author ACER
  */
 public class NotificationDTO {
-
     private int nId;
     private String email;
     private String title;
@@ -109,6 +108,5 @@ public class NotificationDTO {
     public void setIsRead(boolean isRead) {
         this.isRead = isRead;
     }
-
     
 }

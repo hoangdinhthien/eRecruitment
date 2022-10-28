@@ -64,12 +64,13 @@ public class UserDAO {
         return user;
     }
 
-    public void update(String email, String phone, String address) throws SQLException, ClassNotFoundException {
+    public void update(String email, String name, String phone, String address) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("UPDATE [User] SET [phone] = ? , [address] = ?  WHERE [email] = ? ");
-        stm.setString(1, phone);
-        stm.setString(2, address);
-        stm.setString(3, email);
+        PreparedStatement stm = con.prepareStatement("UPDATE [User] SET [name] = ? , [phone] = ? , [address] = ?  WHERE [email] = ? ");
+        stm.setString(1, name);
+        stm.setString(2, phone);
+        stm.setString(3, address);
+        stm.setString(4, email);
         stm.executeUpdate();
         con.close();
     }

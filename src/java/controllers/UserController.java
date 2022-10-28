@@ -16,9 +16,7 @@ import dtos.NotificationDTO;
 import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +34,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "UserController", urlPatterns = {"/user"})
 public class UserController extends HttpServlet {
 
+    HttpSession session;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -47,76 +47,78 @@ public class UserController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            response.setContentType("text/html;charset=UTF-8");
-
-            HttpSession session = request.getSession();
-            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            NotificationDAO nDao = new NotificationDAO();
-            List<NotificationDTO> notify = nDao.select(google.getEmail());
-            request.setAttribute("listNotification", notify);
-            request.setAttribute("count", nDao.count(google.getEmail()));
-
-            List<MajorDTO> listMajor = MajorDAO.listAll();
-            request.setAttribute("listMajor", listMajor);
-
+        session = request.getSession();
+        if (session.getAttribute("info") != null) {
             request.setAttribute("controller", "user");
-            String action = request.getParameter("op");
-            request.setAttribute("action", action);
+            response.setContentType("text/html;charset=UTF-8");
+            try {
+
+                GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+                NotificationDAO nDao = new NotificationDAO();
+                List<NotificationDTO> notify = nDao.select(google.getEmail());
+                request.setAttribute("listNotification", notify);
+                request.setAttribute("count", nDao.count(google.getEmail()));
+
+                List<MajorDTO> listMajor = MajorDAO.listAll();
+                request.setAttribute("listMajor", listMajor);
+
+                request.setAttribute("controller", "user");
+                String action = request.getParameter("op");
+                request.setAttribute("action", action);
 //        String action = request.getParameter("action");
-            System.out.println("Option : " + action);
-            switch (action) {
-                case "info": {
-                    view(request, response);
-                    break;
+                System.out.println("Option : " + action);
+                switch (action) {
+                    case "info": {
+                        view(request, response);
+                        break;
+                    }
+                    case "update": {
+                        view(request, response);
+                        break;
+                    }
+                    case "updatehandler": {
+                        updateHandler(request, response);
+                        break;
+                    }
+                    case "listNotification": {
+                        request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                        break;
+                    }
+                    case "read": {
+                        read(request, response);
+                        break;
+                    }
+                    case "readAll": {
+                        readAll(request, response);
+                        break;
+                    }
+                    case "toLink": {
+                        toLink(request, response);
+                        break;
+                    }
+                    case "deleteRead": {
+                        deleteRead(request, response);
+                        break;
+                    }
+                    case "delete": {
+                        delete(request, response);
+                        break;
+                    }
                 }
-                case "update": {
-                    view(request, response);
-                    break;
-                }
-                case "updatehandler": {
-                    updateHandler(request, response);
-                    break;
-                }
-                case "listNotification": {
-                    request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-                    break;
-                }
-                case "read": {
-                    read(request, response);
-                    break;
-                }
-                case "readAll": {
-                    readAll(request, response);
-                    break;
-                }
-                case "toLink": {
-                    toLink(request, response);
-                    break;
-                }
-                case "deleteRead": {
-                    deleteRead(request, response);
-                    break;
-                }
-                case "delete": {
-                    delete(request, response);
-                    break;
-                }
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
+        } else {
+            response.sendRedirect("home?op=index");
         }
     }
 
     public void view(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
+            session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-
-//            String email = request.getParameter("email");
-            System.out.println("Info");
             UserDAO uDao = new UserDAO();
             UserDTO user = uDao.find(google.getEmail());
             RoleDAO rDao = new RoleDAO();
@@ -131,10 +133,9 @@ public class UserController extends HttpServlet {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
     public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
+            session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
 
             UserDAO uDao = new UserDAO();
@@ -151,13 +152,14 @@ public class UserController extends HttpServlet {
 
     public void updateHandler(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
+            session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             String email = google.getEmail();
+            String name = request.getParameter("name");
             String phone = request.getParameter("phone");
             String address = request.getParameter("address");
             UserDAO uDao = new UserDAO();
-            uDao.update(email, phone, address);
+            uDao.update(email, name, phone, address);
             UserDTO user = uDao.find(email);
             System.out.println("");
             request.setAttribute("user", user);

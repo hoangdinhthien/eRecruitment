@@ -5,6 +5,7 @@
  */
 package daos;
 
+import dtos.ExamDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,12 @@ public class ExamDAO {
             i++;
         }
         i++;
-        String newId = "E0" + i;
+        String newId = null;
+        if (i < 10) {
+            newId = "E0" + i;
+        } else {
+            newId = "E" + i;
+        }
         PreparedStatement pstm = con.prepareStatement("select * from [Exam] where [exam_id] = ?");
         pstm.setString(1, newId);
         rs = pstm.executeQuery();
@@ -45,7 +51,22 @@ public class ExamDAO {
         return newId;
     }
 
-    public String selectExam(int major) throws ClassNotFoundException, SQLException {
+    public ExamDTO selectExam(String exam_id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select [exam_id], [exam_name], [major_id] from [Exam] where [exam_id] = ? ");
+        stm.setString(1, exam_id);
+        ResultSet rs = stm.executeQuery();
+        ExamDTO e = new ExamDTO();
+        if (rs.next()) {
+            e.setExam_id(rs.getString("exam_id"));
+            e.setExam_name(rs.getString("exam_name"));
+            e.setMajor_id(rs.getInt("major_id"));
+        }
+        con.close();
+        return e;
+    }
+    
+    public String selectExamId(int major) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("select [exam_id] from [Exam] where [major_id] = ? order by [exam_id] desc");
         stm.setInt(1, major);
@@ -79,9 +100,17 @@ public class ExamDAO {
 
     public void giveExam(String id, int major ) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("INSERT INTO [Examination] values ( ? , ?  )");
-        stm.setString(1, selectExam(major));
+        PreparedStatement stm = con.prepareStatement("INSERT INTO [Examination] ([exam_id],[can_id]) values ( ? , ?  )");
+        stm.setString(1, selectExamId(major));
         stm.setString(2, id);
+        stm.executeUpdate();
+        con.close();
+    }
+    
+    public void confirmTakingExam(String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Update [Examination] set [status] = 1 where [can_id] = ? ");
+        stm.setString(1, canId);
         stm.executeUpdate();
         con.close();
     }
@@ -98,4 +127,18 @@ public class ExamDAO {
         con.close();
         return eId;
     }
+    
+    public boolean check(String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Select [status] from [Examination] where [can_id] = ? ");
+        stm.setString(1, canId);
+        ResultSet rs = stm.executeQuery();
+        boolean check = false;
+        if (rs.next()) {
+            check = rs.getBoolean("status");
+        }
+        con.close();
+        return check;
+    }
 }
+    

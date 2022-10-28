@@ -25,7 +25,7 @@ public class QuestionDAO {
         List<QuestionDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select * from [Question]");
+        ResultSet rs = stm.executeQuery("SELECT [q_id] , [questiontxt] , [major_id] FROM [Question]");
         list = new ArrayList();
         while (rs.next()) {
             QuestionDTO q = new QuestionDTO();
@@ -41,7 +41,7 @@ public class QuestionDAO {
     public List<QuestionDTO> listOneMajor(int Major) throws SQLException, ClassNotFoundException {
         List<QuestionDTO> list = null;
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Question] where [major_id] = ?");
+        PreparedStatement stm = con.prepareStatement("SELECT [q_id] , [questiontxt] , [major_id] FROM [Question] WHERE [major_id] = ?");
         stm.setInt(1, Major);
         ResultSet rs = stm.executeQuery();
         list = new ArrayList();
@@ -67,8 +67,8 @@ public class QuestionDAO {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [Question].* "
                 + " FROM [Exam_question] "
-                + " INNER JOIN [Question] on [Exam_question].q_id = [Question].q_id "
-                + " where [Exam_question].exam_id = ? "
+                + " INNER JOIN [Question] ON [Exam_question].q_id = [Question].q_id "
+                + " WHERE [Exam_question].exam_id = ? "
                 + " ORDER BY NEWID() ");
         stm.setString(1, eId);
         ResultSet rs = stm.executeQuery();
@@ -93,7 +93,7 @@ public class QuestionDAO {
     public QuestionDTO selectOne(String id) throws SQLException, ClassNotFoundException {
         QuestionDTO q = new QuestionDTO();
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Question] where [q_id] = ?");
+        PreparedStatement stm = con.prepareStatement("SELECT [q_id] , [questiontxt] , [major_id] FROM [Question] WHERE [q_id] = ?");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         if (rs.next()) {
@@ -108,7 +108,7 @@ public class QuestionDAO {
     public String newId() throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select * from [Question] ");
+        ResultSet rs = stm.executeQuery("SELECT [q_id] , [questiontxt] , [major_id] FROM [Question] ");
         int i = 0;
         while (rs.next()) {
             i++;
@@ -123,7 +123,7 @@ public class QuestionDAO {
         } else {
             newId = "Q" + i;
         }
-        PreparedStatement pstm = con.prepareStatement("select * from [Question] where [q_id] = ?");
+        PreparedStatement pstm = con.prepareStatement("SELECT [q_id] , [questiontxt] , [major_id] FROM [Question] WHERE [q_id] = ?");
         pstm.setString(1, newId);
         rs = pstm.executeQuery();
         while (rs.next()) {
@@ -154,7 +154,7 @@ public class QuestionDAO {
 
     public void update(String id, String content, int major) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("update [Question] set questiontxt = ? , major_id = ? where q_id = ? ");
+        PreparedStatement stm = con.prepareStatement("update [Question] set questiontxt = ? , major_id = ? WHERE q_id = ? ");
         stm.setString(1, content);
         stm.setInt(2, major);
         stm.setString(3, id);
@@ -164,7 +164,7 @@ public class QuestionDAO {
 
     public int countByMajor(int major_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Question] where [major_id] = ?");
+        PreparedStatement stm = con.prepareStatement("SELECT [q_id] , [questiontxt] , [major_id] FROM [Question] WHERE [major_id] = ?");
         stm.setInt(1, major_id);
         ResultSet rs = stm.executeQuery();
         int count = 0;
@@ -179,8 +179,8 @@ public class QuestionDAO {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT Count([Question].q_id) as count "
                 + " FROM [Exam_question] "
-                + " INNER JOIN [Question] on [Exam_question].q_id = [Question].q_id "
-                + " where [Exam_question].exam_id = ? ");
+                + " INNER JOIN [Question] ON [Exam_question].q_id = [Question].q_id "
+                + " WHERE [Exam_question].exam_id = ? ");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         if (rs.next()) {

@@ -60,36 +60,54 @@
                     </div>
                     <ul class="department-list">
                         <li class="department-item">
-                            <div class="department-item-title">Business Development and Partnerships</div>
-                            <div class="department-item-count">66 opening</div>
+                            <a href="<c:url value="/job?major_id=1&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Marketing</div>
+                            </a>
                         </li>
                         <li class="department-item">
-                            <div class="department-item-title">Business Development and Partnerships</div>
-                            <div class="department-item-count">66 opening</div>
+                            <a href="<c:url value="/job?major_id=2&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Logistic</div>
+                            </a>
                         </li>
                         <li class="department-item">
-                            <div class="department-item-title">Business Development and Partnerships</div>
-                            <div class="department-item-count">66 opening</div>
+                            <a href="<c:url value="/job?major_id=3&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Data Science and Analytics</div>
+                            </a>
                         </li>
                         <li class="department-item">
-                            <div class="department-item-title">Business Development and Partnerships</div>
-                            <div class="department-item-count">66 opening</div>
+                            <a href="<c:url value="/job?major_id=4&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Information Technology</div>
+                            </a>
                         </li>
                         <li class="department-item">
-                            <div class="department-item-title">Business Development and Partnerships</div>
-                            <div class="department-item-count">66 opening</div>
+                            <a href="<c:url value="/job?major_id=5&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Graphic Design</div>
+                            </a>
                         </li>
                         <li class="department-item">
-                            <div class="department-item-title">Business Development and Partnerships</div>
-                            <div class="department-item-count">66 opening</div>
+                            <a href="<c:url value="/job?major_id=6&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Engineering</div>
+                            </a>
                         </li>
                         <li class="department-item">
-                            <div class="department-item-title">Business Development and Partnerships</div>
-                            <div class="department-item-count">66 opening</div>
+                            <a href="<c:url value="/job?major_id=7&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Risk Manager</div>
+                            </a>
                         </li>
                         <li class="department-item">
-                            <div class="department-item-title">Business Development and Partnerships</div>
-                            <div class="department-item-count">66 opening</div>
+                            <a href="<c:url value="/job?major_id=8&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Economic Finance</div>
+                            </a>
+                        </li>
+                        <li class="department-item">
+                            <a href="<c:url value="/job?major_id=9&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Business Intelligence and Development</div>
+                            </a>                        
+                        </li>
+                        <li class="department-item">
+                            <a href="<c:url value="/job?major_id=10&level_id=0&salary=0&op=filter_job"/>" style="color: blue">
+                                <div class="department-item-title">Operations</div>
+                            </a>
                         </li>
                     </ul>
                 </div>

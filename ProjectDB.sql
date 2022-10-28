@@ -281,6 +281,7 @@ CREATE TABLE [Examination]
 (
 	[exam_id] CHAR(3) FOREIGN KEY REFERENCES dbo.[Exam] NOT NULL,
 	[can_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Candidate] NOT NULL,
+	[status] bit DEFAULT (0) not null,
 	UNIQUE ([exam_id],[can_id])
 )
 GO

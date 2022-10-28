@@ -6,12 +6,14 @@
 package controllers;
 
 import config.Config;
+import daos.CandidateDAO;
 
 import daos.ExamDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
 import daos.OptionDAO;
 import daos.QuestionDAO;
+import dtos.ExamDTO;
 import dtos.GoogleDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
@@ -54,10 +56,12 @@ public class ExamController extends HttpServlet {
 //        String action = (String) request.getAttribute("action");
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            NotificationDAO nDao = new NotificationDAO();
-            List<NotificationDTO> notify = nDao.select(google.getEmail());
-            request.setAttribute("listNotification", notify);
-            request.setAttribute("count", nDao.count(google.getEmail()));
+            if (google != null) {
+                NotificationDAO nDao = new NotificationDAO();
+                List<NotificationDTO> notify = nDao.select(google.getEmail());
+                request.setAttribute("listNotification", notify);
+                request.setAttribute("count", nDao.count(google.getEmail()));
+            }
             List<MajorDTO> listMajor = MajorDAO.listAll();
             request.setAttribute("listMajor", listMajor);
 
@@ -88,6 +92,10 @@ public class ExamController extends HttpServlet {
                 }
                 case "CreateExam": {
                     createExam(request, response);
+                    break;
+                }
+                case "confirmExam": {
+                    confirmTakeExam(request, response);
                     break;
                 }
                 case "takeExam": {
@@ -263,6 +271,39 @@ public class ExamController extends HttpServlet {
         }
     }
 
+    protected void confirmTakeExam(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            System.out.println("Confirm Exam");
+            String canId = request.getParameter("canId");
+            System.out.println("canId: " + canId);
+            ExamDAO eDao = new ExamDAO();
+            String eId = eDao.getExam(canId);
+            if (eId == null || eDao.check(canId)) {
+                System.out.println("Step 2");
+                if (eId == null) {
+                    request.setAttribute("message", "You don't have any exam. ");
+                } else {
+                    request.setAttribute("message", "You have taken this exam. ");
+                }
+            } else {
+                ExamDTO testInfo = eDao.selectExam(eId);
+                request.setAttribute("canId", canId);
+                request.setAttribute("testInfo", testInfo);
+            }
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            if (google != null) {
+                request.setAttribute("action", "result");
+                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            } else {
+                request.getRequestDispatcher("/result.jsp").forward(request, response);
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     protected void takeExam(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -271,15 +312,25 @@ public class ExamController extends HttpServlet {
             System.out.println(canId);
             ExamDAO eDao = new ExamDAO();
             String eId = eDao.getExam(canId);
-            System.out.println(eId);
-            if (eId == null) {
-                System.out.println("Null");
+            if (eId == null || eDao.check(canId)) {
+                System.out.println("Step 2");
+                if (eId == null) {
+                    request.setAttribute("message", "You don't have any exam. ");
+                } else {
+                    request.setAttribute("message", "You have taken this exam. ");
+                }
+                request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);
             } else {
+                System.out.println("Step 3");
                 QuestionDAO qDao = new QuestionDAO();
                 List<QuestionDTO> listQuestion = qDao.listOneExam(eId);
+                System.out.println("Step 4");
                 OptionDAO opDao = new OptionDAO();
                 List<OptionDTO> listOption = opDao.listOneQExam(eId);
+                eDao.confirmTakingExam(canId);
+                System.out.println("Step 5");
 //            System.out.println(listOption);
+                request.setAttribute("canId", canId);
                 request.setAttribute("listQuestion", listQuestion);
                 request.setAttribute("listOption", listOption);
                 request.getRequestDispatcher("/WEB-INF/view/exam/exam.jsp").forward(request, response);
@@ -293,24 +344,33 @@ public class ExamController extends HttpServlet {
             throws ServletException, IOException {
         try {
             String canId = request.getParameter("canId");
-            String eId = request.getParameter("eId");
-            QuestionDAO qDao = new QuestionDAO();
-            double count = qDao.countByExam(eId);
-            OptionDAO opDao = new OptionDAO();
-            double correct = 0;
-            for (int i = 1; i <= count; i++) {
-                int answer = Integer.parseInt(request.getParameter("answer" + i));
-                if (answer != 0) {
-                    if (opDao.isCorrect(answer)) {
-                        correct++;
+            CandidateDAO cDao = new CandidateDAO();
+            boolean check = cDao.check(canId);
+            if (!check) {
+                ExamDAO eDao = new ExamDAO();
+                String eId = eDao.getExam(canId);
+                QuestionDAO qDao = new QuestionDAO();
+                double count = qDao.countByExam(eId);
+                OptionDAO opDao = new OptionDAO();
+                double correct = 0;
+                for (int i = 1; i <= count; i++) {
+                    int answer = Integer.parseInt(request.getParameter("answer" + i));
+                    if (answer != 0) {
+                        if (opDao.isCorrect(answer)) {
+                            correct++;
+                        }
+                        System.out.println(answer + " : " + opDao.isCorrect(answer));
                     }
-                    System.out.println(answer + " : " + opDao.isCorrect(answer));
-                }
 
+                }
+                System.out.println(correct + " " + count + " " + ((correct / count)));
+                double mark = (double) ((correct / count) * 10);
+                System.out.println("Mark : " + mark);
+                cDao.result(mark, canId);
+                request.setAttribute("message", "You have finish the exam. ");
+            } else {
+                request.setAttribute("message", "You have taken this exam. ");
             }
-            System.out.println(correct + " " + count + " " + ((correct / count)));
-            double mark = (double) ((correct / count) * 10);
-            System.out.println("Mark : " + mark);
             request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);

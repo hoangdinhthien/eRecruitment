@@ -25,7 +25,7 @@ public class OptionDAO {
         List<OptionDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select * from [Option]");
+        ResultSet rs = stm.executeQuery("SELECT [op_id], [q_id], [content], [isCorrect] FROM [Option]");
         list = new ArrayList();
         while (rs.next()) {
             OptionDTO opt = new OptionDTO();
@@ -42,7 +42,7 @@ public class OptionDAO {
     public List<OptionDTO> listOneQuestion(String id) throws SQLException, ClassNotFoundException {
         List<OptionDTO> list = null;
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [Option] where [q_id] = ?");
+        PreparedStatement stm = con.prepareStatement("SELECT [op_id], [q_id], [content], [isCorrect] FROM [Option] where [q_id] = ?");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         list = new ArrayList();
@@ -61,7 +61,7 @@ public class OptionDAO {
     public List<OptionDTO> listOneQExam(String id) throws SQLException, ClassNotFoundException {
         List<OptionDTO> list = null;
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT [Option].* "
+        PreparedStatement stm = con.prepareStatement("SELECT [Option].[op_id], [Option].[q_id], [Option].[content], [Option].[isCorrect] "
                 + " FROM [Exam_question] "
                 + " INNER JOIN [Question] on [Exam_question].q_id = [Question].q_id "
                 + " INNER JOIN [Option] on [Question].q_id = [Option].q_id "
@@ -84,7 +84,7 @@ public class OptionDAO {
 
     public void delete(String id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("delete from [Option] where [q_id] = ?");
+        PreparedStatement stm = con.prepareStatement("delete FROM [Option] where [q_id] = ?");
         stm.setString(1, id);
         stm.executeUpdate();
         con.close();
@@ -105,7 +105,7 @@ public class OptionDAO {
     public boolean isCorrect(int id) throws SQLException, ClassNotFoundException {
         boolean check = false;
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select [isCorrect] from [Option] where [op_id] = ? ");
+        PreparedStatement stm = con.prepareStatement("SELECT [isCorrect] FROM [Option] where [op_id] = ? ");
         stm.setInt(1, id);
         ResultSet rs = stm.executeQuery();
         if (rs.next()) {

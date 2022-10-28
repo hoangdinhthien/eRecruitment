@@ -55,11 +55,9 @@ public class HomeController extends HttpServlet {
             List<MajorDTO> listMajor;
             listMajor = majorDao.listAll();
             request.setAttribute("listMajor", listMajor);
-
             String action = request.getParameter("op");
             request.setAttribute("controller", "home");
             request.setAttribute("action", action);
-
             switch (action) {
                 case "index":
                     request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
