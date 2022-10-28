@@ -56,10 +56,12 @@ public class ExamController extends HttpServlet {
 //        String action = (String) request.getAttribute("action");
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            NotificationDAO nDao = new NotificationDAO();
-            List<NotificationDTO> notify = nDao.select(google.getEmail());
-            request.setAttribute("listNotification", notify);
-            request.setAttribute("count", nDao.count(google.getEmail()));
+            if (google != null) {
+                NotificationDAO nDao = new NotificationDAO();
+                List<NotificationDTO> notify = nDao.select(google.getEmail());
+                request.setAttribute("listNotification", notify);
+                request.setAttribute("count", nDao.count(google.getEmail()));
+            }
             List<MajorDTO> listMajor = MajorDAO.listAll();
             request.setAttribute("listMajor", listMajor);
 
