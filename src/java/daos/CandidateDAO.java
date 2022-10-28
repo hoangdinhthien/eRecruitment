@@ -6,7 +6,10 @@
 package daos;
 
 import dtos.CandidateDTO;
+import dtos.GoogleDTO;
 import dtos.InterviewingDTO;
+import dtos.JobsDTO;
+import dtos.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +18,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import utils.DBUtils;
 
 /**
@@ -22,6 +26,117 @@ import utils.DBUtils;
  * @author Thien's
  */
 public class CandidateDAO {
+
+    public static List<CandidateDTO> listCVByEmail(String email) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select c.can_id,j.job_name,c.email,can_cv,score, c.isStatus from candidate c \n"
+                + "                 inner join job j on c.job_id = j.job_id \n"
+                + "                  where email like ?  order by can_id  ASC");
+        UserDAO us = new UserDAO();
+//        stm.setString(1, j.find(email));
+        stm.setString(1, "jackstrong179@gmail.com");
+        ResultSet rs = stm.executeQuery();
+        List<CandidateDTO> list = new ArrayList<>();
+        while (rs.next()) {
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString("can_id");
+            j.setJob_name(rs.getString("job_name"));
+            String cv = rs.getString("can_cv");
+            float score = rs.getInt("score");
+            int isStatus = rs.getInt("isStatus");
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
+        }
+        con.close();
+        return list;
+    }
+
+    public static List<CandidateDTO> search2(String email) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select c.can_id,j.job_name,can_cv,score, c.isStatus from candidate c \n"
+                + "                 inner join job j on c.job_id = j.job_id \n"
+                + "                  where email like ?  order by can_id  ASC");
+//        stm.setString(1, "jackstrong179@gmail.com");
+        stm.setString(1, email);
+        UserDAO uDao = new UserDAO();
+        UserDTO user = uDao.find(email);
+        System.out.println("test1" + user.getEmail());
+        ResultSet rs = stm.executeQuery();
+        List<CandidateDTO> list = new ArrayList<>();
+        while (rs.next()) {
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString("can_id");
+            j.setJob_name(rs.getString("job_name"));
+            String cv = rs.getString("can_cv");
+            float score = rs.getInt("score");
+            int isStatus = rs.getInt("isStatus");
+            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus);
+            list.add(join);
+        }
+        con.close();
+        return list;
+    }
+
+    public static List<CandidateDTO> search(String job_name) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("select c.can_id,j.job_name,c.email,can_cv,score, c.isStatus from candidate c \n"
+                + "                 inner join job j on c.job_id = j.job_id \n"
+                + "                  where job_name like ?  order by can_id  ASC");
+//        stm.setString(1, "jackstrong179@gmail.com");
+        stm.setString(1, "%" + job_name + "%");
+        ResultSet rs = stm.executeQuery();
+        List<CandidateDTO> list = new ArrayList<>();
+        while (rs.next()) {
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString("can_id");
+            j.setJob_name(rs.getString("job_name"));
+            String cv = rs.getString("can_cv");
+            String email = rs.getString("email");
+            float score = rs.getInt("score");
+            int isStatus = rs.getInt("isStatus");
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
+        }
+        con.close();
+        return list;
+    }
+
+    public String newId() throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        Statement stm = con.createStatement();
+        ResultSet rs = stm.executeQuery("select * from [Candidate] ");
+        int i = 0;
+        while (rs.next()) {
+            i++;
+        }
+        i++;
+        System.out.println(i);
+        String newId = null;
+        if (i < 10) {
+            newId = "C00" + i;
+        } else if (i < 100) {
+            newId = "C0" + i;
+        } else {
+            newId = "C" + i;
+        }
+        PreparedStatement pstm = con.prepareStatement("select * from [Candidate] where [can_id] = ?");
+        pstm.setString(1, newId);
+        rs = pstm.executeQuery();
+        while (rs.next()) {
+            i++;
+            if (i < 10) {
+                newId = "C00" + i;
+            } else if (i < 100) {
+                newId = "C0" + i;
+            } else {
+                newId = "C" + i;
+            }
+            pstm.setString(1, newId);
+            rs = pstm.executeQuery();
+        }
+        con.close();
+        return newId;
+    }
 
     public static List<CandidateDTO> searchCandidateByMajor(int major_id, int status) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
@@ -45,6 +160,7 @@ public class CandidateDAO {
         con.close();
         return list;
     }
+
     public static CandidateDTO searchCandidateByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, c.isStatus, u.[name], u.[phone] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
@@ -64,6 +180,7 @@ public class CandidateDAO {
         con.close();
         return c;
     }
+
     public static CandidateDTO searchCandidateById(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, u.[name] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
@@ -84,36 +201,53 @@ public class CandidateDAO {
 
     public static boolean updateCandidateStatus(String id, int isStatus) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("UPDATE [dbo].[Candidate] SET isStatus=? WHERE can_id=?");
+        PreparedStatement stm = con.prepareStatement("update [dbo].[Candidate] set isStatus=? where can_id=?");
         stm.setInt(1, isStatus);
         stm.setString(2, id);
         int rs = stm.executeUpdate();
         con.close();
         return rs != 0;
     }
-    //FILTER STATUS ALL
+
+    //SEARCH 
+    public static List<CandidateDTO> searchJobAll(String search) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        String sql = "select can_id,job_id,email,can_cv,isStatus from candidate where job_id like ?";
+        PreparedStatement stm = con.prepareStatement(sql);
+        stm.setString(1, "%" + search + "%");
+        ResultSet rs = stm.executeQuery();
+        List<CandidateDTO> list = new ArrayList<>();
+        while (rs.next()) {
+            CandidateDTO c = new CandidateDTO();
+            c.setId(rs.getString("can_id"));
+            c.setJobId(rs.getString("job_id"));
+            c.setEmail(rs.getString("email"));
+            c.setCv(rs.getString("can_cv"));
+            c.setIsStatus(rs.getInt("isStatus"));
+            list.add(c);
+        }
+        return list;
+    }
 
     // LIST ALL APPLICATIONS
     public List<CandidateDTO> selectAll() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,c.can_cv,score,isStatus from [Candidate] c"
-        //                + "left join Interviewing as i "
-        //                + "on i.can_id = c.can_id "
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score,isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
         );
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            InterviewingDTO i = new InterviewingDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-//            i.setScore(rs.getInt("inter_score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
 
         }
         con.close();
@@ -125,16 +259,20 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,isStatus from [candidate] where isStatus =0");
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
+                    + "inner join job j on c.job_id = j.job_id "
+                    + "where c.isStatus =0");
             list = new ArrayList<>();
             while (rs.next()) {
-                CandidateDTO c = new CandidateDTO();
-                c.setId(rs.getString("can_id"));
-                c.setJobId(rs.getString("job_id"));
-                c.setEmail(rs.getString("email"));
-                c.setCv(rs.getString("can_cv"));
-                c.setIsStatus(rs.getInt("isStatus"));
-                list.add(c);
+                JobsDTO j = new JobsDTO();
+                String id = rs.getString(1);
+                j.setJob_name(rs.getString(2));
+                String cv = rs.getString(4);
+                String email = rs.getString(3);
+                float score = rs.getInt(5);
+                int isStatus = rs.getInt(6);
+                CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+                list.add(join);
             }
             con.close();
         } catch (SQLException ex) {
@@ -148,16 +286,20 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,isStatus from [candidate] where isStatus =1");
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
+                    + "inner join job j on c.job_id = j.job_id "
+                    + "where c.isStatus =1");
             list = new ArrayList<>();
             while (rs.next()) {
-                CandidateDTO c = new CandidateDTO();
-                c.setId(rs.getString("can_id"));
-                c.setJobId(rs.getString("job_id"));
-                c.setEmail(rs.getString("email"));
-                c.setCv(rs.getString("can_cv"));
-                c.setIsStatus(rs.getInt("isStatus"));
-                list.add(c);
+                JobsDTO j = new JobsDTO();
+                String id = rs.getString(1);
+                j.setJob_name(rs.getString(2));
+                String cv = rs.getString(4);
+                String email = rs.getString(3);
+                float score = rs.getInt(5);
+                int isStatus = rs.getInt(6);
+                CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+                list.add(join);
             }
             con.close();
         } catch (SQLException ex) {
@@ -171,16 +313,20 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,isStatus from [candidate] where isStatus =2");
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
+                    + "inner join job j on c.job_id = j.job_id "
+                    + "where c.isStatus =2");
             list = new ArrayList<>();
             while (rs.next()) {
-                CandidateDTO c = new CandidateDTO();
-                c.setId(rs.getString("can_id"));
-                c.setJobId(rs.getString("job_id"));
-                c.setEmail(rs.getString("email"));
-                c.setCv(rs.getString("can_cv"));
-                c.setIsStatus(rs.getInt("isStatus"));
-                list.add(c);
+                JobsDTO j = new JobsDTO();
+                String id = rs.getString(1);
+                j.setJob_name(rs.getString(2));
+                String cv = rs.getString(4);
+                String email = rs.getString(3);
+                float score = rs.getInt(5);
+                int isStatus = rs.getInt(6);
+                CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+                list.add(join);
             }
             con.close();
         } catch (SQLException ex) {
@@ -194,16 +340,20 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,isStatus from [candidate] where isStatus =3");
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
+                    + "inner join job j on c.job_id = j.job_id "
+                    + "where c.isStatus =3");
             list = new ArrayList<>();
             while (rs.next()) {
-                CandidateDTO c = new CandidateDTO();
-                c.setId(rs.getString("can_id"));
-                c.setJobId(rs.getString("job_id"));
-                c.setEmail(rs.getString("email"));
-                c.setCv(rs.getString("can_cv"));
-                c.setIsStatus(rs.getInt("isStatus"));
-                list.add(c);
+                JobsDTO j = new JobsDTO();
+                String id = rs.getString(1);
+                j.setJob_name(rs.getString(2));
+                String cv = rs.getString(4);
+                String email = rs.getString(3);
+                float score = rs.getInt(5);
+                int isStatus = rs.getInt(6);
+                CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+                list.add(join);
             }
             con.close();
         } catch (SQLException ex) {
@@ -217,16 +367,20 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,isStatus from [candidate] where isStatus =5");
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
+                    + "inner join job j on c.job_id = j.job_id "
+                    + "where c.isStatus =5 ");
             list = new ArrayList<>();
             while (rs.next()) {
-                CandidateDTO c = new CandidateDTO();
-                c.setId(rs.getString("can_id"));
-                c.setJobId(rs.getString("job_id"));
-                c.setEmail(rs.getString("email"));
-                c.setCv(rs.getString("can_cv"));
-                c.setIsStatus(rs.getInt("isStatus"));
-                list.add(c);
+                JobsDTO j = new JobsDTO();
+                String id = rs.getString(1);
+                j.setJob_name(rs.getString(2));
+                String cv = rs.getString(4);
+                String email = rs.getString(3);
+                float score = rs.getInt(5);
+                int isStatus = rs.getInt(6);
+                CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+                list.add(join);
             }
             con.close();
         } catch (SQLException ex) {
@@ -240,17 +394,20 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [candidate] where isStatus > 0 and isStatus < 5");
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
+                    + "inner join job j on c.job_id = j.job_id "
+                    + "where c.isStatus <5 and c.isStatus > 0");
             list = new ArrayList<>();
             while (rs.next()) {
-                CandidateDTO c = new CandidateDTO();
-                c.setId(rs.getString("can_id"));
-                c.setJobId(rs.getString("job_id"));
-                c.setEmail(rs.getString("email"));
-                c.setCv(rs.getString("can_cv"));
-                c.setScore(rs.getInt("score"));
-                c.setIsStatus(rs.getInt("isStatus"));
-                list.add(c);
+                JobsDTO j = new JobsDTO();
+                String id = rs.getString(1);
+                j.setJob_name(rs.getString(2));
+                String cv = rs.getString(4);
+                String email = rs.getString(3);
+                float score = rs.getInt(5);
+                int isStatus = rs.getInt(6);
+                CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+                list.add(join);
             }
             con.close();
         } catch (SQLException ex) {
@@ -264,17 +421,23 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score from [candidate] where isStatus = 4");
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus from candidate c "
+                    + "inner join interviewing i on c.can_id = i.can_id "
+                    + "inner join job j on c.job_id = j.job_id "
+                    + "where c.isStatus =4 ");
             list = new ArrayList<>();
             while (rs.next()) {
-                CandidateDTO c = new CandidateDTO();
-                c.setId(rs.getString("can_id"));
-                c.setJobId(rs.getString("job_id"));
-                c.setEmail(rs.getString("email"));
-                c.setCv(rs.getString("can_cv"));
-                c.setScore(rs.getInt("score"));
-//                c.setIsStatus(rs.getInt("isStatus"));
-                list.add(c);
+                InterviewingDTO i = new InterviewingDTO();
+                JobsDTO j = new JobsDTO();
+                i.setScore(rs.getInt(6));
+                String id = rs.getString(1);
+                j.setJob_name(rs.getString(2));
+                String cv = rs.getString(4);
+                String email = rs.getString(3);
+                float score = rs.getInt(5);
+                int isStatus = rs.getInt(7);
+                CandidateDTO join = new CandidateDTO(id, j, cv, email, score, i, isStatus);
+                list.add(join);
             }
             con.close();
         } catch (SQLException ex) {
@@ -288,20 +451,20 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] order by isStatus ,can_id ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score ,  c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "order by isStatus ,can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-//            InterviewingDTO i = new InterviewingDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-//            i.setScore(rs.getInt("inter_score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
-
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -311,61 +474,20 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] order by isStatus DESC , can_id ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score ,  c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "order by isStatus DESC,can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-//            InterviewingDTO i = new InterviewingDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-//            i.setScore(rs.getInt("inter_score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
-
-        }
-        con.close();
-        return list;
-    }
-
-    // SORT JOB_ID ALL
-    public List<CandidateDTO> sortByJobASCAll() throws SQLException, ClassNotFoundException {
-        List<CandidateDTO> list = null;
-        Connection con = DBUtils.makeConnection();
-        Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] order by job_id, can_id  ASC");
-        list = new ArrayList<>();
-        while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
-        }
-        con.close();
-        return list;
-    }
-
-    public List<CandidateDTO> sortByJobDESCAll() throws SQLException, ClassNotFoundException {
-        List<CandidateDTO> list = null;
-        Connection con = DBUtils.makeConnection();
-        Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] order by job_id DESC , can_id ASC");
-        list = new ArrayList<>();
-        while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -376,17 +498,20 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] order by score, can_id  ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score ,  c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "order by score ,can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -396,17 +521,20 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] order by score DESC , can_id ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "order by score DESC,can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -417,17 +545,20 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] order by  can_id  ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "order by  c.can_id  ASC ");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String email = rs.getString(3);
+            String cv = rs.getString(4);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -437,284 +568,314 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] order by can_id DESC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "order by  c.can_id  DESC ");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String email = rs.getString(3);
+            String cv = rs.getString(4);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
     }
 
-    // SORT STATUS PENDING
-    public List<CandidateDTO> sortByStatusASCPending() throws SQLException, ClassNotFoundException {
+    // SORT STATUS Inprocess
+    public List<CandidateDTO> sortByStatusASCInprocess() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by isStatus, can_id  ASC ");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where isStatus > 0 and isStatus < 5 order by isStatus, can_id  ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String email = rs.getString(3);
+            String cv = rs.getString(4);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
+
         }
         con.close();
         return list;
     }
 
-    public List<CandidateDTO> sortByStatusDESCPending() throws SQLException, ClassNotFoundException {
+    public List<CandidateDTO> sortByStatusDESCInprocess() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by isStatus DESC , can_id ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where isStatus > 0 and isStatus < 5 order by isStatus DESC , can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String email = rs.getString(3);
+            String cv = rs.getString(4);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
     }
 
-    // SORT JOB_ID PENDING
-    public List<CandidateDTO> sortByJobASCPending() throws SQLException, ClassNotFoundException {
+    // SORT JOB_ID Inprocess
+//    public List<CandidateDTO> sortByJobASCInprocess() throws SQLException, ClassNotFoundException {
+//        List<CandidateDTO> list = null;
+//        Connection con = DBUtils.makeConnection();
+//        Statement stm = con.createStatement();
+//        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by job_id, can_id  ASC");
+//        list = new ArrayList<>();
+//        while (rs.next()) {
+//            CandidateDTO c = new CandidateDTO();
+//            c.setId(rs.getString("can_id"));
+//            c.setJobId(rs.getString("job_id"));
+//            c.setEmail(rs.getString("email"));
+//            c.setCv(rs.getString("can_cv"));
+//            c.setScore(rs.getInt("score"));
+//            c.setIsStatus(rs.getInt("isStatus"));
+//            list.add(c);
+//        }
+//        con.close();
+//        return list;
+//    }
+//    public List<CandidateDTO> sortByJobDESCInprocess() throws SQLException, ClassNotFoundException {
+//        List<CandidateDTO> list = null;
+//        Connection con = DBUtils.makeConnection();
+//        Statement stm = con.createStatement();
+//        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by job_id DESC , can_id ASC");
+//        list = new ArrayList<>();
+//        while (rs.next()) {
+//            CandidateDTO c = new CandidateDTO();
+//            c.setId(rs.getString("can_id"));
+//            c.setJobId(rs.getString("job_id"));
+//            c.setEmail(rs.getString("email"));
+//            c.setCv(rs.getString("can_cv"));
+//            c.setScore(rs.getInt("score"));
+//            c.setIsStatus(rs.getInt("isStatus"));
+//            list.add(c);
+//        }
+//        con.close();
+//        return list;
+//    }
+    // SORT SCORE Inprocess
+    public List<CandidateDTO> sortByScoreASCInprocess() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by job_id, can_id  ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where isStatus > 0 and isStatus < 5 order by score, can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String email = rs.getString(3);
+            String cv = rs.getString(4);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
     }
 
-    public List<CandidateDTO> sortByJobDESCPending() throws SQLException, ClassNotFoundException {
+    public List<CandidateDTO> sortByScoreDESCInprocess() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by job_id DESC , can_id ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where isStatus > 0 and isStatus < 5 order by score DESC , can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String email = rs.getString(3);
+            String cv = rs.getString(4);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
     }
 
-    // SORT SCORE PENDING
-    public List<CandidateDTO> sortByScoreASCPending() throws SQLException, ClassNotFoundException {
+    // SORT CAN_ID Inprocess
+    public List<CandidateDTO> sortByCanASCInprocess() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by score, can_id  ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where isStatus > 0 and isStatus < 5 order by  can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String email = rs.getString(3);
+            String cv = rs.getString(4);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
     }
 
-    public List<CandidateDTO> sortByScoreDESCPending() throws SQLException, ClassNotFoundException {
+    public List<CandidateDTO> sortByCanDESCInprocess() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by score DESC , can_id ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where isStatus > 0 and isStatus < 5 order by  can_id DESC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String email = rs.getString(3);
+            String cv = rs.getString(4);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
     }
 
-    // SORT CAN_ID PENDING
-    public List<CandidateDTO> sortByCanASCPending() throws SQLException, ClassNotFoundException {
+    // SORT Status NEWEST
+    public List<CandidateDTO> sortByCanASCNewest() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by  can_id  ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + " where isStatus =0 order by can_id  ASC ");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
     }
 
-    public List<CandidateDTO> sortByCanDESCPending() throws SQLException, ClassNotFoundException {
+    public List<CandidateDTO> sortByCanDESCNewest() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by can_id DESC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, c.isStatus from candidate c "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where isStatus =0 order by can_id  DESC ");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
-        }
-        con.close();
-        return list;
-    }
-
-    // SORT JOB_ID NEWEST
-    public List<CandidateDTO> sortByJobASCNewest() throws SQLException, ClassNotFoundException {
-        List<CandidateDTO> list = null;
-        Connection con = DBUtils.makeConnection();
-        Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 0 order by job_id, can_id  ASC");
-        list = new ArrayList<>();
-        while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
-        }
-        con.close();
-        return list;
-    }
-
-    public List<CandidateDTO> sortByJobDESCNewest() throws SQLException, ClassNotFoundException {
-        List<CandidateDTO> list = null;
-        Connection con = DBUtils.makeConnection();
-        Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 0 order by job_id DESC , can_id ASC");
-        list = new ArrayList<>();
-        while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            JobsDTO j = new JobsDTO();
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(6);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
     }
 
     // SORT JOB_ID RECRUIT
-    public List<CandidateDTO> sortByJobASCRecruit() throws SQLException, ClassNotFoundException {
-        List<CandidateDTO> list = null;
-        Connection con = DBUtils.makeConnection();
-        Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by job_id, can_id  ASC");
-        list = new ArrayList<>();
-        while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
-        }
-        con.close();
-        return list;
-    }
-
-    public List<CandidateDTO> sortByJobDESCRecruit() throws SQLException, ClassNotFoundException {
-        List<CandidateDTO> list = null;
-        Connection con = DBUtils.makeConnection();
-        Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by job_id DESC , can_id ASC");
-        list = new ArrayList<>();
-        while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
-        }
-        con.close();
-        return list;
-    }
-
+//    public List<CandidateDTO> sortByJobASCRecruit() throws SQLException, ClassNotFoundException {
+//        List<CandidateDTO> list = null;
+//        Connection con = DBUtils.makeConnection();
+//        Statement stm = con.createStatement();
+//        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by job_id, can_id  ASC");
+//        list = new ArrayList<>();
+//        while (rs.next()) {
+//            CandidateDTO c = new CandidateDTO();
+//            c.setId(rs.getString("can_id"));
+//            c.setJobId(rs.getString("job_id"));
+//            c.setEmail(rs.getString("email"));
+//            c.setCv(rs.getString("can_cv"));
+//            c.setScore(rs.getInt("score"));
+//            c.setIsStatus(rs.getInt("isStatus"));
+//            list.add(c);
+//        }
+//        con.close();
+//        return list;
+//    }
+//    public List<CandidateDTO> sortByJobDESCRecruit() throws SQLException, ClassNotFoundException {
+//        List<CandidateDTO> list = null;
+//        Connection con = DBUtils.makeConnection();
+//        Statement stm = con.createStatement();
+//        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by job_id DESC , can_id ASC");
+//        list = new ArrayList<>();
+//        while (rs.next()) {
+//            CandidateDTO c = new CandidateDTO();
+//            c.setId(rs.getString("can_id"));
+//            c.setJobId(rs.getString("job_id"));
+//            c.setEmail(rs.getString("email"));
+//            c.setCv(rs.getString("can_cv"));
+//            c.setScore(rs.getInt("score"));
+//            c.setIsStatus(rs.getInt("isStatus"));
+//            list.add(c);
+//        }
+//        con.close();
+//        return list;
+//    }
     // SORT CAN_ID RECRUIT
     public List<CandidateDTO> sortByCanASCRecruit() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by can_id  ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus from candidate c "
+                + "inner join interviewing i on c.can_id = i.can_id "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where c.isStatus =4 order by can_id  ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            InterviewingDTO i = new InterviewingDTO();
+            JobsDTO j = new JobsDTO();
+            i.setScore(rs.getInt(6));
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(7);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, i, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -724,17 +885,23 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by can_id ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus from candidate c "
+                + "inner join interviewing i on c.can_id = i.can_id "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where c.isStatus =4 order by can_id  DESC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            InterviewingDTO i = new InterviewingDTO();
+            JobsDTO j = new JobsDTO();
+            i.setScore(rs.getInt(6));
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(7);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, i, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -745,17 +912,23 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by score,can_id  ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus from candidate c "
+                + "inner join interviewing i on c.can_id = i.can_id "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where c.isStatus =4 order by score,can_id  ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            InterviewingDTO i = new InterviewingDTO();
+            JobsDTO j = new JobsDTO();
+            i.setScore(rs.getInt(6));
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(7);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, i, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -765,17 +938,23 @@ public class CandidateDAO {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by score DESC, can_id ASC");
+        ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus from candidate c "
+                + "inner join interviewing i on c.can_id = i.can_id "
+                + "inner join job j on c.job_id = j.job_id "
+                + "where c.isStatus =4 order by score DESC,can_id  ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            CandidateDTO c = new CandidateDTO();
-            c.setId(rs.getString("can_id"));
-            c.setJobId(rs.getString("job_id"));
-            c.setEmail(rs.getString("email"));
-            c.setCv(rs.getString("can_cv"));
-            c.setScore(rs.getInt("score"));
-            c.setIsStatus(rs.getInt("isStatus"));
-            list.add(c);
+            InterviewingDTO i = new InterviewingDTO();
+            JobsDTO j = new JobsDTO();
+            i.setScore(rs.getInt(6));
+            String id = rs.getString(1);
+            j.setJob_name(rs.getString(2));
+            String cv = rs.getString(4);
+            String email = rs.getString(3);
+            float score = rs.getInt(5);
+            int isStatus = rs.getInt(7);
+            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, i, isStatus);
+            list.add(join);
         }
         con.close();
         return list;
@@ -824,30 +1003,30 @@ public class CandidateDAO {
         con.close();
 
     }
-    
-    public int getMajor (String canId) throws ClassNotFoundException, SQLException{
+
+    public int getMajor(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("select [Job].[major_id] from [Candidate] INNER JOIN [Job] ON   [Candidate].[job_id] = [Job].[job_id] where [Candidate].[can_id] = ? ");
         stm.setString(1, canId);
         ResultSet rs = stm.executeQuery();
         int major = 0;
-        if (rs.next()){
+        if (rs.next()) {
             major = rs.getInt("major_id");
         }
         con.close();
         return major;
     }
-    
+
     public void result(double score, String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Update [Candidate] set [score] = ? , [isStatus] = 2 where [can_id] = ? ");
         stm.setDouble(1, score);
         stm.setString(2, id);
         stm.executeUpdate();
-        System.out.println("Update " + score +" "+ id );
+        System.out.println("Update " + score + " " + id);
         con.close();
     }
-    
+
     public boolean check(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select [isStatus] from [Candidate] where [can_id] = ? ");
@@ -855,13 +1034,12 @@ public class CandidateDAO {
         ResultSet rs = stm.executeQuery();
         boolean check = false;
         if (rs.next()) {
-            if (rs.getInt("isStatus") == 2){
+            if (rs.getInt("isStatus") == 2) {
                 check = true;
             }
         }
         con.close();
         return check;
     }
-    
-}
 
+}

@@ -47,17 +47,17 @@ public class JobsController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try  {
+        try {
 //            HttpSession session = request.getSession();
 //            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
 //            NotificationDAO nDao = new NotificationDAO();
 //            List<NotificationDTO> notify = nDao.select(google.getEmail());
 //            request.setAttribute("listNotification", notify);
 //            request.setAttribute("count", nDao.count(google.getEmail()));
-            
+
             List<MajorDTO> listMajor = MajorDAO.listAll();
             request.setAttribute("listMajor", listMajor);
-            
+
             request.setAttribute("controller", "job");
             String op = request.getParameter("op");
             request.setAttribute("action", op);
@@ -162,6 +162,7 @@ public class JobsController extends HttpServlet {
             Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     protected void filter_job(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -170,7 +171,7 @@ public class JobsController extends HttpServlet {
             int flevel = Integer.parseInt(request.getParameter("level_id"));
             int fsalary = Integer.parseInt(request.getParameter("salary"));
             try {
-                List<JobsDTO> list = JobsDAO.filter_job(fmajor,flevel,fsalary);
+                List<JobsDTO> list = JobsDAO.filter_job(fmajor, flevel, fsalary);
                 MajorDAO majorDao = new MajorDAO();
                 List<MajorDTO> listMajor = majorDao.listAll();
                 request.setAttribute("listMajor", listMajor);

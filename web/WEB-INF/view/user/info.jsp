@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -76,14 +77,75 @@
                 <button onclick="document.querySelector('dialog').close()" class="btn btn-secondary"  >Cancel</button>
             </dialog>
         </div>
+        <div class="account-management">
+            <h3>
+                My Application
+            </h3>
 
-<!--                <table>
-                    <tbody>
-                        <tr>
-                            <td>
-                                Email :
+            <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">      
+                <c:choose>
+                    <c:when test="${not empty listEmail}">
+                        <thead>
+                            <tr>
+                                <th>No.</th><th>Job Name</th>
+                                <th>File Upload</th>
+                                <th>Exam Score</th>
+                                <!--                    <th>Interview Score</th>-->
+                                <th>Status</th><th style="text-align: center">Operations</th>    
+                            </tr>
+                        </thead>
+                        <c:forEach var="can" items="${listEmail}" varStatus="loop">
+                            <tr>
+                                <td style="text-align: center;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
+                            <td>${can.jobname.job_name}</td>
+                            <td>${can.cv}</td>
+                            <td>${can.score}</td>
+                            <td><c:choose>
+                                    <c:when test="${can.isStatus==0}">
+                                        Hasn't Accepted
+                                    </c:when>
+                                    <c:when test="${can.isStatus==1}">
+                                        Accepted
+                                    </c:when>
+                                    <c:when test="${can.isStatus==2}">
+                                        Tested
+                                    </c:when>
+                                    <c:when test="${can.isStatus==3}">
+                                        Has Scheduled
+                                    </c:when>
+                                    <c:when test="${can.isStatus==4}">
+                                        Has Been Interviewed
+                                    </c:when>
+                                    <c:when test="${can.isStatus==5}">
+                                        Hired
+                                    </c:when>
+                                </c:choose>
                             </td>
-                            <td>
+                            <td style="text-align: center">
+                                <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
+                                <a href="apply?op=deleteFile&can_id=${can.id}">Delete</a> 
+                                <%--  <a href="apply?op=yesup&can_id=${can.id}">Accept</a> --%>
+                            </td>
+                            </tr>
+
+                        </c:forEach>
+
+                        </tbody>
+                    </c:when>
+                    <c:otherwise>
+                        <c:out value="NO DATA FOUND"/>
+                    </c:otherwise>
+                </c:choose>
+            </table>
+        </div>
+
+        <!--                <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        Email :
+                                    </td>
+                                    <td>
         ${user.email}
     </td>
 </tr>
@@ -101,9 +163,9 @@
                     Role :
                 </td>
                 <td>
-            ${user.roleId}
-        </td>
-    </tr>
+        ${user.roleId}
+    </td>
+</tr>
         <%--</c:if>--%>
         <tr>
             <td>

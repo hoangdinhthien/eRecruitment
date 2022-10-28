@@ -29,31 +29,31 @@
     </head>
     <body>
     <center>
-        <h1>Pending Applications</h1> <br>
+        <h1>Inprocess Applications</h1> <br>
         <nav class="header__menu">
             <ul>
-                <li><a href="<c:url value="apply?op=sortByCanASCPending"/>"> Sort by Can Id </a>
+                <li><a href="<c:url value="apply?op=sortByCanASCInprocess"/>"> Sort by Can Id </a>
                     <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByCanASCPending">Can Id Ascending</a></li>
-                        <li><a href="apply?op=sortByCanDESCPending">Can Id Descending</a></li>
+                        <li><a href="apply?op=sortByCanASCInprocess">Can Id Ascending</a></li>
+                        <li><a href="apply?op=sortByCanDESCInprocess">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <li><a href="<c:url value="/apply?op=sortByJobASCPending"/>"> Sort by Job Id </a>
+                <%--<li><a href="<c:url value="/apply?op=sortByJobASCInprocess"/>"> Sort by Job Id </a>
                     <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByJobASCPending">Job Id Ascending</a></li>
-                        <li><a href="apply?op=sortByJobDESCPending">Job Id Descending</a></li>
+                        <li><a href="apply?op=sortByJobASCInprocess">Job Id Ascending</a></li>
+                        <li><a href="apply?op=sortByJobDESCInprocess">Job Id Descending</a></li>
+                    </ul>
+                </li>--%>
+                <li><a href="<c:url value="/apply?op=sortByScoreASCInprocess"/>"> Sort by Exam Score </a>
+                    <ul class="header__menu__dropdown">
+                        <li><a href="apply?op=sortByScoreASCInprocess">Score Ascending</a></li>
+                        <li><a href="apply?op=sortByScoreDESCInprocess">Score Descending</a></li>
                     </ul>
                 </li>
-                <li><a href="<c:url value="/apply?op=sortByScoreASCPending"/>"> Sort by Exam Score </a>
+                <li><a href="<c:url value="apply?op=sortByStatusASCInprocess"/>"> Sort by Status </a>
                     <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByScoreASCPending">Score Ascending</a></li>
-                        <li><a href="apply?op=sortByScoreDESCPending">Score Descending</a></li>
-                    </ul>
-                </li>
-                <li><a href="<c:url value="apply?op=sortByStatusASCPending"/>"> Sort by Status </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByStatusASCPending">Status Ascending</a></li>
-                        <li><a href="apply?op=sortByStatusDESCPending">Status Descending</a></li>
+                        <li><a href="apply?op=sortByStatusASCInprocess">Status Ascending</a></li>
+                        <li><a href="apply?op=sortByStatusDESCInprocess">Status Descending</a></li>
                     </ul>
                 </li>
             </ul>
@@ -61,22 +61,22 @@
         <br><br>
         <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">   
             <c:choose>
-                <c:when test="${not empty listPending  }">
+                <c:when test="${not empty listInprocess  }">
                     <thead>
                         <tr>
-                            <th>No.</th><th>Can_id</th><th>Job_id</th>
+                            <th>No.</th><th>Can_id</th><th>Job Name</th>
                             <th>Email</th><th>File Upload</th>
                             <th>Exam Score</th>
                             <!--                    <th>Interview Score</th>-->
                             <th>Status</th><th style="text-align: center">Operations</th>    
                         </tr>
                     </thead>
-                    <c:forEach var="can" items="${listPending}" varStatus="loop">
+                    <c:forEach var="can" items="${listInprocess}" varStatus="loop">
 
                         <tr>
                             <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
                             <td>${can.id}</td>
-                            <td>${can.jobId}</td>
+                            <td>${can.jobname.job_name}</td>
                             <td>${can.email}</td>
                             <td>${can.cv}</td>
                             <td>${can.score}</td>
@@ -98,9 +98,10 @@
                                         Hired
                                     </c:when>
                                 </c:choose>
+                            </td>
                             <td style="text-align: center">
                                 <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-    <!--                            <a href="apply?op=yesup&can_id=${can.id}">Accept</a> |-->
+                                <%--                            <a href="apply?op=yesup&can_id=${can.id}">Accept</a> |--%>
                                 <a href="apply?op=deleteFile&can_id=${can.id}">Reject</a> 
 
                             </td>
