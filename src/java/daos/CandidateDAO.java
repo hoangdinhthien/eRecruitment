@@ -27,30 +27,6 @@ import utils.DBUtils;
  */
 public class CandidateDAO {
 
-    public static List<CandidateDTO> listCVByEmail(String email) throws ClassNotFoundException, SQLException {
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select c.can_id,j.job_name,c.email,can_cv,score, c.isStatus from candidate c \n"
-                + "                 inner join job j on c.job_id = j.job_id \n"
-                + "                  where email like ?  order by can_id  ASC");
-        UserDAO us = new UserDAO();
-//        stm.setString(1, j.find(email));
-        stm.setString(1, "jackstrong179@gmail.com");
-        ResultSet rs = stm.executeQuery();
-        List<CandidateDTO> list = new ArrayList<>();
-        while (rs.next()) {
-            JobsDTO j = new JobsDTO();
-            String id = rs.getString("can_id");
-            j.setJob_name(rs.getString("job_name"));
-            String cv = rs.getString("can_cv");
-            float score = rs.getInt("score");
-            int isStatus = rs.getInt("isStatus");
-            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
-            list.add(join);
-        }
-        con.close();
-        return list;
-    }
-
     public static List<CandidateDTO> search2(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("select c.can_id,j.job_name,can_cv,score, c.isStatus from candidate c \n"
