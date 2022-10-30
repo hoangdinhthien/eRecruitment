@@ -252,6 +252,7 @@
                                                         <c:if test="${notification.linkTitle != null && notification.link != null}">
                                                             <a id="notification-content" href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>">${notification.linkTitle}</a>
                                                         </c:if><br/>
+                                                        <hr>
                                                     </c:forEach>
                                                 </div>
                                                 <div id="notification-footer"><a href="<c:url value="/user?op=listNotification"/>">See All</a></div>
