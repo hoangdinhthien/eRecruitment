@@ -114,7 +114,7 @@ public class InterviewingDAO {
         return list;
     }
 
-    public static List<InterviewingDTO> searchInterviewByCandidateId(String id) throws ClassNotFoundException, SQLException {
+    public static InterviewingDTO searchInterviewByCandidateId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm;
         stm = con.prepareStatement(" SELECT MIN(i.id) AS id, MIN(i.can_id) AS can_id, MIN(i.inter_id) AS inter_id, MIN(i.[location]) AS location, "
@@ -123,10 +123,9 @@ public class InterviewingDAO {
 
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
-        List<InterviewingDTO> list = new LinkedList();
-        while (rs.next()) {
+        InterviewingDTO i = new InterviewingDTO();
+        if (rs.next()) {
             try {
-                InterviewingDTO i = new InterviewingDTO();
                 i.setId(rs.getInt("id"));
                 i.setInter_id(rs.getString("inter_id"));
                 i.setCan_id(rs.getString("can_id"));
@@ -139,13 +138,12 @@ public class InterviewingDAO {
                 } else if (rs.getInt("isStatus") == 4) {
                     i.setStatus("Has Interviewed");
                 }
-                list.add(i);
             } catch (ParseException ex) {
                 Logger.getLogger(InterviewingDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         con.close();
-        return list;
+        return i;
     }
 
     public static boolean addInterviewRecord(InterviewingDTO ig) throws ClassNotFoundException, SQLException {

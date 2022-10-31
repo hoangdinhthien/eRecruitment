@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -336,21 +337,29 @@ public class InterviewController extends HttpServlet {
             GoogleDTO g = (GoogleDTO) session.getAttribute("info");
             String email = g.getEmail();
             //Search candidate va interview cua candidate
-            CandidateDTO can = CandidateDAO.searchCandidateByEmail(email);
-            List<InterviewingDTO> interviews = InterviewingDAO.searchInterviewByCandidateId(can.getId());
-            //Truy van bang interviewing
-            for (InterviewingDTO i : interviews) {
+            List<CandidateDTO> candidates = CandidateDAO.searchCandidateByEmail(email);
+            List<InterviewingDTO> interviews = new ArrayList<>();
+            List<String> job_name = new ArrayList<>();
+            System.out.println(candidates.size());
+            for (CandidateDTO can : candidates) {
+                job_name.add(can.getJobname().getJob_name());
+                InterviewingDTO interview = InterviewingDAO.searchInterviewByCandidateId(can.getId());
+                //Truy van bang interviewing
                 //Lay ten candidate
-                i.setCan_name(can.getName());
+                interview.setCan_name(can.getName());
                 if (can.getIsStatus() == 3) { //Lay candidate da len lich
                     //So sanh time interview voi thoi gian hien tai
                     Date currentDate = new Date();
-                    if (i.getDate().compareTo(currentDate) < 0) {
-                        i.setStatus("Expired");
+                    if (interview.getDate().compareTo(currentDate) < 0) {
+                        interview.setStatus("Expired");
                     }
                 }
+                interviews.add(interview);
+                System.out.println(interviews.size());
             }
+            System.out.println(interviews.size());
             request.setAttribute("interview", interviews);
+            request.setAttribute("job_name", job_name);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);

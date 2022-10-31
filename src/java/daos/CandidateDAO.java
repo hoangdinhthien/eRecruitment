@@ -159,14 +159,17 @@ public class CandidateDAO {
         return list;
     }
 
-    public static CandidateDTO searchCandidateByEmail(String email) throws ClassNotFoundException, SQLException {
+    public static List<CandidateDTO> searchCandidateByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, c.isStatus, u.[name], u.[phone] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
-                + " on j.[job_id] = c.[job_id] JOIN [dbo].[User] u on c.[email] = u.[email] WHERE c.[email]=?");
+        PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, j.job_name, c.email, c.can_cv, c.isStatus, u.[name], u.[phone]"
+                + " FROM [eRecruitment].[dbo].[Candidate] c JOIN [eRecruitment].[dbo].[Job] j "
+                + " ON j.[job_id] = c.[job_id] JOIN [eRecruitment].[dbo].[User] u ON c.[email] = u.[email] WHERE c.[email]= ? ");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
-        CandidateDTO c = new CandidateDTO();
-        if (rs.next()) {
+        List<CandidateDTO> list = new LinkedList();
+        while (rs.next()) {
+            JobsDTO j = new JobsDTO();
+            CandidateDTO c = new CandidateDTO();
             c.setId(rs.getString("can_id"));
             c.setMajorId(rs.getInt("major_id"));
             c.setEmail(rs.getString("email"));
@@ -174,9 +177,12 @@ public class CandidateDAO {
             c.setName(rs.getString("name"));
             c.setIsStatus(rs.getInt("isStatus"));
             c.setPhone(rs.getString("phone"));
+            j.setJob_name(rs.getString("job_name"));
+            c.setJobname(j);
+            list.add(c);
         }
         con.close();
-        return c;
+        return list;
     }
 
     public static CandidateDTO searchCandidateById(String id) throws ClassNotFoundException, SQLException {
