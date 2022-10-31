@@ -4,6 +4,7 @@
     Author     : DELL
 --%>
 
+<%@page import="org.apache.http.HttpRequest"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -59,7 +60,6 @@
             <c:if test="${not empty info && role == 'HR Staff'}">
                 <a class="link" href="<c:url value="/job?op=add_job"/>">Add a new job</a>
             </c:if>
-
             <form action="<c:url value="/job"/>">
                 <ul style="position: relative">
                     <div style="display: flex;">
@@ -181,6 +181,9 @@
                             <c:if test="${loop.count != list.size()}">
                                 <div class="form-popup form-container" id="view_job_detail${loop.count}">
                                     <div>
+                                        <c:if test="${not empty info && role == 'HR Staff'}">
+                                            <a class="link" style="float: right" href="<c:url value="/job?op=update_job&job_id=${job.job_id}"/>">Update job</a>
+                                        </c:if>
                                         <h3 style="text-align: center; color: black">
                                             Job Name: ${job.job_name}
                                         </h3> <br/>
@@ -223,6 +226,9 @@
                             <c:if test="${loop.count == list.size()}">
                                 <div title="lastDiv" class="form-popup form-container" id="view_job_detail${loop.count}" style="background-color: white; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;">
                                     <div>
+                                        <c:if test="${not empty info && role == 'HR Staff'}">
+                                            <a class="link" style="float: right" href="<c:url value="/job?op=update_job&job_id=${job.job_id}"/>">Update job</a>
+                                        </c:if>
                                         <h3 style="text-align: center; color: black">
                                             Job Name: ${job.job_name}
                                         </h3> <br/>
