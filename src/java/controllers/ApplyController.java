@@ -12,6 +12,7 @@ import dtos.JobsDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -188,9 +189,11 @@ public class ApplyController extends HttpServlet {
     // LIST BY ACCOUNT EMAIL
     protected void listApplicationByEmail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-//        try {
-        String email = request.getParameter("email");
         try {
+            //Lay email tu session
+            HttpSession session = request.getSession();
+            GoogleDTO g = (GoogleDTO) session.getAttribute("info");
+            String email = g.getEmail();
             List<CandidateDTO> sea = CandidateDAO.search2(email);
             request.setAttribute("listEmail", sea);
             request.setAttribute("controller", "user");
@@ -205,9 +208,9 @@ public class ApplyController extends HttpServlet {
             throws ClassNotFoundException, SQLException {
         String search = request.getParameter("search");
         try {
-
             List<CandidateDTO> sea = CandidateDAO.search(search);
             request.setAttribute("listAll", sea);
+            request.setAttribute("search", search);
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (ServletException | IOException ex) {
@@ -225,12 +228,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("job_id", jobId);
             request.setAttribute("list", list);
             request.setAttribute("action", "index_apply");
-//        request.setAttribute("controller", "upload");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     protected void listAll(HttpServletRequest request, HttpServletResponse response)
@@ -273,7 +274,6 @@ public class ApplyController extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     protected void list4(HttpServletRequest request, HttpServletResponse response)
@@ -284,7 +284,6 @@ public class ApplyController extends HttpServlet {
             System.out.println(list);
             request.setAttribute("list4", list);
             request.setAttribute("action", "list_Recruit");
-//        request.setAttribute("controller", "upload");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
@@ -323,33 +322,6 @@ public class ApplyController extends HttpServlet {
         }
     }
 
-    //==== SORT JOB ALL
-//    protected void sortByJobASCAll(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException, ClassNotFoundException {
-//        try {
-//            CandidateDAO tf = new CandidateDAO();
-//            List<CandidateDTO> sortPen = tf.sortByJobASCAll();
-//            request.setAttribute("listAll", sortPen);
-//            request.setAttribute("action", "list_All");
-//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-//            System.out.println("Inprocess" + sortPen);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-//    protected void sortByJobDESCAll(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException, ClassNotFoundException {
-//        try {
-//            CandidateDAO tf = new CandidateDAO();
-//            List<CandidateDTO> sortPen = tf.sortByJobDESCAll();
-//            request.setAttribute("listAll", sortPen);
-//            request.setAttribute("action", "list_All");
-//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-//            System.out.println("Inprocess" + sortPen);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
     //===== FILE
     protected void uploadFile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
@@ -384,13 +356,9 @@ public class ApplyController extends HttpServlet {
                 UserDAO uDao = new UserDAO();
                 UserDTO user = uDao.find(google.getEmail());
                 System.out.println("Email :" + user.getEmail());
-
                 String job_id = request.getParameter("job_id");
+                System.out.println(job_id);
                 JobsDAO uj = new JobsDAO();
-//                JobsDTO jobid = uj.find(job_id);
-//                System.out.println("Job_id : " + jobid.getJob_id());
-
-                //============
                 // Mã của can_id : Cxxx
                 // Mã của job_id : Jxxx
                 CandidateDAO cd = new CandidateDAO();
@@ -411,6 +379,8 @@ public class ApplyController extends HttpServlet {
                     ps.setInt(5, 0);
 
                     int status = ps.executeUpdate();
+                    System.out.println("abc");
+                    System.out.println(job_id);
                     if (status > 0) {
                         session.setAttribute("fileName", fileName);
                         String msg = "" + fileName + " file uploaded successfully...";
@@ -424,9 +394,17 @@ public class ApplyController extends HttpServlet {
                         System.out.println("Uploaded Path: " + uploadPath);
                     }
                 } catch (SQLException ex) {
-                    out.println("Exception: " + ex);
+//                    out.println("Exception: " + ex);
                     System.out.println("Exception1: " + ex);
-
+                    session.setAttribute("fileName", fileName);
+                    String msgFailed = "" + fileName + " file uploaded failed...";
+                    request.setAttribute("msgFailed", msgFailed);
+                    List<JobsDTO> list = JobsDAO.list_job();
+                    request.setAttribute("controller", "job");
+                    request.setAttribute("list", list);
+                    request.setAttribute("action", "search");
+                    request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                    System.out.println("File upload failed");
                 } finally {
                     try {
                         if (ps != null) {

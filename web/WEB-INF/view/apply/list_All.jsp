@@ -49,24 +49,18 @@
                 </ul>
             </nav>
             <!--===SEARCH===-->
-            <form action="<c:url value="/apply"/>">
-                <input  type="text" name="search" placeholder="Search Job" value="${search}">
-
-                <button class="btn btn-success" style="border-color: #66D7A7;background: #66D7A7; "
-                        type="submit" class="site-btn" name="op" value="search">SEARCH</button>
-            </form>
-<!--            <form action="<c:url value="apply?op=search"/>" class="d-flex w-50 m-3">
+            <form action="<c:url value="apply?op=search"/>" class="d-flex w-50 m-3">
 
                 <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"> <i class="fa fa-search"></i></span>
-                    <input class="form-control me-2"  placeholder="Nhập thông tin.." type="search" name="search"
+                    <input class="form-control me-2"  placeholder="Search Job" type="text" name="search" 
                            value="${search}"/>
                 </div>
                 <button class="btn btn-success" style=" color: #ffffff !important; border-color: #66D7A7;background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500"  
-                        type="submit">
+                        type="submit" value="search" name="op">
                     Search
                 </button>
-            </form>-->
+            </form>
         </div>
         <br>
         <nav class="header__menu">

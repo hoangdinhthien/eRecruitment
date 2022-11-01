@@ -47,6 +47,14 @@
                 $("div[title|= 'lastDiv']").css("width", "100%");
                 $("div[title|= 'lastDiv']").css("margin-left", "15px");
             });
+
+            $(document).on("click", ".open-AddBookDialog", function () {
+                var myBookId = $(this).data('id');
+                $(".modal-body #bookId").val(myBookId);
+                // As pointed out in comments, 
+                // it is unnecessary to have to manually call the modal.
+                // $('#addBookDialog').modal('show');
+            });
         </script>
         <div class="container">
 
@@ -117,16 +125,25 @@
             <h3>No result!</h3>
         </c:if>
         <br>
-        <a style="text-align: center">
-            <c:if test="${requestScope.msg!=null}">
-                <h3><c:out value="${requestScope.msg}"></c:out>
-                    </h3>
-            </c:if><br>
-            <br>
-            <c:if test="${sessionScope.fileName!=null}">
-                <c:set var="file" scope="session" value="${sessionScope.fileName}"/>
-            </c:if>
-        </a>
+        <c:if test="${not empty msg}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success!</strong> ${msg}
+            </div>
+        </c:if>
+        <c:if test="${not empty msgFailed}">
+            <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Warning!</strong> ${msgFailed} <br>
+                Please check Login Account again
+                <script>
+                    var message = "${msgFailed}";
+                    alert(message + "\n"
+                            + "Please check Login Account again");
+                </script>
+
+            </div>
+        </c:if>
         <c:if test="${not empty list}">
             <div class="container" style="margin-top: 5%">
                 <c:forEach var="job" items="${list}" varStatus="loop">
@@ -137,7 +154,7 @@
                                     Job Name: ${job.job_name}
                                 </h3> <br/>
                                 <div style="text-align: left; width: 100%" >
-                                    <p style="display: inline-block; margin-right: 30px;">
+                                    <p id="${job.job_id}" id="job_id" style="display: inline-block; margin-right: 30px;">
                                         Job ID: ${job.job_id} 
                                     </p>    
                                     <p style="display: inline-block; margin-right: 30px;">
@@ -161,7 +178,57 @@
                                 <p style="text-align: left;">
                                     Post Date: ${job.post_date} <br/>
                                 </p>
+                                <p>Link 1</p>
+                                <a data-toggle="modal" data-id="${job.job_id}" title="Add this item" class="open-AddBookDialog btn btn-primary" href="#addBookDialog">test</a>
 
+                                <p>&nbsp;</p>
+
+
+                                <p>Link 2</p>
+                                <a data-toggle="modal" data-id="${job.job_id}" title="Add this item" class="open-AddBookDialog btn btn-primary" href="#addBookDialog">test</a>
+                                a
+                                <div class="modal hide" id="addBookDialog">
+                                    <div class="modal-header">
+                                        <button class="close" data-dismiss="modal">×</button>
+                                        <h3>Modal header</h3>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>some content</p>
+                                        <input type="text" name="bookId" id="bookId" value="${job.job_id}"/>
+                                        <div class="modal-body">
+                                            <form action="<c:url value='apply'/>" method="post"  enctype="multipart/form-data" >
+
+                                                <table width="400px" align="center" border=2>
+                                                    <tr>
+                                                        <td align="center" colspan="2">Form Details</td>
+                                                    </tr>
+                                                    <tr>
+                                                    <input  value="uploadFile" name="op">
+                                                    
+                                                    
+                                                    <input   name="bookId" id="bookId" id="job_id" value="${job.job_id}" >
+                                                    <!--type="hidden"-->
+                                                    <td>Select File :</td>
+                                                    <td>
+
+                                                        <input type="file" required="" name="file"  
+                                                               accept="image/*"
+                                                               >
+                                                    </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td></td>
+                                                        <!--<td><input type="submit" name="op" value="uploadFile"></td>-->
+                                                        <td><input type="hidden" name="op" value="uploadFile">
+                                                            <button type="submit" class="interview-record-btn">Submit</button>
+                                                        </td>
+                                                    </tr>
+                                                </table> 
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <p style="text-align: right;">
                                     <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
                                        background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
@@ -170,11 +237,10 @@
                                            <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
                                        </c:choose>>Apply</a>
 
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                    <!-- Button trigger modal  onclick="getJob()" -->
+                                    <button id="j"  type="button"  class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                         Launch demo modal
                                     </button>
-
                                     <!-- Modal -->
                                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -194,120 +260,121 @@
                                                         </tr>
                                                         <tr>
                                                         <input  value="uploadFile" name="op">
-                                                        <input   value="${job.job_id}" name="job_id">
+                                                        <c:forEach var="a" items="${list}">
+                                                            <input  name="a" value="${a.job_name}"/>
+                                                        </c:forEach>
+                                                        <input   value="${job.job_id}" name="job.job_id" id="job.job_id" >
+                                                        <input   name="bookId" id="bookId" id="job_id" >
                                                         <!--type="hidden"-->
                                                         <td>Select File :</td>
                                                         <td>
 
-                                                            <input type="file" required="" name="file">
+                                                            <input type="file" required="" name="file"  
+                                                                   accept="image/*"
+                                                                   >
                                                         </td>
                                                         </tr>
                                                         <tr>
                                                             <td></td>
-                                                            <td><input type="submit" name="op" value="uploadFile"></td>
+                                                            <!--<td><input type="submit" name="op" value="uploadFile"></td>-->
+                                                            <td><input type="hidden" name="op" value="uploadFile">
+                                                                <button type="submit" class="interview-record-btn">Submit</button>
+                                                            </td>
                                                         </tr>
                                                     </table> 
-
                                                 </form>
 
                                             </div>
-
                                         </div>
                                     </div>
-                                    </div>
-
-                                    </p>
                                 </div>
-                            </div>
 
-                            <div class="col-md-6"  style="position: relative">
-                                <c:if test="${loop.count != list.size()}">
-                                    <div class="form-popup form-container" id="view_job_detail${loop.count}">
-                                        <div>
-                                            <h3 style="text-align: center; color: black">
-                                                Job Name: ${job.job_name}
-                                            </h3> <br/>
-                                            <div style="text-align: left; width: 100%;">
-                                                <p style="display: inline-block; margin-right: 30px; color: black">
-                                                    Job ID: ${job.job_id} 
-                                                </p>    
-                                                <p style="display: inline-block; margin-right: 30px; color: black">
-                                                    Major ID: ${job.major_id} 
-                                                </p>    
-                                                <p style="display: inline-block; margin-right: 30px; color: black">
-                                                    Vacancy: ${job.job_vacancy} 
-                                                </p>
-                                            </div>
-                                            <p style="text-align: left; color: black">
-                                                Description: ${job.job_description} <br/>
-                                            </p>
-                                            <div style="text-align: left; width: 100%;">
-                                                <p style="display: inline-block; margin-right: 30px; color: black">
-                                                    Level ID: ${job.level_id} <br/>
-                                                </p>
-                                                <p style="display: inline-block; color: black">
-                                                    Salary: ${job.salary}$ <br/>
-                                                </p>
-                                            </div>
-                                            <p style="text-align: left;color: black">
-                                                Post Date: ${job.post_date} <br/>
-                                            </p>
-                                            <p style="text-align: right;">
-                                                <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
-                                                   background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                                   width: 100px" <c:choose>
-                                                       <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
-                                                       <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
-                                                   </c:choose>>Apply</a>
-
-                                                <!-- Button trigger modal -->
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                                    Launch demo modal
-                                                </button>
-
-
-                                            </p>
-                                        </div>
-                                    </div>
-                                </c:if>
-                                <c:if test="${loop.count == list.size()}">
-                                    <div title="lastDiv" class="form-popup form-container" id="view_job_detail${loop.count}" style="background-color: white; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;">
-                                        <div>
-                                            <h3 style="text-align: center; color: black">
-                                                Job Name: ${job.job_name}
-                                            </h3> <br/>
-                                            <div style="text-align: left; width: 100%;">
-                                                <p style="display: inline-block; margin-right: 30px; color: black">
-                                                    Job ID: ${job.job_id} 
-                                                </p>    
-                                                <p style="display: inline-block; margin-right: 30px; color: black">
-                                                    Major ID: ${job.major_id} 
-                                                </p>    
-                                                <p style="display: inline-block; margin-right: 30px; color: black">
-                                                    Vacancy: ${job.job_vacancy} 
-                                                </p>
-                                            </div>
-                                            <p style="text-align: left; color: black">
-                                                Description: ${job.job_description} <br/>
-                                            </p>
-                                            <div style="text-align: left; width: 100%;">
-                                                <p style="display: inline-block; margin-right: 30px; color: black">
-                                                    Level ID: ${job.level_id} <br/>
-                                                </p>
-                                                <p style="display: inline-block; color: black">
-                                                    Salary: ${job.salary}$ <br/>
-                                                </p>
-                                            </div>
-                                            <p style="text-align: left;color: black">
-                                                Post Date: ${job.post_date} <br/>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </c:if>
+                                </p>
                             </div>
                         </div>
-                    </c:forEach>
-                </div>
-            </c:if>
+
+
+                        <div class="col-md-6"  style="position: relative">
+                            <c:if test="${loop.count != list.size()}">
+                                <div class="form-popup form-container" id="view_job_detail${loop.count}">
+                                    <div>
+                                        <h3 style="text-align: center; color: black">
+                                            Job Name: ${job.job_name}
+                                        </h3> <br/>
+                                        <div style="text-align: left; width: 100%;">
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Job ID: ${job.job_id} 
+                                            </p>    
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Major ID: ${job.major_id} 
+                                            </p>    
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Vacancy: ${job.job_vacancy} 
+                                            </p>
+                                        </div>
+                                        <p style="text-align: left; color: black">
+                                            Description: ${job.job_description} <br/>
+                                        </p>
+                                        <div style="text-align: left; width: 100%;">
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Level ID: ${job.level_id} <br/>
+                                            </p>
+                                            <p style="display: inline-block; color: black">
+                                                Salary: ${job.salary}$ <br/>
+                                            </p>
+                                        </div>
+                                        <p style="text-align: left;color: black">
+                                            Post Date: ${job.post_date} <br/>
+                                        </p>
+                                        <p style="text-align: right;">
+                                            <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                               width: 100px" <c:choose>
+                                                   <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
+                                                   <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                               </c:choose>>Apply</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </c:if>
+                            <c:if test="${loop.count == list.size()}">
+                                <div title="lastDiv" class="form-popup form-container" id="view_job_detail${loop.count}" style="background-color: white; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;">
+                                    <div>
+                                        <h3 style="text-align: center; color: black">
+                                            Job Name: ${job.job_name}
+                                        </h3> <br/>
+                                        <div style="text-align: left; width: 100%;">
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Job ID: ${job.job_id} 
+                                            </p>    
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Major ID: ${job.major_id} 
+                                            </p>    
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Vacancy: ${job.job_vacancy} 
+                                            </p>
+                                        </div>
+                                        <p style="text-align: left; color: black">
+                                            Description: ${job.job_description} <br/>
+                                        </p>
+                                        <div style="text-align: left; width: 100%;">
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Level ID: ${job.level_id} <br/>
+                                            </p>
+                                            <p style="display: inline-block; color: black">
+                                                Salary: ${job.salary}$ <br/>
+                                            </p>
+                                        </div>
+                                        <p style="text-align: left;color: black">
+                                            Post Date: ${job.post_date} <br/>
+                                        </p>
+                                    </div>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:forEach>
+            </div>
+        </c:if>
     </body>
 </html>

@@ -27,13 +27,14 @@ public class CandidateDTO {
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv,  float score, int isStatus) {
+    public CandidateDTO(String id, JobsDTO jobname, String cv, float score, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
         this.score = score;
         this.isStatus = isStatus;
     }
+
     public CandidateDTO(String id, JobsDTO jobname, String cv, String email, float score, int isStatus) {
         this.id = id;
         this.jobname = jobname;
@@ -48,6 +49,15 @@ public class CandidateDTO {
         this.jobname = jobname;
         this.cv = cv;
         this.email = email;
+        this.score = score;
+        this.interid = interid;
+        this.isStatus = isStatus;
+    }
+
+    public CandidateDTO(String id, JobsDTO jobname, String cv, float score, InterviewingDTO interid, int isStatus) {
+        this.id = id;
+        this.jobname = jobname;
+        this.cv = cv;
         this.score = score;
         this.interid = interid;
         this.isStatus = isStatus;

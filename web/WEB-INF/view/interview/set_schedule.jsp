@@ -97,10 +97,10 @@
                                     </div>
                                 </div>
                                 <c:forEach var="can" items="${sublist}">
-                                    <input type="hidden" name="cId" value="${can.id}"/>
+                                    <input  name="cId" value="${can.id}"/>
                                 </c:forEach>
-                                <input type="hidden" name="major_id" value="${chosenMajor}"/>
-                                <input type="hidden" name="page" value="${page}"/>
+                                <input  name="major_id" value="${chosenMajor}"/>
+                                <input  name="page" value="${page}"/>
                                 <button type="button" class="btn cancel" onclick="closeForm()" style="float: right">Close</button><br/>
                                 <button title="Set" type="submit" class="btn" name="op" value="set_schedule_handler">Set</button>
                             </form>
@@ -146,7 +146,7 @@
                     count = checked;
                     if (checked > max_allowed) {
                         this.checked = false;
-                        alert("Please select" + max_allowed + " options.");
+                        alert("Please select " + max_allowed + " options.");
                         --checked;
                     }
                     if (checked === max_allowed) {
