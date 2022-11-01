@@ -54,7 +54,7 @@
         <h1>Add new question</h1>
         <div class="container">
             <div class="create-exam">
-                <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()">
+                <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()" method="post">
                     <div>
                         <textarea type="text" placeholder="Enter Question" name="question" cols="150" rows="10" style="resize: none;" required="true"></textarea>
                     </div>

@@ -3,10 +3,12 @@ package controllers;
 import config.Config;
 import daos.CandidateDAO;
 import daos.ExamDAO;
+import daos.JobsDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
+import dtos.JobsDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
 
@@ -63,10 +65,12 @@ public class ApplyController extends HttpServlet {
         try {
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            NotificationDAO nDao = new NotificationDAO();
-            List<NotificationDTO> notify = nDao.select(google.getEmail());
-            request.setAttribute("listNotification", notify);
-            request.setAttribute("count", nDao.count(google.getEmail()));
+            if (google != null) {
+                NotificationDAO nDao = new NotificationDAO();
+                List<NotificationDTO> notify = nDao.select(google.getEmail());
+                request.setAttribute("listNotification", notify);
+                request.setAttribute("count", nDao.count(google.getEmail()));
+            }
             List<MajorDTO> listMajor = MajorDAO.listAll();
             request.setAttribute("listMajor", listMajor);
             request.setAttribute("controller", "apply");
@@ -87,11 +91,11 @@ public class ApplyController extends HttpServlet {
                 case "deleteFile":
                     deleteFile(request, response);
                     break;
-                case "yesRecruit":
-                    yesRecruit(request, response);
+                case "yesupNewest":
+                    yesupNewest(request, response);
                     break;
-                case "yesup":
-                    yesup(request, response);
+                case "yesupRecruit":
+                    yesupRecruit(request, response);
                     break;
                 // Display Applications
                 case "listAll":
@@ -527,48 +531,76 @@ public class ApplyController extends HttpServlet {
         }
     }
 
-    protected void yesRecruit(HttpServletRequest request, HttpServletResponse response)
+    protected void yesupNewest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
             String can_id = request.getParameter("can_id"); // lấy id        
             CandidateDAO tf = new CandidateDAO();
             tf.updateup(can_id);
-            CandidateDTO cd = new CandidateDTO();
-            System.out.println("status :" + cd.getIsStatus());
-            String email = tf.getEmailByCanId(can_id);
-            NotificationDAO nDao = new NotificationDAO();
-//            nDao.add(email, "Aplication "+ can_id +" have been accepted",
-//                    "You Aplication have been accepted by the HR department. There is a entry Exam that need to be done before the interviewing.",
-//                    "Click here to take the exam.",
-//                    "/exam?op=takeExam&canId=C001" + can_id);
-            //Cho hiện lại danh sách 
-            listAll(request, response);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-    protected void yesup(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
-        try {
-            String can_id = request.getParameter("can_id"); // lấy id        
-            CandidateDAO tf = new CandidateDAO();
-            tf.updateup(can_id);
-            int major =  tf.getMajor(can_id);
+            int major = tf.getMajor(can_id);
             ExamDAO eDao = new ExamDAO();
             eDao.giveExam(can_id, major);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
             String email = tf.getEmailByCanId(can_id);
             NotificationDAO nDao = new NotificationDAO();
-            nDao.add(email, "Aplication "+ can_id +" have been accepted",
-                    "You Aplication have been accepted by the HR department. There is a entry Exam that need to be done before the interviewing.",
+            nDao.add(email, "Aplication " + can_id + " have been accepted",
+                    "Thank you for apply to this jobs. "
+                            + "You aplication have been accepted by the HR department. "
+                            + "There is a entry Exam that need to be done before the interviewing. "
+                            + "Please take this test at soon at posible.",
                     "Click here to take the exam.",
-                    "/exam?op=confirmExam&canId=" + can_id);
-            MailUtils mail = new MailUtils();
+                    "exam?op=confirmExam&canId=" + can_id);
+//            String to = google.getEmail();
+            String subject = "3HTD: Aplication " + can_id + " have been accepted";
+            String body = "<p>Thank you for apply to this jobs. "
+                    + "You aplication have been accepted by the HR department. "
+                    + "There is a entry Exam that need to be done before the interviewing. "
+                    + "Please take this test at soon at posible.</p></br>"
+                    + "<a  href=\"http://localhost:8084/recruitment-system/exam?op=confirmExam&canId=" + can_id + "\" style=\"font-size: 20px; font-weight:bold;\"> Click here to take the exam: </a></br>"
+                    + "<p>If this is not you please skip this message!</p>";
+            MailUtils.send(email, subject, body);
             //Cho hiện lại danh sách 
-            listAll(request, response);
+            response.sendRedirect("apply?op=list0");
+        } catch (SQLException ex) {
+        } catch (Exception ex) {
+        }
+    }
+
+    protected void yesupRecruit(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException {
+        try {
+            String can_id = request.getParameter("can_id"); // lấy id        
+            CandidateDAO tf = new CandidateDAO();
+            tf.updateup(can_id);
+            String email = tf.getEmailByCanId(can_id);
+            tf.removeUnusedApplication(email);
+            JobsDAO jDao = new JobsDAO();
+            JobsDTO job = jDao.getJob(can_id);
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.add(email, "Your future job is here.",
+                    "Thank you for apply to this jobs."
+                            + " We have been impressed with your background and would like to formally offer you the position of " + job.getJob_name() + "."
+                            + " This is a full time position with an annual salary of " + job.getSalary() + "."
+                            + " You will be reporting to the head of the department. Your expected starting date is 31/10."
+                            + " Because of this, your other applicans will be cancel.",
+                    null,
+                    null);
+            //Cho hiện lại danh sách 
+            String subject = "3HTD: Your future job is here.";
+            String body = "<p>Thank you for apply to this jobs. "
+                    + "We have been impressed with your background and would like to formally offer you the position of " + job.getJob_name() + ". "
+                    + "This is a full time position with an annual salary of " + job.getSalary() + "$. "
+                    + "You will be reporting to the head of the department. "
+                    + "Your expected starting date is 31/10.</p></br>"
+                    + "<p>Because of this, your other applicans will be cancel.</p></br>"
+                    + "<p>If this is not you please skip this message!</p>";
+            MailUtils.send(email, subject, body);
+            response.sendRedirect("apply?op=listAll");
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -582,8 +614,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -596,8 +630,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -611,8 +647,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -625,8 +663,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -640,8 +680,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Pending");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -654,8 +696,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Pending");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -669,8 +713,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Pending");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -683,8 +729,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Pending");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -698,8 +746,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Pending");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -712,8 +762,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Pending");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -727,8 +779,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Pending");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -741,8 +795,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Pending");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Pending" + sortPen);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -756,8 +812,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -770,8 +828,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -785,8 +845,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -799,8 +861,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -814,8 +878,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -828,8 +894,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -843,8 +911,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list0", sortRecruit);
             request.setAttribute("action", "list_Newest");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -856,8 +926,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list0", sort);
             request.setAttribute("action", "list_Newest");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 

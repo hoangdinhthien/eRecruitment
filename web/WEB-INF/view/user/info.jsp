@@ -47,7 +47,7 @@
                             <c:if test="${user.roleId!=5}">
                                 <h5 class="user-content-item">
                                     Role: <c:forEach items="${listRole}" var="role">
-                                        <c:if test="${user.roleId==role.id}">${role.name}</c:if>
+                                        <c:if test="${role.id==user.roleId}">${role.name}</c:if>
                                     </c:forEach>
                                 </h5>
                             </c:if>
@@ -65,7 +65,7 @@
             <span class="account-management-item">-Edit your info <button onclick="document.querySelector('dialog').showModal()" >Update </button></span>
             <dialog >
                 <p>Update Infomation</p>
-                <form action="<c:url value="/user"/>">
+                <form action="<c:url value="/user"/>" method="post">
                     <input type="hidden" value="${user.email}" name="email"/>
                     <input class="input" type="text" value="${user.name}" name="name" placeholder="Name"/><br/>
                     <input class="input" type="text" value="${user.phone}" name="phone" placeholder="Phone Number" pattern="[0]{1}[1-9]{1}[0-9]{8}"/><br/>

@@ -52,7 +52,7 @@
     <body>
         <div class="container">
             <h2>Update question</h2>
-            <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()">
+            <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()" method="post">
                 <div class="update-question">
                     <textarea type="text" placeholder="Question" name="question" cols="150" rows="10" style="resize: none;" required="true">${question.questiontxt}</textarea><br/>
                     <input type="hidden" name="q_id" value="${question.q_id}"/>

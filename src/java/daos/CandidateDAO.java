@@ -805,10 +805,36 @@ public class CandidateDAO {
     }
      */
     // Custom
+    
+    public static void deleteCanResult (String email) throws SQLException, ClassNotFoundException{
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id] FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4 ");
+        stm.setString(1, email);
+        ResultSet rs = stm.executeQuery();
+        ExamDAO eDao = new ExamDAO();
+        InterviewingDAO iDao = new InterviewingDAO();
+        if (rs.next()){
+            String canId = rs.getString("can_id");
+            eDao.deleteCanExam(canId);
+            iDao.deleteInterview(canId);
+            //remove candidate skill
+        }
+        con.close();
+    }
+    
     public void updateup(String can_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET isStatus = isStatus + 1 WHERE can_id = ?");
         stm.setString(1, can_id);
+        stm.executeUpdate();
+        con.close();
+    }
+    
+    public void removeUnusedApplication(String email) throws SQLException, ClassNotFoundException {
+        deleteCanResult(email);
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
+        stm.setString(1, email);
         stm.executeUpdate();
         con.close();
     }
@@ -875,6 +901,19 @@ public class CandidateDAO {
         }
         con.close();
         return email;
+    }
+    
+    public String getJob (String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [dbo].[Candidate] WHERE [can_id] = ? ");
+        stm.setString(1, canId);
+        ResultSet rs = stm.executeQuery();
+        String job  = null;
+        if (rs.next()) {
+            job = rs.getString("job_id");
+        }
+        con.close();
+        return job;
     }
 }
 

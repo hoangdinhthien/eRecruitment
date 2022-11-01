@@ -140,5 +140,13 @@ public class ExamDAO {
         con.close();
         return check;
     }
+    
+    public void deleteCanExam(String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Examination] WHERE [can_id] = ? ");
+        stm.setString(1, canId);
+        stm.executeUpdate();
+        con.close();
+    }
 }
     

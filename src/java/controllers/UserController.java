@@ -125,6 +125,7 @@ public class UserController extends HttpServlet {
             List<RoleDTO> listRole = rDao.selectAll();
             request.setAttribute("listRole", listRole);
             request.setAttribute("user", user);
+            request.setAttribute("action", "info");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
 
         } catch (SQLException ex) {
@@ -160,11 +161,7 @@ public class UserController extends HttpServlet {
             String address = request.getParameter("address");
             UserDAO uDao = new UserDAO();
             uDao.update(email, name, phone, address);
-            UserDTO user = uDao.find(email);
-            System.out.println("");
-            request.setAttribute("user", user);
-            request.setAttribute("action", "info");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            view(request, response);
 
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
