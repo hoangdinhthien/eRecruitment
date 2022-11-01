@@ -424,6 +424,8 @@ public class ApplyController extends HttpServlet {
         } catch (IOException | ServletException e) {
             out.println("Exception: " + e);
             System.out.println("Exception2: " + e);
+            String msgFailed = "" + fileName + " file uploaded failed...";
+                        request.setAttribute("msgFailed", msgFailed);
         }
 
     }
