@@ -826,6 +826,41 @@ public class CandidateDAO {
 
     public void deleteSuperfluousCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
         Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <=4 ");
+        stm.setString(1, jobId);
+        ResultSet rs = stm.executeQuery();
+        ExamDAO eDao = new ExamDAO();
+        InterviewingDAO iDao = new InterviewingDAO();
+        while (rs.next()) {
+            String canId = rs.getString("can_id");
+            String email = rs.getString("email");
+            eDao.deleteCanExam(canId);
+            iDao.deleteInterview(canId);
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.add(email, "The available job have been filled",
+                    "Thank you for apply to this jobs. "
+                            + "Unfortunaly, all available spot have been filled. "
+                            + "Because of that, you application "+ canId +" for this job will be reject. "
+                            + "Please checkout other position with the same department.",
+                    "Click here to check other job.",
+                    "job?op=list");
+            //Cho hiện lại danh sách 
+            String subject = "3HTD:The available job have been filled";
+            String body = "<p>Thank you for apply to this jobs. "
+                    + "Unfortunaly, all available spot have been filled. "
+                    + "Because of that, you application "+ canId +" for this job will be reject. "
+                    + "Please checkout other position with the same department.</p></br>"
+                    + "<a  href=\"http://localhost:8084/recruitment-system/job?op=list"+"\" style=\"font-size: 20px; font-weight:bold;\">Click here to check other job.</a></br>"
+                    + "<p>If this is not you please skip this message!</p>"; 
+            MailUtils.send(email, subject, body);
+            delete(canId);
+            //remove candidate skill
+        }
+        con.close();
+    }
+    
+    public void deleteJobCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
+        Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? ");
         stm.setString(1, jobId);
         ResultSet rs = stm.executeQuery();
