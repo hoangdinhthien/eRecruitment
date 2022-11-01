@@ -6,10 +6,12 @@
 package controllers;
 
 import config.Config;
+import daos.CandidateDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
 import daos.RoleDAO;
 import daos.UserDAO;
+import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
@@ -121,8 +123,12 @@ public class UserController extends HttpServlet {
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             UserDAO uDao = new UserDAO();
             UserDTO user = uDao.searchUserByEmail(google.getEmail());
+            user.setEmail(google.getEmail());
             RoleDAO rDao = new RoleDAO();
             List<RoleDTO> listRole = rDao.selectAll();
+            String email = google.getEmail();
+            List<CandidateDTO> sea = CandidateDAO.search2(email);
+            request.setAttribute("listEmail", sea);
             request.setAttribute("listRole", listRole);
             request.setAttribute("user", user);
             request.setAttribute("action", "info");

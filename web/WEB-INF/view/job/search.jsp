@@ -59,7 +59,6 @@
             });
         </script>
         <div class="container">
-
             <c:if test="${not empty info && role == 'HR Staff'}">
                 <a class="link" href="<c:url value="/job?op=add_job"/>">Add a new job</a>
             </c:if>
@@ -195,7 +194,8 @@
                                 <div class="form-popup form-container" id="view_job_detail${loop.count}">
                                     <div>
                                         <c:if test="${not empty info && role == 'HR Staff'}">
-                                            <a class="link" style="float: right" href="<c:url value="/job?op=update_job&job_id=${job.job_id}"/>">Update job</a>
+                                            <a class="link" style="float: right" href="<c:url value="/job?op=delete_job&job_id=${job.job_id}"/>">Delete job</a>
+                                            <a class="link" style="float: right; margin-right: 5px" href="<c:url value="/job?op=update_job&job_id=${job.job_id}"/>">Update job</a>
                                         </c:if>
                                         <h3 style="text-align: center; color: black">
                                             Job Name: ${job.job_name}

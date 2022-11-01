@@ -31,7 +31,7 @@ public class UserDAO {
 
     public static UserDTO searchUserByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select u.[name], u.[phone], u.[address], r.[role_name] from [dbo].[User] u"
+        PreparedStatement stm = con.prepareStatement("Select u.[name], u.[phone], u.[address],u.[role_id], r.[role_name] from [dbo].[User] u"
                 + " join [dbo].[Role] r  on u.role_id = r.role_id where email=?");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
@@ -39,6 +39,7 @@ public class UserDAO {
         if (rs.next()) {
             u = new UserDTO();
             u.setName(rs.getString("name"));
+            u.setRoleId(rs.getInt("role_id"));
             u.setRole(rs.getString("role_name"));
             u.setPhone(rs.getString("phone"));
             u.setAddress(rs.getString("address"));

@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import utils.DBUtils;
+import utils.MailUtils;
 
 /**
  *
@@ -58,7 +59,7 @@ public class CandidateDAO {
                 + "where [email] like ?  order by [can_id] ASC");
         stm.setString(1, email);
         UserDAO uDao = new UserDAO();
-        UserDTO user = uDao.searchUserByEmail(email);
+        UserDTO user = uDao.find(email);
         System.out.println("test1" + user.getEmail());
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new ArrayList<>();
@@ -1002,6 +1003,41 @@ public class CandidateDAO {
         con.close();
     }
     
+      public void deleteSuperfluousCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email],  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <= 4 ");
+        stm.setString(1, jobId);
+        ResultSet rs = stm.executeQuery();
+        ExamDAO eDao = new ExamDAO();
+        InterviewingDAO iDao = new InterviewingDAO();
+        if (rs.next()) {
+            String canId = rs.getString("can_id");
+            String email = rs.getString("email");
+            eDao.deleteCanExam(canId);
+            iDao.deleteInterview(canId);
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.add(email, "The available job have been filled",
+                    "Thank you for apply to this jobs. "
+                            + "Unfortunaly, all available spot have been filled. "
+                            + "Because of that, you application "+ canId +" for this job will be reject. "
+                            + "Please checkout other position with the same department.",
+                    "Click here to check other job.",
+                    "job?op=list");
+            //Cho hiện lại danh sách 
+            String subject = "3HTD:The available job have been filled";
+            String body = "<p>Thank you for apply to this jobs. "
+                    + "Unfortunaly, all available spot have been filled. "
+                    + "Because of that, you application "+ canId +" for this job will be reject. "
+                    + "Please checkout other position with the same department.</p></br>"
+                    + "<a  href=\"http://localhost:8084/recruitment-system/job?op=list"+"\" style=\"font-size: 20px; font-weight:bold;\">Click here to check other job.</a></br>"
+                    + "<p>If this is not you please skip this message!</p>"; 
+            MailUtils.send(email, subject, body);
+            delete(canId);
+            //remove candidate skill
+        }
+        con.close();
+    }
+    
     public void updateup(String can_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET isStatus = isStatus + 1 WHERE can_id = ?");
@@ -1019,6 +1055,15 @@ public class CandidateDAO {
         con.close();
     }
 
+        public void removeSuperfluousApplication(String email) throws SQLException, ClassNotFoundException {
+        deleteCanResult(email);
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
+        stm.setString(1, email);
+        stm.executeUpdate();
+        con.close();
+    }
+    
     public void delete(String can_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         System.out.println("Connection done [Delete]");

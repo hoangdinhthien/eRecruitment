@@ -9,7 +9,7 @@
         * {box-sizing: border-box;}
 
         /* Set a style for all buttons */
-        button {
+        .faq button {
             background-color: #04AA6D;
             color: white;
             padding: 14px 20px;
@@ -20,7 +20,7 @@
             opacity: 0.9;
         }
 
-        button:hover {
+        .faq button:hover {
             opacity:1;
         }
 
@@ -116,7 +116,7 @@
 
         <h2>Delete Modal</h2>
 
-        <button onclick="document.getElementById('id01').style.display = 'block'">Open Modal</button>
+        <button class="faq" onclick="document.getElementById('id01').style.display = 'block'">Open Modal</button>
 
         <div id="id01" class="modal">
             <span onclick="document.getElementById('id01').style.display = 'none'" class="close" title="Close Modal">×</span>

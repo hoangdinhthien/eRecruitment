@@ -448,7 +448,7 @@ public class InterviewController extends HttpServlet {
                     //Gui thong bao
                     NotificationDAO.add(u.getEmail(), "Evaluate Interview Process",
                             "There are some interviews' record need to be evaluated. Please check and giving decision as soon as you available to take a look.",
-                            "", "");
+                            "List of interviews", "apply?op=list4");
                     //Gui mail
                     String to = u.getEmail();
                     String subject = "3HTD: Evaluate Interview Process";

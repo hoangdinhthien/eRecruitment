@@ -68,10 +68,6 @@
 
                 <form action="<c:url value="/job"/>" style="" name="myForm" onsubmit="return validateForm()" method="post" required >
                     <div class="input-group mb-3">
-                        <span class="input-group-text">Job ID:</span>    
-                        <input placeholder="Enter Job ID" class="form-control" type="number" name="job_id" min="0"/>
-                    </div>
-                    <div class="input-group mb-3">
                         <span class="input-group-text" >Job name:</span>
                         <input placeholder="Enter Job Name" class="form-control" type="text" name="job_name"/>
                     </div>
