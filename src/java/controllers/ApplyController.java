@@ -582,6 +582,7 @@ public class ApplyController extends HttpServlet {
             if(!jDao.checkVacancy(job.getJob_id())){
                 System.out.println("3");
                 tf.deleteSuperfluousCan(job.getJob_id());
+                jDao.delete(job.getJob_id());
             }
             System.out.println("4");
             NotificationDAO nDao = new NotificationDAO();

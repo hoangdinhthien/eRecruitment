@@ -206,4 +206,12 @@ public class JobsDAO {
         }
         return check;
     }
+    
+    public void delete(String jobId) throws ClassNotFoundException, SQLException{
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Job] WHERE [job_id] = ? ");
+        stm.setString(1, jobId);
+        stm.executeUpdate();
+        con.close();
+    }
 }

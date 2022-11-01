@@ -826,12 +826,12 @@ public class CandidateDAO {
 
     public void deleteSuperfluousCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <= 4 ");
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? ");
         stm.setString(1, jobId);
         ResultSet rs = stm.executeQuery();
         ExamDAO eDao = new ExamDAO();
         InterviewingDAO iDao = new InterviewingDAO();
-        if (rs.next()) {
+        while (rs.next()) {
             String canId = rs.getString("can_id");
             String email = rs.getString("email");
             eDao.deleteCanExam(canId);
