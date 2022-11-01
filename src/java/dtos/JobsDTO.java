@@ -88,5 +88,5 @@ public class JobsDTO {
         this.post_date = post_date;
     }
 
-    
+       
 }

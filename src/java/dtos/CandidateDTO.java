@@ -34,7 +34,6 @@ public class CandidateDTO {
         this.score = score;
         this.isStatus = isStatus;
     }
-
     public CandidateDTO(String id, JobsDTO jobname, String cv, String email, float score, int isStatus) {
         this.id = id;
         this.jobname = jobname;
@@ -65,6 +64,22 @@ public class CandidateDTO {
         this.isStatus = isStatus;
         this.score = score;
         this.status = status;
+    }
+
+    public InterviewingDTO getInterid() {
+        return interid;
+    }
+
+    public void setInterid(InterviewingDTO interid) {
+        this.interid = interid;
+    }
+
+    public JobsDTO getJobname() {
+        return jobname;
+    }
+
+    public void setJobname(JobsDTO jobname) {
+        this.jobname = jobname;
     }
 
     public float getScore() {
@@ -145,21 +160,5 @@ public class CandidateDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public InterviewingDTO getInterid() {
-        return interid;
-    }
-
-    public void setInterid(InterviewingDTO interid) {
-        this.interid = interid;
-    }
-
-    public JobsDTO getJobname() {
-        return jobname;
-    }
-
-    public void setJobname(JobsDTO jobname) {
-        this.jobname = jobname;
     }
 }

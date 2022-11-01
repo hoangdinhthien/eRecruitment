@@ -49,11 +49,6 @@
                 $("div[title|= 'lastDiv']").css("margin-left", "15px");
             });
         </script>
-        <!--<form action="<c:url value="/job"/>">
-            Search: 
-            <input type="text" name="search" value=""/><br/>
-            <button type="submit" name="op" value="search">Search</button>
-        </form>-->
         <div class="container">
 
             <c:if test="${not empty info && role == 'HR Staff'}">

@@ -19,9 +19,12 @@ public class InterviewingDTO {
     private String status;
     private String comment;
     private int score;
+    private CandidateDTO canid;
 
     public InterviewingDTO() {
     }
+    
+    
 
     public InterviewingDTO(int id, String inter_id, String inter_name, String can_id, String can_name, Date date, String location, int score) {
         this.id = id;
