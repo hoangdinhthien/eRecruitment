@@ -356,8 +356,7 @@ public class ApplyController extends HttpServlet {
 
                 System.out.println("Info");
                 UserDAO uDao = new UserDAO();
-                UserDTO user = uDao.searchUserByEmail(google.getEmail());
-                System.out.println("Email :" + user.getEmail());
+                System.out.println(google.getEmail());
 
                 String job_id = request.getParameter("job_id");
                 JobsDAO uj = new JobsDAO();
@@ -376,7 +375,7 @@ public class ApplyController extends HttpServlet {
                     ps.setString(1, can_id);
                     //1 email - 1 job_id
                     ps.setString(2, job_id);
-                    ps.setString(3, user.getEmail());
+                    ps.setString(3, google.getEmail());
                     ps.setString(4, path);
                     ps.setInt(5, 0);
 

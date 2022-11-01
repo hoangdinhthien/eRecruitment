@@ -144,7 +144,7 @@ CREATE TABLE [Candidate]
 	[can_id] CHAR(4) PRIMARY KEY NOT NULL, --C000
 	[job_id] CHAR(4) FOREIGN KEY REFERENCES dbo.[Job] NOT NULL,
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
-	[can_cv] NVARCHAR(50) NOT NULL,-- comment 
+	[can_cv] NVARCHAR(200) NOT NULL,-- comment 
 	[score] FLOAT,
 	[isStatus] int DEFAULT (0) NOT NULL,
 	/*	Note: 
