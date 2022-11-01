@@ -244,12 +244,12 @@ public class JobsController extends HttpServlet {
             up_job.setPost_date(postDate);
             JobsDAO.update_job(up_job);
             NotificationDAO nDao = new NotificationDAO();
-            List<CandidateDTO> list_mail= JobsDAO.list_mail("job_id");
+            List<CandidateDTO> list_mail= JobsDAO.list_mail(job_id);
             for(CandidateDTO c:list_mail){
             nDao.add(c.getEmail(), "Job " + job_id + " have been updated",
                     "The job what you applied have been updated!",
                     "Click to see more about the job have been updated",
-                    "job?op=list");
+                    "job?op=search&search="+job_name);
             }
             request.getRequestDispatcher("/job?op=list").forward(request, response);
         } catch (SQLException ex) {

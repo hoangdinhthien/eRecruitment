@@ -49,6 +49,14 @@
                 $("div[title|= 'lastDiv']").css("width", "100%");
                 $("div[title|= 'lastDiv']").css("margin-left", "15px");
             });
+
+            $(document).on("click", ".open-AddBookDialog", function () {
+                var myBookId = $(this).data('id');
+                $(".modal-body #bookId").val(myBookId);
+                // As pointed out in comments, 
+                // it is unnecessary to have to manually call the modal.
+                // $('#addBookDialog').modal('show');
+            });
         </script>
         <div class="container">
 
@@ -118,16 +126,25 @@
             <h3>No result!</h3>
         </c:if>
         <br>
-        <a style="text-align: center">
-            <c:if test="${requestScope.msg!=null}">
-                <h3><c:out value="${requestScope.msg}"></c:out>
-                    </h3>
-            </c:if><br>
-            <br>
-            <c:if test="${sessionScope.fileName!=null}">
-                <c:set var="file" scope="session" value="${sessionScope.fileName}"/>
-            </c:if>
-        </a>
+        <c:if test="${not empty msg}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Success!</strong> ${msg}
+            </div>
+        </c:if>
+        <c:if test="${not empty msgFailed}">
+            <div class="alert alert-danger alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>Warning!</strong> ${msgFailed} <br>
+                Please check Login Account again
+                <script>
+                    var message = "${msgFailed}";
+                    alert(message + "\n"
+                            + "Please check Login Account again");
+                </script>
+
+            </div>
+        </c:if>
         <c:if test="${not empty list}">
             <div class="container" style="margin-top: 5%">
                 <c:forEach var="job" items="${list}" varStatus="loop">
@@ -138,7 +155,7 @@
                                     Job Name: ${job.job_name}
                                 </h3> <br/>
                                 <div style="text-align: left; width: 100%" >
-                                    <p style="display: inline-block; margin-right: 30px;">
+                                    <p id="${job.job_id}" id="job_id" style="display: inline-block; margin-right: 30px;">
                                         Job ID: ${job.job_id} 
                                     </p>    
                                     <p style="display: inline-block; margin-right: 30px;">

@@ -15,6 +15,7 @@ import dtos.NotificationDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -213,6 +214,7 @@ public class ApplyController extends HttpServlet {
         try {
             List<CandidateDTO> sea = CandidateDAO.search(search);
             request.setAttribute("listAll", sea);
+            request.setAttribute("search", search);
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (ServletException | IOException ex) {
@@ -357,8 +359,10 @@ public class ApplyController extends HttpServlet {
                 System.out.println("Info");
                 UserDAO uDao = new UserDAO();
                 System.out.println(google.getEmail());
-
+                UserDTO user = uDao.find(google.getEmail());
+                System.out.println("Email :" + user.getEmail());
                 String job_id = request.getParameter("job_id");
+                System.out.println(job_id);
                 JobsDAO uj = new JobsDAO();
                 // Mã của can_id : Cxxx
                 // Mã của job_id : Jxxx
@@ -380,6 +384,8 @@ public class ApplyController extends HttpServlet {
                     ps.setInt(5, 0);
 
                     int status = ps.executeUpdate();
+                    System.out.println("abc");
+                    System.out.println(job_id);
                     if (status > 0) {
                         session.setAttribute("fileName", fileName);
                         String msg = "" + fileName + " file uploaded successfully...";
@@ -393,9 +399,17 @@ public class ApplyController extends HttpServlet {
                         System.out.println("Uploaded Path: " + uploadPath);
                     }
                 } catch (SQLException ex) {
-                    out.println("Exception: " + ex);
+//                    out.println("Exception: " + ex);
                     System.out.println("Exception1: " + ex);
-
+                    session.setAttribute("fileName", fileName);
+                    String msgFailed = "" + fileName + " file uploaded failed...";
+                    request.setAttribute("msgFailed", msgFailed);
+                    List<JobsDTO> list = JobsDAO.list_job();
+                    request.setAttribute("controller", "job");
+                    request.setAttribute("list", list);
+                    request.setAttribute("action", "search");
+                    request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                    System.out.println("File upload failed");
                 } finally {
                     try {
                         if (ps != null) {

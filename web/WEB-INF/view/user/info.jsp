@@ -97,35 +97,35 @@
                         <c:forEach var="can" items="${listEmail}" varStatus="loop">
                             <tr>
                                 <td style="text-align: center;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
-                            <td>${can.jobname.job_name}</td>
-                            <td>${can.cv}</td>
-                            <td>${can.score}</td>
-                            <td><c:choose>
-                                    <c:when test="${can.isStatus==0}">
-                                        Hasn't Accepted
-                                    </c:when>
-                                    <c:when test="${can.isStatus==1}">
-                                        Accepted
-                                    </c:when>
-                                    <c:when test="${can.isStatus==2}">
-                                        Tested
-                                    </c:when>
-                                    <c:when test="${can.isStatus==3}">
-                                        Has Scheduled
-                                    </c:when>
-                                    <c:when test="${can.isStatus==4}">
-                                        Has Been Interviewed
-                                    </c:when>
-                                    <c:when test="${can.isStatus==5}">
-                                        Hired
-                                    </c:when>
-                                </c:choose>
-                            </td>
-                            <td style="text-align: center">
-                                <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                <a href="apply?op=deleteFile&can_id=${can.id}">Delete</a> 
-                                <%--  <a href="apply?op=yesup&can_id=${can.id}">Accept</a> --%>
-                            </td>
+                                <td>${can.jobname.job_name}</td>
+                                <td>${can.cv}</td>
+                                <td>${can.score}</td>
+                                <td><c:choose>
+                                        <c:when test="${can.isStatus==0}">
+                                            Hasn't Accepted
+                                        </c:when>
+                                        <c:when test="${can.isStatus==1}">
+                                            Accepted
+                                        </c:when>
+                                        <c:when test="${can.isStatus==2}">
+                                            Tested
+                                        </c:when>
+                                        <c:when test="${can.isStatus==3}">
+                                            Has Scheduled
+                                        </c:when>
+                                        <c:when test="${can.isStatus==4}">
+                                            Has Been Interviewed
+                                        </c:when>
+                                        <c:when test="${can.isStatus==5}">
+                                            Hired
+                                        </c:when>
+                                    </c:choose>
+                                </td>
+                                <td style="text-align: center">
+                                    <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
+                                    <a href="apply?op=deleteFile&can_id=${can.id}">Delete</a> 
+                                    <%--  <a href="apply?op=yesup&can_id=${can.id}">Accept</a> --%>
+                                </td>
                             </tr>
 
                         </c:forEach>

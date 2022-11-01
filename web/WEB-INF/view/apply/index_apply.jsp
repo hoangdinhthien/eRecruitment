@@ -12,7 +12,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <form action="<c:url value='apply'/>" method="post"  enctype="multipart/form-data" >
+        <form action="<c:url value='apply'/>" method="post" name="myForm"  enctype="multipart/form-data" >
 
             <table width="400px" align="center" border=2>
                 <tr>
@@ -20,7 +20,7 @@
                 </tr>
                 <tr>
                 <input type="hidden" value="uploadFile" name="op">
-                <input type="hidden" value="${job_id}" name="job_id">
+                <input type="" value="${job_id}" name="job_id">
                 <td>Select File :</td>
                 <td>
 
@@ -29,7 +29,7 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td><input type="submit" name="op" value="uploadFile"></td>
+                    <td><button type="submit" name="op" value="uploadFile">Upload File</button></td>
                 </tr>
             </table> 
 

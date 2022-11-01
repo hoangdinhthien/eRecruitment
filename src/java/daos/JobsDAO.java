@@ -26,7 +26,8 @@ public class JobsDAO {
 
     public static List<JobsDTO> search_job(String job_name) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select [job_id],[job_name],[major_id],[job_description],[level_id],[job_vacancy],[salary],[post_date] from [dbo].[Job] where job_name like ? order by [post_date] desc");
+        PreparedStatement stm = con.prepareStatement("Select [job_id],[job_name],[major_id],[job_description],[level_id],[job_vacancy],[salary],[post_date] "
+                + "from [dbo].[Job] where job_name like ? and [job_vacancy] > 0 order by [post_date] desc");
         stm.setString(1, "%" + job_name + "%");
         ResultSet rs = stm.executeQuery();
         List<JobsDTO> list = new ArrayList<>();
@@ -48,7 +49,8 @@ public class JobsDAO {
 
     public static List<JobsDTO> list_job() throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select [job_id],[job_name],[major_id],[job_description],[level_id],[job_vacancy],[salary],[post_date] from [dbo].[Job] order by [post_date] desc ");
+        PreparedStatement stm = con.prepareStatement("Select [job_id],[job_name],[major_id],[job_description],[level_id],[job_vacancy],[salary],[post_date]"
+                + " from [dbo].[Job] where [job_vacancy] > 0 order by [post_date] desc ");
         ResultSet rs = stm.executeQuery();
         List<JobsDTO> list = new ArrayList<>();
         while (rs.next()) {
@@ -280,8 +282,8 @@ public class JobsDAO {
        public static List<CandidateDTO> list_mail(String job_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select [email] from [dbo].[Candidate] where job_id=?");
-        ResultSet rs = stm.executeQuery();
         stm.setString(1, job_id);
+        ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new ArrayList<>();
         while (rs.next()) {
             CandidateDTO r = new CandidateDTO();

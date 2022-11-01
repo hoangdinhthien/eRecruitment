@@ -53,10 +53,9 @@ public class CandidateDAO {
 
     public static List<CandidateDTO> search2(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select c.can_id,j.job_name,can_cv,score, c.isStatus from candidate c \n"
-                + "                 inner join job j on c.job_id = j.job_id \n"
-                + "                  where email like ?  order by can_id  ASC");
-//        stm.setString(1, "jackstrong179@gmail.com");
+        PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus "
+                + "from [dbo].[Candidate] c inner join [job] j on c.job_id = j.job_id "
+                + "where [email] like ?  order by [can_id] ASC");
         stm.setString(1, email);
         UserDAO uDao = new UserDAO();
         UserDTO user = uDao.searchUserByEmail(email);
@@ -68,9 +67,9 @@ public class CandidateDAO {
             String id = rs.getString("can_id");
             j.setJob_name(rs.getString("job_name"));
             String cv = rs.getString("can_cv");
-            float score = rs.getInt("score");
+            float score = rs.getFloat("score");
             int isStatus = rs.getInt("isStatus");
-            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus);
+            CandidateDTO join = new CandidateDTO(id, j, cv,  score, isStatus);
             list.add(join);
         }
         con.close();
