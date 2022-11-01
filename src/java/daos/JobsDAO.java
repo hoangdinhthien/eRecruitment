@@ -175,4 +175,29 @@ public class JobsDAO {
         con.close();
         return r;
     }
+    
+    public void reduceVacancy(String jobId) throws ClassNotFoundException, SQLException{
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("UPDATE [Job] SET [job_vacancy] = [job_vacancy] - 1 WHERE [job_id] = ? ");
+        stm.setString(1, jobId);
+        stm.executeUpdate();
+        con.close();
+    }
+    
+    public boolean checkVacancy(String jobId) throws ClassNotFoundException, SQLException{
+        reduceVacancy(jobId);
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [job_vacancy] FROM [Job] WHERE [job_id] = ? ");
+        stm.setString(1, jobId);
+        ResultSet rs = stm.executeQuery();
+        int vacancy = 0;
+        if(rs.next()){
+            vacancy = rs.getInt("job_vacancy");
+        }
+        con.close();
+        boolean check = false;
+        if(vacancy  <= 1){
+            
+        }
+    }
 }

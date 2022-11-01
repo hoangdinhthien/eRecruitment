@@ -237,7 +237,7 @@
                                     <ul>
                                         <li>
                                             <!--id="notification-link"-->
-                                            <a id="notification-link"">
+                                            <a id="notification-link">
                                                 <i class="fa fa-bell"></i>
                                             </a>
                                             <c:if test="${count!=0}">
@@ -247,12 +247,13 @@
                                                 <div id="notification-title">Notifications</div>
                                                 <div id="notification-body">
                                                     <c:forEach items="${listNotification}" var="notification">
-                                                        ${notification.title}<br/>
-                                                        (${notification.timeAgo}) <br/>
-                                                        <c:if test="${notification.linkTitle != null && notification.link != null}">
-                                                            <a id="notification-content" href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>">${notification.linkTitle}</a>
-                                                        </c:if><br/>
-                                                        <hr>
+                                                            <a id="notification-content" <c:if test="${notification.linkTitle != null && notification.link != null}">
+                                                               href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>"  </c:if> >
+                                                                ${notification.title}<br/>
+                                                                (${notification.timeAgo}) <br/>
+                                                                <hr>
+                                                            </a>
+                                                            <br/>
                                                     </c:forEach>
                                                 </div>
                                                 <div id="notification-footer"><a href="<c:url value="/user?op=listNotification"/>">See All</a></div>

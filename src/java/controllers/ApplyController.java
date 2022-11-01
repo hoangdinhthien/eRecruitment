@@ -577,6 +577,7 @@ public class ApplyController extends HttpServlet {
             tf.removeUnusedApplication(email);
             JobsDAO jDao = new JobsDAO();
             JobsDTO job = jDao.getJob(can_id);
+            
             NotificationDAO nDao = new NotificationDAO();
             nDao.add(email, "Your future job is here.",
                     "Thank you for apply to this jobs."
