@@ -216,9 +216,6 @@
                                         </li>
                                     </c:if>
                                     <c:if test="${not empty info && role == 'Member' || role == 'Candidate'}" >
-                                        <li>
-                                            <a href="<c:url value="/apply?op=listApplicationByEmail"/>">My Application</a>
-                                        </li>
                                         <li><a href="<c:url value="/faq?op=index_faq"/>">FAQs</a></li>
                                         </c:if>
 
@@ -244,26 +241,34 @@
                                     <ul>
                                         <li>
                                             <!--id="notification-link"-->
-                                            <a id="notification-footer" href="<c:url value="/user?op=listNotification"/>">
+                                            <a id="notification-link" >
                                                 <i class="fa fa-bell"></i>
                                             </a>
                                             <c:if test="${count!=0}">
                                                 <span id="notification_count">${count}</span>
                                             </c:if>
-                                            <!--                                            <div id="notification-container">
-                                                                                            <div id="notification-title">Notifications</div>
-                                                                                            <div id="notification-body">
-                                            <c:forEach items="${listNotification}" var="notification">
-                                                ${notification.title}<br/>
-                                                (${notification.timeAgo}) <br/>
-                                                <c:if test="${notification.linkTitle != null && notification.link != null}">
-                                                    <a id="notification-content" href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>">${notification.linkTitle}</a>
-                                                </c:if><br/>
-                                                <hr>
-                                            </c:forEach>
-                                        </div>
-                                        <div id="notification-footer"><a href="<c:url value="/user?op=listNotification"/>">See All</a></div>
-                                    </div>-->
+                                            <div id="notification-container">
+                                                <div id="notification-title">Notifications</div>
+                                                <div id="notification-body">
+                                                    <c:forEach items="${listNotification}" var="notification" varStatus="loop" step="1" begin="1" end="5">
+                                                        <c:if test="${notification.linkTitle != null && notification.link != null}" >
+                                                            <a id="notification-content-${loop.count}" 
+                                                               <c:if test="${notification.linkTitle != null && notification.link != null}" >href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>" </c:if>>
+
+                                                               ${notification.title}
+                                                               <br>
+                                                               (${notification.timeAgo}) 
+                                                               <br/>
+                                                               <hr>
+                                                            </a>
+                                                            <br/>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </div>
+                                                <div id="notification-footer"><a href="<c:url value="/user?op=listNotification"/>">See All</a></div>
+
+                                            </div>
+
                                         </li>
                                     </ul>
                                 </div>

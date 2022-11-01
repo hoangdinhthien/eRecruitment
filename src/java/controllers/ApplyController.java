@@ -4,18 +4,16 @@ import config.Config;
 import daos.CandidateDAO;
 import daos.ExamDAO;
 import daos.JobsDAO;
-import daos.MajorDAO;
 import daos.NotificationDAO;
+import daos.RoleDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.JobsDTO;
-import dtos.MajorDTO;
-import dtos.NotificationDTO;
+import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -88,8 +86,8 @@ public class ApplyController extends HttpServlet {
             case "listAll":
                 listAll(request, response);
                 break;
-            case "listApplicationByEmail":
-                listApplicationByEmail(request, response);
+            case "viewUserApplication":
+                viewUserApplication(request, response);
                 break;
             case "list0":
                 list0(request, response);
@@ -190,21 +188,27 @@ public class ApplyController extends HttpServlet {
         }
     }
 
-    // LIST BY ACCOUNT EMAIL
-    protected void listApplicationByEmail(HttpServletRequest request, HttpServletResponse response)
+    protected void viewUserApplication(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
+        String email = request.getParameter("email"); // lấy id
         try {
-            //Lay email tu session
-            HttpSession session = request.getSession();
-            GoogleDTO g = (GoogleDTO) session.getAttribute("info");
-            String email = g.getEmail();
-            List<CandidateDTO> sea = CandidateDAO.search2(email);
-            request.setAttribute("listEmail", sea);
+            session = request.getSession();
+            UserDAO uDao = new UserDAO();
+            UserDTO user = uDao.searchUserByEmail(email);
+            RoleDAO rDao = new RoleDAO();
+            List<RoleDTO> listRole = rDao.selectAll();
+            System.out.println("User Email: " + email);
+            List<CandidateDTO> sea = CandidateDAO.viewUserApplication(email);
+            request.setAttribute("listUserEmail", sea);
+            request.setAttribute("email", email);
+            request.setAttribute("listRole", listRole);
+            request.setAttribute("user", user);
             request.setAttribute("controller", "user");
-            request.setAttribute("action", "info");
+            request.setAttribute("action", "viewUserInfo");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: " + email);
         }
     }
 
@@ -359,7 +363,7 @@ public class ApplyController extends HttpServlet {
                 System.out.println("Info");
                 UserDAO uDao = new UserDAO();
                 System.out.println(google.getEmail());
-                UserDTO user = uDao.find(google.getEmail());
+                UserDTO user = uDao.searchUserByEmail(google.getEmail());
                 System.out.println("Email :" + user.getEmail());
                 String job_id = request.getParameter("job_id");
                 System.out.println(job_id);

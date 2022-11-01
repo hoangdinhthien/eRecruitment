@@ -112,7 +112,7 @@
                             <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
                             <td>${can.id}</td>
                             <td>${can.jobname.job_name}</td>
-                            <td>${can.email}</td>
+                            <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>"> ${can.email} </a></td>
                             <td>${can.cv}</td>
                             <td>${can.score}</td>
                             <td><c:choose>

@@ -31,13 +31,14 @@ public class UserDAO {
 
     public static UserDTO searchUserByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select u.[name], u.[phone], u.[address],u.[role_id], r.[role_name] from [dbo].[User] u"
+        PreparedStatement stm = con.prepareStatement("Select u.[email],u.[name], u.[phone], u.[address],u.[role_id], r.[role_name] from [dbo].[User] u"
                 + " join [dbo].[Role] r  on u.role_id = r.role_id where email=?");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         UserDTO u = null;
         if (rs.next()) {
             u = new UserDTO();
+            u.setEmail(rs.getString("email"));
             u.setName(rs.getString("name"));
             u.setRoleId(rs.getInt("role_id"));
             u.setRole(rs.getString("role_name"));
@@ -48,23 +49,6 @@ public class UserDAO {
         return u;
     }
 
-    public UserDTO find(String email) throws SQLException, ClassNotFoundException {
-        UserDTO user = null;
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [User] where email = ? ");
-        stm.setString(1, email);
-        ResultSet rs = stm.executeQuery();
-        if (rs.next()) {
-            user = new UserDTO();
-            user.setEmail(rs.getString("email"));
-            user.setName(rs.getString("name"));
-            user.setRoleId(rs.getInt("role_id"));
-            user.setPhone(rs.getString("phone"));
-            user.setAddress(rs.getString("address"));
-        }
-        con.close();
-        return user;
-    }
 
     public void update(String email, String phone, String address) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();

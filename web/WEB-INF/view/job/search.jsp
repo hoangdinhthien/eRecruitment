@@ -139,7 +139,7 @@
                 <script>
                     var message = "${msgFailed}";
                     alert(message + "\n"
-                            + "Please check Login Account again");
+                            + "");
                 </script>
 
             </div>

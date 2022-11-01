@@ -27,15 +27,17 @@ import utils.MailUtils;
  * @author Thien's
  */
 public class CandidateDAO {
-
-    public static List<CandidateDTO> listCVByEmail(String email) throws ClassNotFoundException, SQLException {
+    
+    
+    public static List<CandidateDTO> viewUserApplication(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select c.can_id,j.job_name,c.email,can_cv,score, c.isStatus from candidate c \n"
-                + "                 inner join job j on c.job_id = j.job_id \n"
-                + "                  where email like ?  order by can_id  ASC");
-        UserDAO us = new UserDAO();
-//        stm.setString(1, j.find(email));
-        stm.setString(1, "jackstrong179@gmail.com");
+        PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus "
+                + "from [dbo].[Candidate] c inner join [job] j on c.[job_id] = j.[job_id] "
+                + "where [email] like ?  order by [can_id] ASC");
+        stm.setString(1, email);
+        UserDAO uDao = new UserDAO();
+        UserDTO user = uDao.searchUserByEmail(email);
+        System.out.println("List User Application: " + user.getEmail());
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new ArrayList<>();
         while (rs.next()) {
@@ -43,9 +45,9 @@ public class CandidateDAO {
             String id = rs.getString("can_id");
             j.setJob_name(rs.getString("job_name"));
             String cv = rs.getString("can_cv");
-            float score = rs.getInt("score");
+            float score = rs.getFloat("score");
             int isStatus = rs.getInt("isStatus");
-            CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus);
             list.add(join);
         }
         con.close();
@@ -55,11 +57,11 @@ public class CandidateDAO {
     public static List<CandidateDTO> search2(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus "
-                + "from [dbo].[Candidate] c inner join [job] j on c.job_id = j.job_id "
+                + "from [dbo].[Candidate] c inner join [job] j on c.[job_id] = j.[job_id] "
                 + "where [email] like ?  order by [can_id] ASC");
         stm.setString(1, email);
         UserDAO uDao = new UserDAO();
-        UserDTO user = uDao.find(email);
+        UserDTO user = uDao.searchUserByEmail(email);
         System.out.println("test1" + user.getEmail());
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new ArrayList<>();
@@ -70,7 +72,7 @@ public class CandidateDAO {
             String cv = rs.getString("can_cv");
             float score = rs.getFloat("score");
             int isStatus = rs.getInt("isStatus");
-            CandidateDTO join = new CandidateDTO(id, j, cv,  score, isStatus);
+            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus);
             list.add(join);
         }
         con.close();
@@ -214,6 +216,7 @@ public class CandidateDAO {
         con.close();
         return rs != 0;
     }
+
     public static List<CandidateDTO> searchJobAll(String search) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         String sql = "select can_id,job_id,email,can_cv,isStatus from candidate where job_id like ?";
@@ -986,15 +989,14 @@ public class CandidateDAO {
     }
      */
     // Custom
-    
-    public static void deleteCanResult (String email) throws SQLException, ClassNotFoundException{
+    public static void deleteCanResult(String email) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [can_id] FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4 ");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         ExamDAO eDao = new ExamDAO();
         InterviewingDAO iDao = new InterviewingDAO();
-        if (rs.next()){
+        if (rs.next()) {
             String canId = rs.getString("can_id");
             eDao.deleteCanExam(canId);
             iDao.deleteInterview(canId);
@@ -1002,8 +1004,43 @@ public class CandidateDAO {
         }
         con.close();
     }
-    
-      public void deleteSuperfluousCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
+
+    public void deleteSuperfluousCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <=4 ");
+        stm.setString(1, jobId);
+        ResultSet rs = stm.executeQuery();
+        ExamDAO eDao = new ExamDAO();
+        InterviewingDAO iDao = new InterviewingDAO();
+        while (rs.next()) {
+            String canId = rs.getString("can_id");
+            String email = rs.getString("email");
+            eDao.deleteCanExam(canId);
+            iDao.deleteInterview(canId);
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.add(email, "The available job have been filled",
+                    "Thank you for apply to this jobs. "
+                    + "Unfortunaly, all available spot have been filled. "
+                    + "Because of that, you application " + canId + " for this job will be reject. "
+                    + "Please checkout other position with the same department.",
+                    "Click here to check other job.",
+                    "job?op=list");
+            //Cho hiện lại danh sách 
+            String subject = "3HTD:The available job have been filled";
+            String body = "<p>Thank you for apply to this jobs. "
+                    + "Unfortunaly, all available spot have been filled. "
+                    + "Because of that, you application " + canId + " for this job will be reject. "
+                    + "Please checkout other position with the same department.</p></br>"
+                    + "<a  href=\"http://localhost:8084/recruitment-system/job?op=list" + "\" style=\"font-size: 20px; font-weight:bold;\">Click here to check other job.</a></br>"
+                    + "<p>If this is not you please skip this message!</p>";
+            MailUtils.send(email, subject, body);
+            delete(canId);
+            //remove candidate skill
+        }
+        con.close();
+    }
+
+    public void deleteJobCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email],  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <= 4 ");
         stm.setString(1, jobId);
@@ -1018,26 +1055,26 @@ public class CandidateDAO {
             NotificationDAO nDao = new NotificationDAO();
             nDao.add(email, "The available job have been filled",
                     "Thank you for apply to this jobs. "
-                            + "Unfortunaly, all available spot have been filled. "
-                            + "Because of that, you application "+ canId +" for this job will be reject. "
-                            + "Please checkout other position with the same department.",
+                    + "Unfortunaly, all available spot have been filled. "
+                    + "Because of that, you application " + canId + " for this job will be reject. "
+                    + "Please checkout other position with the same department.",
                     "Click here to check other job.",
                     "job?op=list");
             //Cho hiện lại danh sách 
             String subject = "3HTD:The available job have been filled";
             String body = "<p>Thank you for apply to this jobs. "
                     + "Unfortunaly, all available spot have been filled. "
-                    + "Because of that, you application "+ canId +" for this job will be reject. "
+                    + "Because of that, you application " + canId + " for this job will be reject. "
                     + "Please checkout other position with the same department.</p></br>"
-                    + "<a  href=\"http://localhost:8084/recruitment-system/job?op=list"+"\" style=\"font-size: 20px; font-weight:bold;\">Click here to check other job.</a></br>"
-                    + "<p>If this is not you please skip this message!</p>"; 
+                    + "<a  href=\"http://localhost:8084/recruitment-system/job?op=list" + "\" style=\"font-size: 20px; font-weight:bold;\">Click here to check other job.</a></br>"
+                    + "<p>If this is not you please skip this message!</p>";
             MailUtils.send(email, subject, body);
             delete(canId);
             //remove candidate skill
         }
         con.close();
     }
-    
+
     public void updateup(String can_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET isStatus = isStatus + 1 WHERE can_id = ?");
@@ -1045,7 +1082,7 @@ public class CandidateDAO {
         stm.executeUpdate();
         con.close();
     }
-    
+
     public void removeUnusedApplication(String email) throws SQLException, ClassNotFoundException {
         deleteCanResult(email);
         Connection con = DBUtils.makeConnection();
@@ -1055,7 +1092,7 @@ public class CandidateDAO {
         con.close();
     }
 
-        public void removeSuperfluousApplication(String email) throws SQLException, ClassNotFoundException {
+    public void removeSuperfluousApplication(String email) throws SQLException, ClassNotFoundException {
         deleteCanResult(email);
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
@@ -1063,7 +1100,7 @@ public class CandidateDAO {
         stm.executeUpdate();
         con.close();
     }
-    
+
     public void delete(String can_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         System.out.println("Connection done [Delete]");
@@ -1113,27 +1150,26 @@ public class CandidateDAO {
         con.close();
         return check;
     }
-    
-    
-    public  String getEmailByCanId (String canId) throws ClassNotFoundException, SQLException {
+
+    public String getEmailByCanId(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [email] FROM [dbo].[Candidate] WHERE [can_id] = ? ");
         stm.setString(1, canId);
         ResultSet rs = stm.executeQuery();
-        String email  = null;
+        String email = null;
         if (rs.next()) {
             email = (rs.getString("email"));
         }
         con.close();
         return email;
     }
-    
-    public String getJob (String canId) throws ClassNotFoundException, SQLException {
+
+    public String getJob(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [dbo].[Candidate] WHERE [can_id] = ? ");
         stm.setString(1, canId);
         ResultSet rs = stm.executeQuery();
-        String job  = null;
+        String job = null;
         if (rs.next()) {
             job = rs.getString("job_id");
         }

@@ -129,6 +129,7 @@ public class UserController extends HttpServlet {
             String email = google.getEmail();
             List<CandidateDTO> sea = CandidateDAO.search2(email);
             request.setAttribute("listEmail", sea);
+            request.setAttribute("listEmail", sea);
             request.setAttribute("listRole", listRole);
             request.setAttribute("user", user);
             request.setAttribute("action", "info");
@@ -140,6 +141,7 @@ public class UserController extends HttpServlet {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             session = request.getSession();
