@@ -5,6 +5,7 @@
  */
 package daos;
 
+import dtos.CandidateDTO;
 import dtos.JobsDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -222,36 +223,50 @@ public static List<JobsDTO> filter_job(int fmajor, int flevel, int fsalary) thro
 //        stm.executeUpdate();
 //        con.close();
 //    }
-    public static boolean delete_job(JobsDTO j) throws SQLException, ClassNotFoundException {
-        Connection con = null;
-        PreparedStatement stm = null;
-        try {
-            con = DBUtils.makeConnection();
-            if (con != null) {
-                String sql = "Delete from [dbo].[Job] where job_id=?";
-                stm = con.prepareStatement(sql);
-                stm.setString(1, j.getJob_name());
-                stm.setInt(2, j.getMajor_id());
-                stm.setString(3, j.getJob_description());
-                stm.setInt(4, j.getLevel_id());
-                stm.setInt(5, j.getJob_vacancy());
-                stm.setDouble(6, j.getSalary());
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                stm.setString(7, sdf.format(j.getPost_date()));
-                stm.setString(8, j.getJob_id());
-                int row = stm.executeUpdate();
-                if (row > 0) {
-                    return true;
-                }
-            }
-        } finally {
-            if (stm != null) {
-                stm.close();
-            }
-            if (con != null) {
-                con.close();
-            }
+//    public static boolean delete_job(JobsDTO j) throws SQLException, ClassNotFoundException {
+//        Connection con = null;
+//        PreparedStatement stm = null;
+//        try {
+//            con = DBUtils.makeConnection();
+//            if (con != null) {
+//                String sql = "Delete from [dbo].[Job] where job_id=?";
+//                stm = con.prepareStatement(sql);
+//                stm.setString(1, j.getJob_name());
+//                stm.setInt(2, j.getMajor_id());
+//                stm.setString(3, j.getJob_description());
+//                stm.setInt(4, j.getLevel_id());
+//                stm.setInt(5, j.getJob_vacancy());
+//                stm.setDouble(6, j.getSalary());
+//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//                stm.setString(7, sdf.format(j.getPost_date()));
+//                stm.setString(8, j.getJob_id());
+//                int row = stm.executeUpdate();
+//                if (row > 0) {
+//                    return true;
+//                }
+//            }
+//        } finally {
+//            if (stm != null) {
+//                stm.close();
+//            }
+//            if (con != null) {
+//                con.close();
+//            }
+//        }
+//        return false;
+//    }
+       public static List<CandidateDTO> list_mail(String job_id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Select [email] from [dbo].[Candidate] where job_id=?");
+        ResultSet rs = stm.executeQuery();
+        stm.setString(1, job_id);
+        List<CandidateDTO> list = new ArrayList<>();
+        while (rs.next()) {
+            CandidateDTO r = new CandidateDTO();
+            r.setEmail(rs.getString("email"));
+            list.add(r);
         }
-        return false;
+        con.close();
+        return list;
     }
 }
