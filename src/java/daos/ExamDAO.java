@@ -65,7 +65,6 @@ public class ExamDAO {
         con.close();
         return e;
     }
-
     public String selectExamId(int major) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("select [exam_id] from [Exam] where [major_id] = ? order by [exam_id] desc");
@@ -139,6 +138,14 @@ public class ExamDAO {
         }
         con.close();
         return check;
+    }
+    
+    public void deleteCanExam(String canId) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Examination] WHERE [can_id] = ? ");
+        stm.setString(1, canId);
+        stm.executeUpdate();
+        con.close();
     }
 }
     

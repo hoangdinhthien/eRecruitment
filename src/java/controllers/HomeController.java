@@ -6,13 +6,14 @@
 package controllers;
 
 import config.Config;
+import daos.FeedbackDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
+import dtos.FeedbackDTO;
 import dtos.GoogleDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -68,6 +69,35 @@ public class HomeController extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
 
+        }
+    }
+
+    protected void sendFeedback(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            String subject = request.getParameter("subject");
+            String content = request.getParameter("content");
+            FeedbackDAO fDao = new FeedbackDAO();
+            fDao.send(google.getEmail(), subject, content);
+            request.setAttribute("action", "index");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    protected void viewFeedback(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            FeedbackDAO fDao = new FeedbackDAO();
+            List<FeedbackDTO> listFeedback = fDao.listAll();
+            request.setAttribute("listFeedback", listFeedback);
+            
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

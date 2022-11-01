@@ -315,3 +315,11 @@ VALUES
 (),
 GO
 */
+
+CREATE TABLE [Feedback]
+(
+	[id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
+	[content] NVARCHAR(200) NOT NULL,
+	[date] date not null
+)

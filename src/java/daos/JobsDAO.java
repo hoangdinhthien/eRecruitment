@@ -98,59 +98,81 @@ public class JobsDAO {
         return false;
     }
 
-public static List<JobsDTO> filter_job(int fmajor, int flevel, int fsalary) throws ClassNotFoundException, SQLException {
+    public static List<JobsDTO> filter_job(int fmajor, int flevel, int fsalary) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         String sql = "Select * from [dbo].[Job] ";
         if (fmajor != 0 || flevel != 0 || fsalary != 0) {
             sql = sql + " where ";
-            if (fmajor != 0){
-              sql = sql + " [major_id] = ? ";  
-              if (flevel != 0 || fsalary != 0){
-                  sql = sql + " and ";
-              }
+            if (fmajor != 0) {
+                sql = sql + " [major_id] = ? ";
+                if (flevel != 0 || fsalary != 0) {
+                    sql = sql + " and ";
+                }
             }
-            if (flevel != 0){
-                sql = sql + " [level_id] = ? ";  
-                if ( fsalary != 0){
-                  sql = sql + " and ";
-              }
+            if (flevel != 0) {
+                sql = sql + " [level_id] = ? ";
+                if (fsalary != 0) {
+                    sql = sql + " and ";
+                }
             }
-            if (fsalary != 0){
-                if (fsalary == 1){
+            if (fsalary != 0) {
+                if (fsalary == 1) {
                     sql = sql + " [salary] < 1000 ";
-                }else if (fsalary == 2){
+                } else if (fsalary == 2) {
                     sql = sql + " [salary] >= 1000  and [salary] < 5000 ";
-                }else if (fsalary == 3){
-                    sql = sql + " [salary] >= 5000 "; 
+                } else if (fsalary == 3) {
+                    sql = sql + " [salary] >= 5000 ";
                 }
             }
         }
         sql = sql + " order by [post_date] desc ";
         PreparedStatement stm = con.prepareStatement(sql);
         int position = 1;
-        if (fmajor != 0){
+        if (fmajor != 0) {
             stm.setInt(position, fmajor);
             position++;
         }
-        if (flevel != 0){
+        if (flevel != 0) {
             stm.setInt(position, flevel);
         }
         ResultSet rs = stm.executeQuery();
         List<JobsDTO> filter = new ArrayList<>();
         while (rs.next()) {
-            
-                JobsDTO r = new JobsDTO();
-                r.setJob_id(rs.getString("job_id"));
-                r.setJob_name(rs.getString("job_name"));
-                r.setMajor_id(rs.getInt("major_id"));
-                r.setJob_vacancy(rs.getInt("job_vacancy"));
-                r.setJob_description(rs.getString("job_description"));
-                r.setLevel_id(rs.getInt("level_id"));
-                r.setSalary(rs.getInt("salary"));
-                r.setPost_date(rs.getDate("post_date"));
-                filter.add(r);
-            }
+
+            JobsDTO r = new JobsDTO();
+            r.setJob_id(rs.getString("job_id"));
+            r.setJob_name(rs.getString("job_name"));
+            r.setMajor_id(rs.getInt("major_id"));
+            r.setJob_vacancy(rs.getInt("job_vacancy"));
+            r.setJob_description(rs.getString("job_description"));
+            r.setLevel_id(rs.getInt("level_id"));
+            r.setSalary(rs.getInt("salary"));
+            r.setPost_date(rs.getDate("post_date"));
+            filter.add(r);
+        }
         con.close();
         return filter;
+    }
+
+    public JobsDTO getJob(String canId) throws ClassNotFoundException, SQLException {
+        CandidateDAO cDao = new CandidateDAO();
+        String jobId = cDao.getJob(canId);
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Job] WHERE [job_id] = ? ");
+        stm.setString(1, jobId);
+        ResultSet rs = stm.executeQuery();
+        JobsDTO r = new JobsDTO();
+        while (rs.next()) {
+            r.setJob_id(rs.getString("job_id"));
+            r.setJob_name(rs.getString("job_name"));
+            r.setMajor_id(rs.getInt("major_id"));
+            r.setJob_vacancy(rs.getInt("job_vacancy"));
+            r.setJob_description(rs.getString("job_description"));
+            r.setLevel_id(rs.getInt("level_id"));
+            r.setSalary(rs.getInt("salary"));
+            r.setPost_date(rs.getDate("post_date"));
+        }
+        con.close();
+        return r;
     }
 }

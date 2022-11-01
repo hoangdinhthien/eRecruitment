@@ -2,13 +2,16 @@ package controllers;
 
 import config.Config;
 import daos.CandidateDAO;
-import daos.InterviewingDAO;
+import daos.ExamDAO;
 import daos.JobsDAO;
+import daos.MajorDAO;
+import daos.NotificationDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
-import dtos.InterviewingDTO;
 import dtos.JobsDTO;
+import dtos.MajorDTO;
+import dtos.NotificationDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import utils.DBUtils;
+import utils.MailUtils;
 
 @WebServlet(name = "ApplyController", urlPatterns = {"/apply"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10,
@@ -496,13 +500,34 @@ public class ApplyController extends HttpServlet {
             String can_id = request.getParameter("can_id"); // lấy id        
             CandidateDAO tf = new CandidateDAO();
             tf.updateup(can_id);
+            int major = tf.getMajor(can_id);
+            ExamDAO eDao = new ExamDAO();
+            eDao.giveExam(can_id, major);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
-
+            String email = tf.getEmailByCanId(can_id);
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.add(email, "Aplication " + can_id + " have been accepted",
+                    "Thank you for apply to this jobs. "
+                            + "You aplication have been accepted by the HR department. "
+                            + "There is a entry Exam that need to be done before the interviewing. "
+                            + "Please take this test at soon at posible.",
+                    "Click here to take the exam.",
+                    "exam?op=confirmExam&canId=" + can_id);
+//            String to = google.getEmail();
+            String subject = "3HTD: Aplication " + can_id + " have been accepted";
+            String body = "<p>Thank you for apply to this jobs. "
+                    + "You aplication have been accepted by the HR department. "
+                    + "There is a entry Exam that need to be done before the interviewing. "
+                    + "Please take this test at soon at posible.</p></br>"
+                    + "<a  href=\"http://localhost:8084/recruitment-system/exam?op=confirmExam&canId=" + can_id + "\" style=\"font-size: 20px; font-weight:bold;\"> Click here to take the exam: </a></br>"
+                    + "<p>If this is not you please skip this message!</p>";
+            MailUtils.send(email, subject, body);
             //Cho hiện lại danh sách 
             response.sendRedirect("apply?op=list0");
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } catch (Exception ex) {
         }
     }
 
@@ -512,13 +537,34 @@ public class ApplyController extends HttpServlet {
             String can_id = request.getParameter("can_id"); // lấy id        
             CandidateDAO tf = new CandidateDAO();
             tf.updateup(can_id);
-            CandidateDTO cd = new CandidateDTO();
-            System.out.println("status :" + cd.getIsStatus());
-
+            String email = tf.getEmailByCanId(can_id);
+            tf.removeUnusedApplication(email);
+            JobsDAO jDao = new JobsDAO();
+            JobsDTO job = jDao.getJob(can_id);
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.add(email, "Your future job is here.",
+                    "Thank you for apply to this jobs."
+                            + " We have been impressed with your background and would like to formally offer you the position of " + job.getJob_name() + "."
+                            + " This is a full time position with an annual salary of " + job.getSalary() + "."
+                            + " You will be reporting to the head of the department. Your expected starting date is 31/10."
+                            + " Because of this, your other applicans will be cancel.",
+                    null,
+                    null);
             //Cho hiện lại danh sách 
+            String subject = "3HTD: Your future job is here.";
+            String body = "<p>Thank you for apply to this jobs. "
+                    + "We have been impressed with your background and would like to formally offer you the position of " + job.getJob_name() + ". "
+                    + "This is a full time position with an annual salary of " + job.getSalary() + "$. "
+                    + "You will be reporting to the head of the department. "
+                    + "Your expected starting date is 31/10.</p></br>"
+                    + "<p>Because of this, your other applicans will be cancel.</p></br>"
+                    + "<p>If this is not you please skip this message!</p>";
+            MailUtils.send(email, subject, body);
             response.sendRedirect("apply?op=listAll");
         } catch (SQLException ex) {
             ex.printStackTrace();
+        } catch (Exception ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -533,7 +579,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -547,7 +594,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -562,7 +610,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -576,7 +625,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -591,7 +641,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -605,7 +656,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -647,7 +699,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -661,7 +714,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -676,7 +730,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -688,9 +743,9 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("listInprocess", sortPen);
             request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -731,8 +786,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -745,8 +802,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -760,8 +819,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -774,8 +835,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -789,8 +852,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list0", sortRecruit);
             request.setAttribute("action", "list_Newest");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -802,8 +867,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list0", sort);
             request.setAttribute("action", "list_Newest");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
