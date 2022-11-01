@@ -66,7 +66,7 @@
 
             <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">      
                 <c:choose>
-                    <c:when test="${not empty listEmail}">
+                    <c:when test="${not empty listUserEmail}">
                         <thead>
                             <tr>
                                 <th>No.</th><th>Job Name</th>
@@ -75,7 +75,7 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <c:forEach var="can" items="${listEmail}" varStatus="loop">
+                        <c:forEach var="can" items="${listUserEmail}" varStatus="loop">
                             <tr>
                                 <td style="text-align: center;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
                                 <td>${can.jobname.job_name}</td>

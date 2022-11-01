@@ -216,12 +216,12 @@
                                         </li>
                                     </c:if>
                                     <c:if test="${not empty info && role == 'Member' || role == 'Candidate'}" >
-                                        
+
                                     </c:if>
 
 
                                     <li><a href="<c:url value="/faq?op=index_faq"/>">FAQ</a></li>
-                                    <li><a <c:choose><c:when test="${not empty info}"> href="<c:url value="/apply?op=listApplicationByEmail"/>"</c:when>
+                                    <li><a <c:choose><c:when test="${not empty info}"> href="<c:url value="/user?op=info"/>"</c:when>
                                                                                            <c:otherwise><a  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
                                                                                            </c:choose>>My Application</a></li>
                                 </ul>

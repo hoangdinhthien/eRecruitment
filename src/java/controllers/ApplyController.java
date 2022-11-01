@@ -4,11 +4,13 @@ import config.Config;
 import daos.CandidateDAO;
 import daos.InterviewingDAO;
 import daos.JobsDAO;
+import daos.RoleDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.InterviewingDTO;
 import dtos.JobsDTO;
+import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,9 +85,6 @@ public class ApplyController extends HttpServlet {
             // Display Applications
             case "listAll":
                 listAll(request, response);
-                break;
-            case "listApplicationByEmail":
-                listApplicationByEmail(request, response);
                 break;
             case "viewUserApplication":
                 viewUserApplication(request, response);
@@ -209,35 +208,23 @@ public class ApplyController extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         String email = request.getParameter("email"); // lấy id
         try {
-            
-            System.out.println("User Email: "+ email);
+            session = request.getSession();
+            UserDAO uDao = new UserDAO();
+            UserDTO user = uDao.find(email);
+            RoleDAO rDao = new RoleDAO();
+            List<RoleDTO> listRole = rDao.selectAll();
+            System.out.println("User Email: " + email);
             List<CandidateDTO> sea = CandidateDAO.viewUserApplication(email);
-            request.setAttribute("listEmail", sea);
+            request.setAttribute("listUserEmail", sea);
             request.setAttribute("email", email);
+            request.setAttribute("listRole", listRole);
+            request.setAttribute("user", user);
             request.setAttribute("controller", "user");
             request.setAttribute("action", "viewUserInfo");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (ServletException | IOException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
-        System.out.println("Error: " +email);
-        }
-    }
-
-    // LIST BY ACCOUNT EMAIL
-    protected void listApplicationByEmail(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException, SQLException {
-        try {
-            //Lay email tu session
-            HttpSession session = request.getSession();
-            GoogleDTO g = (GoogleDTO) session.getAttribute("info");
-            String email = g.getEmail();
-            List<CandidateDTO> sea = CandidateDAO.search2(email);
-            request.setAttribute("listEmail", sea);
-            request.setAttribute("controller", "user");
-            request.setAttribute("action", "info");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-        } catch (ServletException | IOException ex) {
-            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error: " + email);
         }
     }
 

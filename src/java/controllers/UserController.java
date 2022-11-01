@@ -6,10 +6,12 @@
 package controllers;
 
 import config.Config;
+import daos.CandidateDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
 import daos.RoleDAO;
 import daos.UserDAO;
+import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
@@ -122,9 +124,12 @@ public class UserController extends HttpServlet {
             session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             UserDAO uDao = new UserDAO();
-            UserDTO user = uDao.searchUserByEmail(google.getEmail());
+            UserDTO user = uDao.find(google.getEmail());
             RoleDAO rDao = new RoleDAO();
             List<RoleDTO> listRole = rDao.selectAll();
+            String email = google.getEmail();
+            List<CandidateDTO> sea = CandidateDAO.search2(email);
+            request.setAttribute("listEmail", sea);
             request.setAttribute("listRole", listRole);
             request.setAttribute("user", user);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -135,6 +140,7 @@ public class UserController extends HttpServlet {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             session = request.getSession();
