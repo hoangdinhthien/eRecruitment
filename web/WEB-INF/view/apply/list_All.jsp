@@ -21,13 +21,11 @@
     <body>
     <center>
         <h1>List All Applications</h1>
-
         <div class="pt-3 align-items-center justify-content-center d-flex">
             <!--===Filter===-->
             <nav class="header__menu" >
                 <ul>
                     <li>
-
                         <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
                            background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
                            width: 100px"
@@ -71,12 +69,6 @@
                         <li><a href="apply?op=sortByCanDESCAll">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <%--<li><a href="<c:url value="/apply?op=sortByJobASCAll"/>"> Sort by Job Id </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByJobASCAll">Job Id Ascending</a></li>
-                        <li><a href="apply?op=sortByJobDESCAll">Job Id Descending</a></li>
-                    </ul>
-                </li> --%>
                 <li><a href="<c:url value="/apply?op=sortByScoreASCAll"/>"> Sort by Exam Score </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByScoreASCAll">Score Ascending</a></li>
@@ -91,8 +83,6 @@
                 </li>
             </ul>
         </nav>
-
-
         <!--TABLE-->
         <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">      
             <c:choose>
@@ -112,7 +102,7 @@
                             <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
                             <td>${can.id}</td>
                             <td>${can.jobname.job_name}</td>
-                            <td>${can.email}</td>
+                            <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>"> ${can.email} </a></td>
                             <td>${can.cv}</td>
                             <td>${can.score}</td>
                             <td><c:choose>

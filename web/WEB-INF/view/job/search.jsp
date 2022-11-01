@@ -135,11 +135,11 @@
             <div class="alert alert-danger alert-dismissible">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong>Warning!</strong> ${msgFailed} <br>
-                Please check Login Account again
                 <script>
                     var message = "${msgFailed}";
-                    alert(message + "\n"
-                            + "Please check Login Account again");
+                    alert(message 
+//                            + "\n0Please check Login Account again"
+                            );
                 </script>
 
             </div>
@@ -178,57 +178,6 @@
                                 <p style="text-align: left;">
                                     Post Date: ${job.post_date} <br/>
                                 </p>
-                                <p>Link 1</p>
-                                <a data-toggle="modal" data-id="${job.job_id}" title="Add this item" class="open-AddBookDialog btn btn-primary" href="#addBookDialog">test</a>
-
-                                <p>&nbsp;</p>
-
-
-                                <p>Link 2</p>
-                                <a data-toggle="modal" data-id="${job.job_id}" title="Add this item" class="open-AddBookDialog btn btn-primary" href="#addBookDialog">test</a>
-                                a
-                                <div class="modal hide" id="addBookDialog">
-                                    <div class="modal-header">
-                                        <button class="close" data-dismiss="modal">×</button>
-                                        <h3>Modal header</h3>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p>some content</p>
-                                        <input type="text" name="bookId" id="bookId" value="${job.job_id}"/>
-                                        <div class="modal-body">
-                                            <form action="<c:url value='apply'/>" method="post"  enctype="multipart/form-data" >
-
-                                                <table width="400px" align="center" border=2>
-                                                    <tr>
-                                                        <td align="center" colspan="2">Form Details</td>
-                                                    </tr>
-                                                    <tr>
-                                                    <input  value="uploadFile" name="op">
-                                                    
-                                                    
-                                                    <input   name="bookId" id="bookId" id="job_id" value="${job.job_id}" >
-                                                    <!--type="hidden"-->
-                                                    <td>Select File :</td>
-                                                    <td>
-
-                                                        <input type="file" required="" name="file"  
-                                                               accept="image/*"
-                                                               >
-                                                    </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td></td>
-                                                        <!--<td><input type="submit" name="op" value="uploadFile"></td>-->
-                                                        <td><input type="hidden" name="op" value="uploadFile">
-                                                            <button type="submit" class="interview-record-btn">Submit</button>
-                                                        </td>
-                                                    </tr>
-                                                </table> 
-                                            </form>
-
-                                        </div>
-                                    </div>
-                                </div>
                                 <p style="text-align: right;">
                                     <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
                                        background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
@@ -237,57 +186,8 @@
                                            <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
                                        </c:choose>>Apply</a>
 
-                                    <!-- Button trigger modal  onclick="getJob()" -->
-                                    <button id="j"  type="button"  class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                                        Launch demo modal
-                                    </button>
-                                    <!-- Modal -->
-                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="<c:url value='apply'/>" method="post"  enctype="multipart/form-data" >
 
-                                                    <table width="400px" align="center" border=2>
-                                                        <tr>
-                                                            <td align="center" colspan="2">Form Details</td>
-                                                        </tr>
-                                                        <tr>
-                                                        <input  value="uploadFile" name="op">
-                                                        <c:forEach var="a" items="${list}">
-                                                            <input  name="a" value="${a.job_name}"/>
-                                                        </c:forEach>
-                                                        <input   value="${job.job_id}" name="job.job_id" id="job.job_id" >
-                                                        <input   name="bookId" id="bookId" id="job_id" >
-                                                        <!--type="hidden"-->
-                                                        <td>Select File :</td>
-                                                        <td>
 
-                                                            <input type="file" required="" name="file"  
-                                                                   accept="image/*"
-                                                                   >
-                                                        </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <!--<td><input type="submit" name="op" value="uploadFile"></td>-->
-                                                            <td><input type="hidden" name="op" value="uploadFile">
-                                                                <button type="submit" class="interview-record-btn">Submit</button>
-                                                            </td>
-                                                        </tr>
-                                                    </table> 
-                                                </form>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 </p>
                             </div>
