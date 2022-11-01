@@ -576,10 +576,14 @@ public class ApplyController extends HttpServlet {
             String email = tf.getEmailByCanId(can_id);
             tf.removeUnusedApplication(email);
             JobsDAO jDao = new JobsDAO();
+            System.out.println("1");
             JobsDTO job = jDao.getJob(can_id);
+            System.out.println("2");
             if(!jDao.checkVacancy(job.getJob_id())){
+                System.out.println("3");
                 tf.deleteSuperfluousCan(job.getJob_id());
             }
+            System.out.println("4");
             NotificationDAO nDao = new NotificationDAO();
             nDao.add(email, "Your future job is here.",
                     "Thank you for apply to this jobs."

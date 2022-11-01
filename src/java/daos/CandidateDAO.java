@@ -826,7 +826,7 @@ public class CandidateDAO {
 
     public void deleteSuperfluousCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email],  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <= 4 ");
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <= 4 ");
         stm.setString(1, jobId);
         ResultSet rs = stm.executeQuery();
         ExamDAO eDao = new ExamDAO();
@@ -860,6 +860,7 @@ public class CandidateDAO {
     }
 
     public void updateup(String can_id) throws SQLException, ClassNotFoundException {
+        System.out.println("Update up");
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET isStatus = isStatus + 1 WHERE can_id = ?");
         stm.setString(1, can_id);
@@ -868,6 +869,7 @@ public class CandidateDAO {
     }
 
     public void removeUnusedApplication(String email) throws SQLException, ClassNotFoundException {
+        System.out.println("remove unused");
         deleteCanResult(email);
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
@@ -876,14 +878,6 @@ public class CandidateDAO {
         con.close();
     }
 
-    public void removeSuperfluousApplication(String email) throws SQLException, ClassNotFoundException {
-        deleteCanResult(email);
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
-        stm.setString(1, email);
-        stm.executeUpdate();
-        con.close();
-    }
 
     public void delete(String can_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
