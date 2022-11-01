@@ -198,7 +198,7 @@
                                     <li class="${empty list?'active':'link'}"><a href="<c:url value='/home?op=index'/>">Home</a></li>
                                     <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
 
-                                    <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
+                                    <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'|| role == 'Admin'}" >
                                         <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
                                             <ul class="header__menu__dropdown">
                                                 <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
@@ -207,7 +207,7 @@
                                             </ul>
                                         </li>
                                     </c:if>
-                                    <li><a href="<c:url value="/apply?op=index"/>">Upload File</a></li>
+                                    <c:if test="${not empty info && role == 'HR Staff' || role == 'Admin'}">
                                     <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
                                         <ul class="header__menu__dropdown">
                                             <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
@@ -215,7 +215,8 @@
                                             <li><a class="link" href="<c:url value="/apply?op=listPending"/>">Pending Applications</a></li>
                                             <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
                                         </ul>
-                                        <!--<li><a href="#">Contact</a></li>-->
+                                    </li>
+                                    </c:if>   <!--<li><a href="#">Contact</a></li>-->
                                 </ul>
                             </nav>
                         </div>
@@ -237,13 +238,13 @@
                                     <ul>
                                         <li>
                                             <!--id="notification-link"-->
-                                            <a id="notification-link">
+                                            <a id="notification-footer" href="<c:url value="/user?op=listNotification"/>">
                                                 <i class="fa fa-bell"></i>
                                             </a>
                                             <c:if test="${count!=0}">
                                                 <span id="notification_count">${count}</span>
                                             </c:if>
-                                            <div id="notification-container">
+<!--                                            <div id="notification-container">
                                                 <div id="notification-title">Notifications</div>
                                                 <div id="notification-body">
                                                     <c:forEach items="${listNotification}" var="notification">
@@ -257,7 +258,7 @@
                                                     </c:forEach>
                                                 </div>
                                                 <div id="notification-footer"><a href="<c:url value="/user?op=listNotification"/>">See All</a></div>
-                                            </div>
+                                            </div>-->
                                         </li>
                                     </ul>
                                 </div>

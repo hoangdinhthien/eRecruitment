@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import utils.DBUtils;
+import utils.MailUtils;
 
 /**
  *
@@ -45,6 +46,7 @@ public class CandidateDAO {
         con.close();
         return list;
     }
+
     public static CandidateDTO searchCandidateByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, c.isStatus, u.[name], u.[phone] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
@@ -64,6 +66,7 @@ public class CandidateDAO {
         con.close();
         return c;
     }
+
     public static CandidateDTO searchCandidateById(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, u.[name] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
@@ -805,15 +808,14 @@ public class CandidateDAO {
     }
      */
     // Custom
-    
-    public static void deleteCanResult (String email) throws SQLException, ClassNotFoundException{
+    public static void deleteCanResult(String email) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [can_id] FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4 ");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         ExamDAO eDao = new ExamDAO();
         InterviewingDAO iDao = new InterviewingDAO();
-        if (rs.next()){
+        if (rs.next()) {
             String canId = rs.getString("can_id");
             eDao.deleteCanExam(canId);
             iDao.deleteInterview(canId);
@@ -821,7 +823,42 @@ public class CandidateDAO {
         }
         con.close();
     }
-    
+
+    public void deleteSuperfluousCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email],  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <= 4 ");
+        stm.setString(1, jobId);
+        ResultSet rs = stm.executeQuery();
+        ExamDAO eDao = new ExamDAO();
+        InterviewingDAO iDao = new InterviewingDAO();
+        if (rs.next()) {
+            String canId = rs.getString("can_id");
+            String email = rs.getString("email");
+            eDao.deleteCanExam(canId);
+            iDao.deleteInterview(canId);
+            NotificationDAO nDao = new NotificationDAO();
+            nDao.add(email, "The available job have been filled",
+                    "Thank you for apply to this jobs. "
+                            + "Unfortunaly, all available spot have been filled. "
+                            + "Because of that, you application "+ canId +" for this job will be reject. "
+                            + "Please checkout other position with the same department.",
+                    "Click here to check other job.",
+                    "job?op=list");
+            //Cho hiện lại danh sách 
+            String subject = "3HTD:The available job have been filled";
+            String body = "<p>Thank you for apply to this jobs. "
+                    + "Unfortunaly, all available spot have been filled. "
+                    + "Because of that, you application "+ canId +" for this job will be reject. "
+                    + "Please checkout other position with the same department.</p></br>"
+                    + "<a  href=\"http://localhost:8084/recruitment-system/job?op=list"+"\" style=\"font-size: 20px; font-weight:bold;\">Click here to check other job.</a></br>"
+                    + "<p>If this is not you please skip this message!</p>"; 
+            MailUtils.send(email, subject, body);
+            delete(canId);
+            //remove candidate skill
+        }
+        con.close();
+    }
+
     public void updateup(String can_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET isStatus = isStatus + 1 WHERE can_id = ?");
@@ -829,8 +866,17 @@ public class CandidateDAO {
         stm.executeUpdate();
         con.close();
     }
-    
+
     public void removeUnusedApplication(String email) throws SQLException, ClassNotFoundException {
+        deleteCanResult(email);
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
+        stm.setString(1, email);
+        stm.executeUpdate();
+        con.close();
+    }
+
+    public void removeSuperfluousApplication(String email) throws SQLException, ClassNotFoundException {
         deleteCanResult(email);
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
@@ -850,30 +896,30 @@ public class CandidateDAO {
         con.close();
 
     }
-    
-    public int getMajor (String canId) throws ClassNotFoundException, SQLException{
+
+    public int getMajor(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("select [Job].[major_id] from [Candidate] INNER JOIN [Job] ON   [Candidate].[job_id] = [Job].[job_id] where [Candidate].[can_id] = ? ");
         stm.setString(1, canId);
         ResultSet rs = stm.executeQuery();
         int major = 0;
-        if (rs.next()){
+        if (rs.next()) {
             major = rs.getInt("major_id");
         }
         con.close();
         return major;
     }
-    
+
     public void result(double score, String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Update [Candidate] set [score] = ? , [isStatus] = 2 where [can_id] = ? ");
         stm.setDouble(1, score);
         stm.setString(2, id);
         stm.executeUpdate();
-        System.out.println("Update " + score +" "+ id );
+        System.out.println("Update " + score + " " + id);
         con.close();
     }
-    
+
     public boolean check(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select [isStatus] from [Candidate] where [can_id] = ? ");
@@ -881,34 +927,33 @@ public class CandidateDAO {
         ResultSet rs = stm.executeQuery();
         boolean check = false;
         if (rs.next()) {
-            if (rs.getInt("isStatus") == 2){
+            if (rs.getInt("isStatus") == 2) {
                 check = true;
             }
         }
         con.close();
         return check;
     }
-    
-    
-    public  String getEmailByCanId (String canId) throws ClassNotFoundException, SQLException {
+
+    public String getEmailByCanId(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [email] FROM [dbo].[Candidate] WHERE [can_id] = ? ");
         stm.setString(1, canId);
         ResultSet rs = stm.executeQuery();
-        String email  = null;
+        String email = null;
         if (rs.next()) {
             email = (rs.getString("email"));
         }
         con.close();
         return email;
     }
-    
-    public String getJob (String canId) throws ClassNotFoundException, SQLException {
+
+    public String getJob(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [dbo].[Candidate] WHERE [can_id] = ? ");
         stm.setString(1, canId);
         ResultSet rs = stm.executeQuery();
-        String job  = null;
+        String job = null;
         if (rs.next()) {
             job = rs.getString("job_id");
         }
@@ -916,4 +961,3 @@ public class CandidateDAO {
         return job;
     }
 }
-
