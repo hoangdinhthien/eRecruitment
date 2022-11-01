@@ -1044,7 +1044,6 @@ public class CandidateDAO {
         return check;
     }
 
-<<<<<<< HEAD
     public String getEmailByCanId(String canId) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [email] FROM [dbo].[Candidate] WHERE [can_id] = ? ");
@@ -1057,6 +1056,4 @@ public class CandidateDAO {
         con.close();
         return email;
     }
-=======
->>>>>>> origin/Duy
 }
