@@ -38,6 +38,24 @@ public class CandidateDAO {
 //        con.close();
 //
 //    }
+    public static List<CandidateDTO> listCan(String email) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT c.can_id, c.[job_id] FROM [dbo].[Candidate] c "
+                + "WHERE c.[email]=?");
+        stm.setString(1, email);
+        UserDAO uDao = new UserDAO();
+        UserDTO user = uDao.find(email);
+        ResultSet rs = stm.executeQuery();
+        CandidateDTO c = new CandidateDTO();
+        List<CandidateDTO> list = new ArrayList<>();
+        if (rs.next()) {
+            c.setId(rs.getString("can_id"));
+            c.setJobId(rs.getString("job_id"));
+            list.add(c);
+        }
+        con.close();
+        return list;
+    }
 
     public static List<CandidateDTO> viewUserApplication(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
@@ -63,6 +81,7 @@ public class CandidateDAO {
         con.close();
         return list;
     }
+
     public static List<CandidateDTO> search2(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus "
@@ -173,8 +192,10 @@ public class CandidateDAO {
 
     public static CandidateDTO searchCandidateByEmail(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, c.isStatus, u.[name], u.[phone] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
-                + " on j.[job_id] = c.[job_id] JOIN [dbo].[User] u on c.[email] = u.[email] WHERE c.[email]=?");
+        PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, c.isStatus, u.[name], u.[phone] FROM [dbo].[Candidate] c "
+                + "JOIN [dbo].[Job] j on j.[job_id] = c.[job_id] "
+                + "JOIN [dbo].[User] u on c.[email] = u.[email] "
+                + "WHERE c.[email]=?");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         CandidateDTO c = new CandidateDTO();

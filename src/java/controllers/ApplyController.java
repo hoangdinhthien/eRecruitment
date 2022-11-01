@@ -210,7 +210,7 @@ public class ApplyController extends HttpServlet {
         try {
             session = request.getSession();
             UserDAO uDao = new UserDAO();
-            UserDTO user = uDao.find(email);
+            UserDTO user = uDao.searchUserByEmail(email);
             RoleDAO rDao = new RoleDAO();
             List<RoleDTO> listRole = rDao.selectAll();
             System.out.println("User Email: " + email);
