@@ -4,12 +4,15 @@ import config.Config;
 import daos.CandidateDAO;
 import daos.ExamDAO;
 import daos.JobsDAO;
+import daos.MajorDAO;
 import daos.NotificationDAO;
 import daos.RoleDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.JobsDTO;
+import dtos.MajorDTO;
+import dtos.NotificationDTO;
 import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.File;
@@ -68,6 +71,16 @@ public class ApplyController extends HttpServlet {
         if (session.getAttribute("info") == null) {
             response.sendRedirect("https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force");
         } else {
+        HttpSession session = request.getSession();
+        GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+        if (google != null) {
+            NotificationDAO nDao = new NotificationDAO();
+            List<NotificationDTO> notify = nDao.select(google.getEmail());
+            request.setAttribute("listNotification", notify);
+            request.setAttribute("count", nDao.count(google.getEmail()));
+        }
+        List<MajorDTO> listMajor = MajorDAO.listAll();
+        request.setAttribute("listMajor", listMajor);
 
             request.setAttribute("controller", "apply");
             String op = request.getParameter("op");
