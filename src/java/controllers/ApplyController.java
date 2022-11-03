@@ -4,12 +4,15 @@ import config.Config;
 import daos.CandidateDAO;
 import daos.ExamDAO;
 import daos.JobsDAO;
+import daos.MajorDAO;
 import daos.NotificationDAO;
 import daos.RoleDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.JobsDTO;
+import dtos.MajorDTO;
+import dtos.NotificationDTO;
 import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.File;
@@ -58,6 +61,16 @@ public class ApplyController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
+        HttpSession session = request.getSession();
+        GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+        if (google != null) {
+            NotificationDAO nDao = new NotificationDAO();
+            List<NotificationDTO> notify = nDao.select(google.getEmail());
+            request.setAttribute("listNotification", notify);
+            request.setAttribute("count", nDao.count(google.getEmail()));
+        }
+        List<MajorDTO> listMajor = MajorDAO.listAll();
+        request.setAttribute("listMajor", listMajor);
         request.setAttribute("controller", "apply");
         String op = request.getParameter("op");
         request.setAttribute("action", op);
@@ -434,7 +447,7 @@ public class ApplyController extends HttpServlet {
             out.println("Exception: " + e);
             System.out.println("Exception2: " + e);
             String msgFailed = "" + fileName + " file uploaded failed...";
-                        request.setAttribute("msgFailed", msgFailed);
+            request.setAttribute("msgFailed", msgFailed);
         }
 
     }
@@ -526,9 +539,9 @@ public class ApplyController extends HttpServlet {
             NotificationDAO nDao = new NotificationDAO();
             nDao.add(email, "Aplication " + can_id + " have been accepted",
                     "Thank you for apply to this jobs. "
-                            + "You aplication have been accepted by the HR department. "
-                            + "There is a entry Exam that need to be done before the interviewing. "
-                            + "Please take this test at soon at posible.",
+                    + "You aplication have been accepted by the HR department. "
+                    + "There is a entry Exam that need to be done before the interviewing. "
+                    + "Please take this test at soon at posible.",
                     "Click here to take the exam.",
                     "exam?op=confirmExam&canId=" + can_id);
 //            String to = google.getEmail();
@@ -558,16 +571,16 @@ public class ApplyController extends HttpServlet {
             tf.removeUnusedApplication(email);
             JobsDAO jDao = new JobsDAO();
             JobsDTO job = jDao.getJob(can_id);
-            if(!jDao.checkVacancy(job.getJob_id())){
+            if (!jDao.checkVacancy(job.getJob_id())) {
                 tf.deleteSuperfluousCan(job.getJob_id());
             }
             NotificationDAO nDao = new NotificationDAO();
             nDao.add(email, "Your future job is here.",
                     "Thank you for apply to this jobs."
-                            + " We have been impressed with your background and would like to formally offer you the position of " + job.getJob_name() + "."
-                            + " This is a full time position with an annual salary of " + job.getSalary() + "."
-                            + " You will be reporting to the head of the department. Your expected starting date is 31/10."
-                            + " Because of this, your other applicans will be cancel.",
+                    + " We have been impressed with your background and would like to formally offer you the position of " + job.getJob_name() + "."
+                    + " This is a full time position with an annual salary of " + job.getSalary() + "."
+                    + " You will be reporting to the head of the department. Your expected starting date is 31/10."
+                    + " Because of this, your other applicans will be cancel.",
                     null,
                     null);
             //Cho hiện lại danh sách 

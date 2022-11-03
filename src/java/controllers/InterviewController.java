@@ -75,11 +75,12 @@ public class InterviewController extends HttpServlet {
                 request.setAttribute("controller", "interview");
 
                 GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-                NotificationDAO nDao = new NotificationDAO();
-                List<NotificationDTO> notify = nDao.select(google.getEmail());
-                request.setAttribute("listNotification", notify);
-                request.setAttribute("count", nDao.count(google.getEmail()));
-
+                if (google != null) {
+                    NotificationDAO nDao = new NotificationDAO();
+                    List<NotificationDTO> notify = nDao.select(google.getEmail());
+                    request.setAttribute("listNotification", notify);
+                    request.setAttribute("count", nDao.count(google.getEmail()));
+                }
                 List<MajorDTO> listMajor = MajorDAO.listAll();
                 request.setAttribute("listMajor", listMajor);
 
