@@ -135,7 +135,6 @@
             <div class="alert alert-danger alert-dismissible">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                 <strong>Warning!</strong> ${msgFailed} <br>
-                Please check Login Account again
                 <script>
                     var message = "${msgFailed}";
                     alert(message + "\n"

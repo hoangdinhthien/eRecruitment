@@ -77,7 +77,7 @@
                                             <c:when test="${not empty info && role == 'Admin'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
@@ -92,7 +92,7 @@
                                             <c:when test="${not empty info && role == 'Member'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
@@ -107,7 +107,7 @@
                                             <c:when test="${not empty info && role == 'HR Staff'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul><li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
                                                             </li>
@@ -124,7 +124,7 @@
                                             <c:when test="${not empty info && role == 'Interviewer'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
@@ -143,7 +143,7 @@
                                             <c:when test="${not empty info && role == 'Candidate'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>

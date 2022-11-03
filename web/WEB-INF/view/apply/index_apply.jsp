@@ -4,35 +4,52 @@
     Author     : ADMIN
 --%>
 
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+         pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     </head>
     <body>
-        <form action="<c:url value='apply'/>" method="post" name="myForm"  enctype="multipart/form-data" >
+        <div class="container" style="text-align: left">
 
-            <table width="400px" align="center" border=2>
-                <tr>
-                    <td align="center" colspan="2">Form Details</td>
-                </tr>
-                <tr>
-                <input type="hidden" value="uploadFile" name="op">
-                <input type="" value="${job_id}" name="job_id">
-                <td>Select File :</td>
-                <td>
+            <form  action="<c:url value="/apply?op=uploadFile"/>" enctype="multipart/form-data" method="post">
+                <input type="hidden" value="${job_id}" name="job_id">
+                <input type="hidden" value="${cv}" name="cv">
+                <p>Select Your CV:</p>
+                <div class="custom-file mb-3" style="width: 45%">
+                    <input type="file" class="custom-file-input" id="customFile" name="filename">
+                    <label class="custom-file-label" for="customFile">Choose file</label>
+                </div>
+                <div >
+                    <button type="submit" class="btn btn-success">Apply CV</button>
+                </div>
+            </form>
 
-                    <input type="file" required="" name="file">
-                </td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td><button type="submit" name="op" value="uploadFile">Upload File</button></td>
-                </tr>
-            </table> 
-
-        </form>
+        </div>
+        <c:if test="${not empty cv}">
+            <script>
+                $(".custom-file-input").siblings(".custom-file-label").addClass("selected").html("${cv}");
+            </script>
+        </c:if>
+        <script>
+// Add the following code if you want the name of the file appear on select
+//            $(document).ready(function () {
+//                $(".custom-file-input").siblings(".custom-file-label").addClass("selected").html(${cv});
+//            });
+            $(".custom-file-input").on("change", function () {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+        </script>
     </body>
 </html>

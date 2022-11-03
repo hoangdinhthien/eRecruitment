@@ -167,7 +167,7 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, j.job_name, c.email, c.can_cv, c.isStatus, u.[name], u.[phone]"
                 + " FROM [eRecruitment].[dbo].[Candidate] c JOIN [eRecruitment].[dbo].[Job] j "
-                + " ON j.[job_id] = c.[job_id] JOIN [eRecruitment].[dbo].[User] u ON c.[email] = u.[email] WHERE c.[email]= ? ");
+                + " ON j.[job_id] = c.[job_id] JOIN [eRecruitment].[dbo].[User] u ON c.[email] = u.[email] WHERE c.[email]= ? and c.[isStatus] >2");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new LinkedList();

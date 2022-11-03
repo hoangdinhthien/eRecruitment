@@ -69,7 +69,7 @@ public class InterviewController extends HttpServlet {
             throws ServletException, IOException {
         session = request.getSession();
         if (session.getAttribute("info") == null) {
-            response.sendRedirect("home?op=index");
+            response.sendRedirect("https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force");
         } else {
             try {
                 request.setAttribute("controller", "interview");
@@ -340,7 +340,6 @@ public class InterviewController extends HttpServlet {
             List<CandidateDTO> candidates = CandidateDAO.searchCandidateByEmail(email);
             List<InterviewingDTO> interviews = new ArrayList<>();
             List<String> job_name = new ArrayList<>();
-            System.out.println(candidates.size());
             for (CandidateDTO can : candidates) {
                 job_name.add(can.getJobname().getJob_name());
                 InterviewingDTO interview = InterviewingDAO.searchInterviewByCandidateId(can.getId());

@@ -120,9 +120,10 @@ public class InterviewingDAO {
     public static InterviewingDTO searchInterviewByCandidateId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm;
-        stm = con.prepareStatement(" SELECT MIN(i.id) AS id, MIN(i.can_id) AS can_id, MIN(i.inter_id) AS inter_id, MIN(i.[location]) AS location, "
+        stm = con.prepareStatement("SELECT MIN(i.id) AS id, MIN(i.can_id) AS can_id, MIN(i.inter_id) AS inter_id, MIN(i.[location]) AS location, "
                 + "MIN(i.[inter_score]) AS inter_score, MIN(i.[date]) AS [date], c.[isStatus] "
-                + "FROM  [dbo].[Interviewing] i JOIN  [dbo].[Candidate] c ON i.[can_id]=c.[can_id] WHERE i.[can_id]=? GROUP BY c.[isStatus]");
+                + "FROM  [dbo].[Interviewing] i JOIN  [dbo].[Candidate] c ON i.[can_id]=c.[can_id] WHERE i.[can_id]=?"
+                + " GROUP BY c.[isStatus]");
 
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
