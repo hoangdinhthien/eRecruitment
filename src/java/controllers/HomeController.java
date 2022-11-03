@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.sound.midi.Soundbank;
 
 /**
  *
@@ -58,10 +59,20 @@ public class HomeController extends HttpServlet {
             request.setAttribute("listMajor", listMajor);
             String action = request.getParameter("op");
             request.setAttribute("controller", "home");
-            request.setAttribute("action", action);
+            request.setAttribute("action", "feedback");
             switch (action) {
                 case "index":
+                    request.setAttribute("action", "index");
                     request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                    break;
+                case "viewFeedback":
+                    viewFeedback(request, response);
+                    break;
+                case "sendFeedback":
+                    sendFeedback(request, response);
+                    break;
+                case "delete":
+                    deleteFeedback(request, response);
                     break;
             }
         } catch (SQLException ex) {
@@ -75,14 +86,15 @@ public class HomeController extends HttpServlet {
     protected void sendFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            HttpSession session = request.getSession();
-            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            System.out.println("Send");
+            String email = request.getParameter("email");
             String subject = request.getParameter("subject");
-            String content = request.getParameter("content");
+            String detail = request.getParameter("detail");
             FeedbackDAO fDao = new FeedbackDAO();
-            fDao.send(google.getEmail(), subject, content);
-            request.setAttribute("action", "index");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            fDao.send(email, subject, detail);
+            System.out.println("Sended !");
+            request.setAttribute("message", "Your feedback have been sended.");
+            viewFeedback(request, response);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -92,11 +104,31 @@ public class HomeController extends HttpServlet {
     protected void viewFeedback(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            if (google != null) {
+                request.setAttribute("feedbackEmail", google.getEmail());
+            }
             FeedbackDAO fDao = new FeedbackDAO();
             List<FeedbackDTO> listFeedback = fDao.listAll();
             request.setAttribute("listFeedback", listFeedback);
-            
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    protected void deleteFeedback(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int id = Integer.parseInt(request.getParameter("id"));
+            FeedbackDAO fDao = new FeedbackDAO();
+            fDao.delete(id);
+            request.setAttribute("message", "Delete Successfully");
+            viewFeedback(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -16,17 +16,17 @@ public class FeedbackDTO {
     private int id;
     private String email;
     private String subject;
-    private String content;
+    private String detail;
     private Date date;
 
     public FeedbackDTO() {
     }
 
-    public FeedbackDTO(int id, String email, String subject, String content, Date date) {
+    public FeedbackDTO(int id, String email, String subject, String detail, Date date) {
         this.id = id;
         this.email = email;
         this.subject = subject;
-        this.content = content;
+        this.detail = detail;
         this.date = date;
     }
 
@@ -54,12 +54,12 @@ public class FeedbackDTO {
         this.subject = subject;
     }
 
-    public String getContent() {
-        return content;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public Date getDate() {
@@ -70,4 +70,5 @@ public class FeedbackDTO {
         this.date = date;
     }
 
+   
 }
