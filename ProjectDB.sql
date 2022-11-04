@@ -320,7 +320,50 @@ GO
 CREATE TABLE [Feedback]
 (
 	[id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
-	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
-	[content] NVARCHAR(200) NOT NULL,
+	[email] NVARCHAR(60) NOT NULL,
+	[subject] NVARCHAR (150) NOT NULL,
+	[detail] NVARCHAR(400) NOT NULL,
 	[date] date not null
+)
+
+CREATE TABLE [Q&A_question]
+(
+	[qId] char(4) PRIMARY KEY NOT NULL,--Q000
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
+	[detail] text NOT NULL,
+	[datetime] datetime NOT NULL,
+)
+
+CREATE TABLE [Q&A_answer]
+(
+	[aId] char(5) PRIMARY KEY NOT NULL,--A0000
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
+	[qId] char(5) FOREIGN KEY REFERENCES dbo.[Q&A_question] NOT NULL,
+	[detail] text NOT NULL,
+	[datetime] datetime NOT NULL,
+)
+
+CREATE TABLE [Report]
+(
+	[r_id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
+	[reason] NVARCHAR(100) NOT NULL,
+)
+
+INSERT INTO [Report] ([reason])
+VALUES
+('Unwanted commercial content or spam'),
+('Pornography or sexually explicit material'),
+('Child abuse'),
+('Hate speech or graphic violence'),
+('Promotes terrorism'),
+('Harassment or bullying'),
+('Suicide or self injury'),
+('Misinformation')
+
+
+CREATE TABLE [Report_list]
+(
+	[Q&A_id] char(5) not null,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
+	[r_id] int FOREIGN KEY REFERENCES dbo.[Report] NOT NULL,
 )

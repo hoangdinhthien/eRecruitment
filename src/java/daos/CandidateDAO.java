@@ -1047,7 +1047,7 @@ public class CandidateDAO {
         ResultSet rs = stm.executeQuery();
         ExamDAO eDao = new ExamDAO();
         InterviewingDAO iDao = new InterviewingDAO();
-        if (rs.next()) {
+        while (rs.next()) {
             String canId = rs.getString("can_id");
             String email = rs.getString("email");
             eDao.deleteCanExam(canId);
@@ -1076,6 +1076,7 @@ public class CandidateDAO {
     }
 
     public void updateup(String can_id) throws SQLException, ClassNotFoundException {
+        System.out.println("Update up");
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET isStatus = isStatus + 1 WHERE can_id = ?");
         stm.setString(1, can_id);
@@ -1084,6 +1085,7 @@ public class CandidateDAO {
     }
 
     public void removeUnusedApplication(String email) throws SQLException, ClassNotFoundException {
+        System.out.println("remove unused");
         deleteCanResult(email);
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");

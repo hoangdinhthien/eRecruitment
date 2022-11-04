@@ -47,12 +47,16 @@ and open the template in the editor.
 }
 
 #notification-body a{
-    padding: 35px 0 0 0 ;
+    padding: 35px 0 0 0 !important;
     /*min-height: 340px;*/
     display: block;
     text-align: center;
     text-decoration: none;
-    color: black;
+    color:black;
+}
+
+#notification-body a:hover{
+    color: gray;
 }
 
 #notification-footer {

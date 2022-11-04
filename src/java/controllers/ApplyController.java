@@ -595,6 +595,7 @@ public class ApplyController extends HttpServlet {
             String email = tf.getEmailByCanId(can_id);
             tf.removeUnusedApplication(email);
             JobsDAO jDao = new JobsDAO();
+            System.out.println("1");
             JobsDTO job = jDao.getJob(can_id);
             if (!jDao.checkVacancy(job.getJob_id())) {
                 tf.deleteSuperfluousCan(job.getJob_id());

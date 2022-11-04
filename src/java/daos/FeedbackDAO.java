@@ -28,31 +28,46 @@ public class FeedbackDAO {
         List<FeedbackDTO> list = null;
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
-        ResultSet rs = stm.executeQuery("SELECT [id], [email], [subject], [content], [date] FROM [Feedback]");
+        ResultSet rs = stm.executeQuery("SELECT [id], [email], [subject], [detail], [date] FROM [Feedback]");
 
         list = new ArrayList();
+        boolean check = false;
         while (rs.next()) {
             FeedbackDTO feedback = new FeedbackDTO();
             feedback.setId(rs.getInt("id"));
             feedback.setEmail(rs.getString("email"));
             feedback.setSubject(rs.getString("subject"));
-            feedback.setContent(rs.getString("content"));
+            feedback.setDetail(rs.getString("detail"));
             feedback.setDate(rs.getDate("date"));
             list.add(feedback);
+            check = true;
         }
         con.close();
-        return list;
+        if (check) {
+            return list;
+        } else {
+            return null;
+        }
     }
 
     public void send(String email, String subject, String content) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("INSERT INTO [Feedback] ( {email], [subject], [content], [date]) VALUES ( ? , ? , ? , ? )");
+        PreparedStatement stm = con.prepareStatement("INSERT INTO [Feedback] ( [email], [subject], [detail], [date]) VALUES ( ? , ? , ? , ? )");
         stm.setString(1, email);
         stm.setString(2, subject);
         stm.setString(3, content);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         LocalDateTime now = LocalDateTime.now();
         stm.setString(4, dtf.format(now));
+        System.out.println(dtf.format(now));
+        stm.executeUpdate();
+        con.close();
+    }
+
+    public void delete(int id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Feedback] WHERE [id] = ? ");
+        stm.setInt(1, id);
         stm.executeUpdate();
         con.close();
     }

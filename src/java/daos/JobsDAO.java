@@ -241,7 +241,6 @@ public class JobsDAO {
             if (vacancy == 1) {
                 reduceVacancy(jobId);
             }
-            
             check = false;
         } else {
             reduceVacancy(jobId);
