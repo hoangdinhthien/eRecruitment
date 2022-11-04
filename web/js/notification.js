@@ -6,9 +6,9 @@
 
 $(document).ready(function ()
 {
-    $("#notification-link").click(function ()
+    $("#notification_link").click(function ()
     {
-        $("#notification-container").fadeToggle(300);
+        $("#notification_container").fadeToggle(300);
         $("#notification_count").fadeOut("slow");
         return false;
     });
@@ -16,28 +16,24 @@ $(document).ready(function ()
     //Document Click hiding the popup 
     $(document).click(function ()
     {
-        $("#notification-container").hide();
+        $("#notification_container").hide();
     });
 
     //Popup on click
-    $("#notification-container").click(function ()
+    $("#notification_container").click(function ()
     {
         return false;
     });
 
-    $("#notification-footer").click(function () {
+    $("#notification_footer").click(function () {
         window.location.href = '/recruitment-system/user?op=listNotification';
     });
 
-    $("#notification-content").click(function () {
-        a_href = $(this).attr('href');
-        window.location.href = a_href;
-        alert(a_href);
-        console.log(a_href);
-        console.log(queryString);
-        console.log(urlParams);
-        console.log(nId);
-
-    });
+    for (i = 1; i <= 5; i++) {
+        $("#notification_content-" + i).click(function () {
+            a_href = $(this).attr('href');
+            window.location.href = a_href;
+        });
+    }
 });
 

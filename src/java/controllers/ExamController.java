@@ -367,6 +367,8 @@ public class ExamController extends HttpServlet {
                 double mark = (double) ((correct / count) * 10);
                 System.out.println("Mark : " + mark);
                 cDao.result(mark, canId);
+                
+                request.setAttribute("mark", mark);
                 request.setAttribute("message", "You have finish the exam. ");
             } else {
                 request.setAttribute("message", "You have taken this exam. ");

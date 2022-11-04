@@ -14,31 +14,45 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <c:choose>
-        <c:when test="${not empty info && role == 'Admin' || role == 'HR Staff'}">
-            <c:if test="${listFeedback==null}">
-                <h2>Nothing at the moment!</h2>
-            </c:if>
-            <c:forEach items="${listFeedback}" var="feedback">
-                ${feedback.subject} <br/>
-                ${feedback.email} <br/>
-                ${feedback.detail}<br/>
-                <fmt:formatDate type = "date" value = "${feedback.date}" /> <br/>
-                <a href="<c:url value="/home?op=delete&id=${feedback.id}"/>"><button>Delete</button></a>
-            </c:forEach>
-        </c:when>
-            <c:otherwise>
-                <form action="<c:url value="/home"/>" >
-                    Feedback Subject: <br/>
-                    <input type="text" name="subject"  maxlength="150"/><br/>
-                    Email: <br/>
-                    <input type="text" name="email" maxlength="60" value="${feedbackEmail}"/><br/>
-                    Detail: <br/>
-                    <input type="text" name="detail"  maxlength="400"/><br/>
-                    <input type="hidden" name="op" value="sendFeedback"/><br/>
-                    <input type="submit"/>
-                </form>
-            </c:otherwise>
-        </c:choose>
+        
+        <div class="container">
+            <c:choose>
+                <c:when test="${not empty info && role == 'Admin' || role == 'HR Staff'}">
+                    <c:if test="${listFeedback==null}">
+                        <h2>Nothing at the moment!</h2>
+                    </c:if>
+                    <c:forEach items="${listFeedback}" var="feedback">
+                        ${feedback.subject} <br/>
+                        ${feedback.email} <br/>
+                        ${feedback.detail}<br/>
+                        <fmt:formatDate type = "date" value = "${feedback.date}" /> <br/>
+                        <a href="<c:url value="/home?op=delete&id=${feedback.id}"/>"><button>Delete</button></a>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <h2>We'd like your feedback</h2>
+                    <div class="feedback_form">
+                        <form action="<c:url value="/home"/>" >
+                            <div class="feedback_item">
+                                <label>Feedback Subject:</label>
+                                <input  class="feedback_input" type="text" name="subject"  maxlength="150" size="35"/>
+                            </div>
+                            <div class="feedback_item">
+                                <label> Email:</label> 
+                                <input class="feedback_input" type="text" name="email" maxlength="60" value="${feedbackEmail}"  size="35"/>
+                            </div>
+                            <div class="feedback_item">
+                                <label>Detail:</label> 
+                                <textarea class="feedback_input" type="text" name="detail"  maxlength="1000"  placeholder="Enter message ..."></textarea>
+                                <input type="hidden" name="op" value="sendFeedback"/>
+                            </div>
+                            <p>
+                                <input type="submit" class="btn btn-primary"/>
+                            </p>
+                        </form>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </div>
     </body>
 </html>
