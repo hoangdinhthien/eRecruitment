@@ -76,6 +76,7 @@
                                         <c:choose>
                                             <c:when test="${not empty info && role == 'Admin'}">
                                                 <ul class="login-ava">
+                                                    Hi, <i>${info.name}</i>
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
@@ -91,6 +92,7 @@
                                             </c:when>
                                             <c:when test="${not empty info && role == 'Member'}">
                                                 <ul class="login-ava">
+                                                    Hi, <i>${info.name}</i>
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
@@ -106,6 +108,7 @@
                                             </c:when>
                                             <c:when test="${not empty info && role == 'HR Staff'}">
                                                 <ul class="login-ava">
+                                                    Hi, <i>${info.name}</i>
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul><li style="list-style-type:none">
@@ -123,6 +126,7 @@
                                             </c:when>
                                             <c:when test="${not empty info && role == 'Interviewer'}">
                                                 <ul class="login-ava">
+                                                    Hi, <i>${info.name}</i>
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
@@ -142,6 +146,7 @@
                                             </c:when>
                                             <c:when test="${not empty info && role == 'Candidate'}">
                                                 <ul class="login-ava">
+                                                    Hi, <i>${info.name}</i>
                                                     <li style="list-style-type:none">
                                                         <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
@@ -213,14 +218,6 @@
                                         <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
                                             <ul class="header__menu__dropdown">
                                                 <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
-                                                <li><a class="link" href="<c:url value="/apply?op=list0"/>">Newest Applications</a></li>
-                                                <li><a class="link" href="<c:url value="/apply?op=listPending"/>">Pending Applications</a></li>
-                                                <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
-                                            </ul>
-                                        </li>
-                                        <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
-                                            <ul class="header__menu__dropdown">
-                                                <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
                                                 <li><a class="link" href="<c:url value="/apply?op=list0"/>">Latest Applications</a></li>
                                                 <li><a class="link" href="<c:url value="/apply?op=listInprocess"/>">In-Progress Applications</a></li>
                                                 <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
@@ -228,8 +225,8 @@
                                         </li>
                                     </c:if>
                                     <c:if test="${not empty info && role == 'Member' || role == 'Candidate'}" >
-                                        <li><a href="<c:url value="/faq?op=index_faq"/>">FAQs</a></li>
-                                        </c:if>
+<!--                                        <li><a href="<c:url value="/faq?op=index_faq"/>">FAQs</a></li>-->
+                                    </c:if>
 
 
                                 </ul>

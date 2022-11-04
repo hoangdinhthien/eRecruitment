@@ -30,7 +30,9 @@
                     <input type="file" class="custom-file-input" id="customFile" name="filename" accept="image/*" onchange="validateFileType()">
                     <label class="custom-file-label" for="customFile">Choose file</label>
                 </div>
-                <i>*Only accept image file</i>>
+                <p>
+                    <i style="color: red;">*Only accept image file</i>
+                </p>
                 <div >
                     <button type="submit" class="btn btn-success" id="submitbutton">Apply CV</button>
                 </div>
@@ -52,7 +54,7 @@
                 $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
             });
             function validateFileType() {
-                var fileName = document.getElementById("files").value;
+                var fileName = document.getElementById("customFile").value;
                 var idxDot = fileName.lastIndexOf(".") + 1;
                 var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
                 if (extFile == "jpg" || extFile == "jpeg" || extFile == "png"

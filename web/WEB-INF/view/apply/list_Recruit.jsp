@@ -81,7 +81,7 @@
                                     <td style="text-align: center">
                                         <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
                                     <a href="apply?op=yesupRecruit&can_id=${can.id}">Accept</a> |
-                                    <a href="apply?op=rejectFileRecruit&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Reject</a>
+                                    <a href="apply?op=deleteFile&can_id=${can.id}">Reject</a> 
                                 </td>
 
 

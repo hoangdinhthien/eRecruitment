@@ -23,7 +23,7 @@
                     <!-- ben trai  -->
                     <div class="col-2">
                         <figure>
-                            <img src="${info.picture}" class="user-img"/>
+                            <img src="${info.picture}" alt="Not Found" class="user-img" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                         </figure>
 
                         <!-- user name -->
