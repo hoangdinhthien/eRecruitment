@@ -2,19 +2,17 @@ package controllers;
 
 import config.Config;
 import daos.CandidateDAO;
-import daos.InterviewingDAO;
 import daos.JobsDAO;
+import daos.NotificationDAO;
 import daos.RoleDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
-import dtos.InterviewingDTO;
 import dtos.JobsDTO;
 import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import utils.DBUtils;
+import utils.MailUtils;
 
 @WebServlet(name = "ApplyController", urlPatterns = {"/apply"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10,
@@ -57,7 +56,7 @@ public class ApplyController extends HttpServlet {
     public static String fileName = null;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException, SQLException {
+            throws ServletException, IOException, ClassNotFoundException, SQLException, Exception {
         request.setAttribute("controller", "apply");
         String op = request.getParameter("op");
         request.setAttribute("action", op);
@@ -75,6 +74,15 @@ public class ApplyController extends HttpServlet {
             // Custom
             case "deleteFile":
                 deleteFile(request, response);
+                break;
+            case "rejectFileNewest":
+                rejectFileNewest(request, response);
+                break;
+            case "rejectFileInprocess":
+                rejectFileInprocess(request, response);
+                break;
+            case "rejectFileRecruit":
+                rejectFileRecruit(request, response);
                 break;
             case "yesupNewest":
                 yesupNewest(request, response);
@@ -187,23 +195,8 @@ public class ApplyController extends HttpServlet {
                 break;
         }
     }
-// protected void upload(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException, ClassNotFoundException {
-//        try {
-//            String jobId = request.getParameter("job_id");
-//            CandidateDAO tf = new CandidateDAO();
-//            List<CandidateDTO> list = tf.selectAll();
-//            System.out.println(list);
-//            request.setAttribute("job_id", jobId);
-//            request.setAttribute("list", list);
-//            request.setAttribute("action", "index_apply");
-//            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-//        } catch (SQLException ex) {
-//            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-    // VIEW USER APPLICATION ( HR STAFF )
 
+    // VIEW USER APPLICATION ( HR STAFF )
     protected void viewUserApplication(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         String email = request.getParameter("email"); // lấy id
@@ -353,19 +346,21 @@ public class ApplyController extends HttpServlet {
         try {
             out = response.getWriter();
             session = request.getSession(false);
-            String folderName = "cv";
+            String folderName = "cvs";
             Part filePart = request.getPart("file");//Textbox name FILE
             String fileName = filePart.getSubmittedFileName();
 
             //Đường dẫn đến Nơi Lưu
-            // C:\Users\ADMIN\OneDrive\Máy tính\PRJ\UploadFileProPro\build\web\cv\
-            String uploadPath = request.getServletContext().getRealPath("") + folderName + File.separator;
+            // C:\Users\ADMIN\OneDrive\Máy tính\PRJ\UploadFileProPro\build\web\cvs\
+            String uploadPath
+                    = request.getServletContext().getRealPath("")
+                    + folderName + File.separator;
 
             File dir = new File(uploadPath);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
-            String path = /*folderName +*/ fileName;
+            String path = folderName + fileName;
             UserDTO userDTO = new UserDTO();
             userDTO.getEmail();
 
@@ -378,7 +373,7 @@ public class ApplyController extends HttpServlet {
 
                 System.out.println("Info");
                 UserDAO uDao = new UserDAO();
-                UserDTO user = uDao.find(google.getEmail());
+                UserDTO user = uDao.searchUserByEmail(google.getEmail());
                 System.out.println("Email :" + user.getEmail());
                 String job_id = request.getParameter("job_id");
                 System.out.println(job_id);
@@ -401,9 +396,7 @@ public class ApplyController extends HttpServlet {
                     ps.setString(3, user.getEmail());
                     ps.setString(4, path);
                     ps.setInt(5, 0);
-
                     int status = ps.executeUpdate();
-                    System.out.println("abc");
                     System.out.println(job_id);
                     if (status > 0) {
                         session.setAttribute("fileName", fileName);
@@ -421,7 +414,6 @@ public class ApplyController extends HttpServlet {
 //                    out.println("Exception: " + ex);
                     System.out.println("Exception1: " + ex);
                     session.setAttribute("fileName", fileName);
-                    String msgFailed = "" + fileName + " file uploaded failed...";
                     request.setAttribute("msgFailed", "That Job already apply.");
                     List<JobsDTO> list = JobsDAO.list_job();
                     request.setAttribute("controller", "job");
@@ -520,39 +512,191 @@ public class ApplyController extends HttpServlet {
             CandidateDAO tf = new CandidateDAO();
             tf.delete(can_id);
             //Cho hiện lại danh sách 
-            response.sendRedirect("upload?op=upload_index");
+            response.sendRedirect("user?op=info");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    protected void rejectFileNewest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException, Exception {
+        try {
+            String can_id = request.getParameter("can_id"); // lấy id
+            String email = request.getParameter("email"); // lấy id
+            CandidateDAO tf = new CandidateDAO();
+            tf.rejectFileNewest(can_id);
+            List<CandidateDTO> list0 = CandidateDAO.hrstatus0();
+            //=== Notification + Send Email
+            String job_name = request.getParameter("job_name"); // lấy job_name
+            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            String to = can.getEmail();
+            System.out.println("Data: " + job_name + " " + to);
+            String subject = "3HTD: Your Resume has been rejected";
+            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
+                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+                    + " Through the review of the profile, we found that there are some points that you do not match our requirements."
+                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
+                    + "<p>We look forward to you becoming our member.</p>"
+                    + "<p>Best regards,</p>"
+                    + "<p>3HTD</p>";
+            MailUtils.send(to, subject, body);
+            NotificationDAO.add(to, "Rejected Resume",
+                    "<p>Your Resume has been rejected.</p>",
+                    null, null);
+            //Cho hiện lại danh sách 
+            String Reject = can_id + " have been Reject";
+            request.setAttribute("Reject", Reject);
+            request.setAttribute("list0", list0);
+            request.setAttribute("action", "list_Newest");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    protected void rejectFileInprocess(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException, Exception {
+        try {
+            String can_id = request.getParameter("can_id"); // lấy id
+            CandidateDAO tf = new CandidateDAO();
+            tf.delete(can_id);
+            List<CandidateDTO> listInprocess = CandidateDAO.hrstatus14();
+//            //=== Notification + Send Email
+            String job_name = request.getParameter("job_name"); // lấy job_name
+            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            String to = can.getEmail();
+            System.out.println("Data: " + job_name + " " + to);
+            String subject = "3HTD: Your Resume has been rejected";
+            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
+                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+                    + " Through the review of the profile, we found that there are some points that you do not match our requirements."
+                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
+                    + "<p>We look forward to you becoming our member.</p>"
+                    + "<p>Best regards,</p>"
+                    + "<p>3HTD</p>";
+            MailUtils.send(to, subject, body);
+            NotificationDAO.add(to, "Rejected Resume",
+                    "<p>Your Resume has been rejected.</p>",
+                    null, null);
+            //Cho hiện lại danh sách 
+            String Reject = can_id + " have been Reject";
+            request.setAttribute("Reject", Reject);
+            request.setAttribute("listInprocess", listInprocess);
+            request.setAttribute("action", "list_Inprocess");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    protected void rejectFileRecruit(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException, Exception {
+        try {
+            String can_id = request.getParameter("can_id"); // lấy id
+            CandidateDAO tf = new CandidateDAO();
+            tf.delete(can_id);
+            String job_name = request.getParameter("job_name"); // lấy job_name   
+            List<CandidateDTO> list4 = CandidateDAO.hrstatus4();
+            //=== Notification + Send Email
+            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            String to = can.getEmail();
+            System.out.println("Data: " + job_name + " " + to);
+            String subject = "3HTD: Your Resume has been rejected";
+            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
+                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+                    + " Through the review of the profile and the results of the interview, we found that there are some points that you do not match our requirements."
+                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
+                    + "<p>We look forward to you becoming our member.</p>"
+                    + "<p>Best regards,</p>"
+                    + "<p>3HTD</p>";
+            MailUtils.send(to, subject, body);
+            NotificationDAO.add(to, "Rejected Resume",
+                    "<p>Your Resume has been rejected.</p>",
+                    null, null);
+            //Cho hiện lại danh sách 
+            String Reject = can_id + " have been Reject";
+            request.setAttribute("Reject", Reject);
+            request.setAttribute("list4", list4);
+            request.setAttribute("action", "list_Recruit");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
     protected void yesupNewest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException, ClassNotFoundException, Exception {
         try {
             String can_id = request.getParameter("can_id"); // lấy id        
+            String email = request.getParameter("email"); // lấy email        
+            String job_name = request.getParameter("job_name"); // lấy job_name        
             CandidateDAO tf = new CandidateDAO();
-            tf.updateup(can_id);
+            tf.updateup01(can_id, email);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
-
+            List<CandidateDTO> list0 = CandidateDAO.hrstatus0();
+            //=== Notification + Send Email
+            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            String to = can.getEmail();
+            String subject = "3HTD: Your Resume has been accepted";
+            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                    + "<p>We thank you for applying for the job: <strong>" + job_name + " </strong> of 3HTD.</p>"
+                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+                    + "You have completed the first stage in the recruitment of our company."
+                    + "<p>This includes <strong> Posting A CV, Taking A Test, Going To An Interview, and Waiting To Receive A Notification Of Matriculation. </strong> </p>"
+                    + "<p>Have a nice day and don't forget to check your email regularly! We look forward to the opportunity to meet you.</p><br/>"
+                    + "<p>We look forward to you becoming our member.</p>"
+                    + "<p>Sincerely</p>"
+                    + "<p>3HTD</p>";
+            MailUtils.send(to, subject, body);
+            NotificationDAO.add(to, "Accepted Resume",
+                    "<p>Your Resume already accepted.</p>",
+                    null, null);
             //Cho hiện lại danh sách 
-            response.sendRedirect("apply?op=list0");
+            String Accept = can_id + " have been Accept";
+            request.setAttribute("Accept", Accept);
+            request.setAttribute("list0", list0);
+            request.setAttribute("action", "list_Newest");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
     protected void yesupRecruit(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, ClassNotFoundException {
+            throws ServletException, IOException, ClassNotFoundException, Exception {
         try {
-            String can_id = request.getParameter("can_id"); // lấy id        
+            String can_id = request.getParameter("can_id"); // lấy id    
+            String email = request.getParameter("email"); // lấy id    
+            String job_name = request.getParameter("job_name"); // lấy job_name
             CandidateDAO tf = new CandidateDAO();
-            tf.updateup(can_id);
+//            tf.updateup45(can_id, email);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
-
+            List<CandidateDTO> list4 = CandidateDAO.hrstatus4();
+            //=== Notification + Send Email
+            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            String to = can.getEmail();
+            String subject = "3HTD: You have been selected";
+            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                    + "<p>Congratulations on becoming one of the members with the " + job_name + " of 3HTD company's. "
+                    + "Thank you for choosing our company as your workplace. "
+                    + "Wish you success in the future. </p>"
+                    + "<p>Sincerely</p>"
+                    + "<p>3HTD</p>";
+            MailUtils.send(to, subject, body);
+            NotificationDAO.add(to, "Congratulations",
+                    "<p>You have been selected.</p>",
+                    null, null);
             //Cho hiện lại danh sách 
-            response.sendRedirect("apply?op=listAll");
+            String Accept = can_id + " have been Accept";
+            request.setAttribute("Accept", Accept);
+            request.setAttribute("list4", list4);
+            request.setAttribute("action", "list_Recruit");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -888,6 +1032,8 @@ public class ApplyController extends HttpServlet {
                     .getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -909,6 +1055,8 @@ public class ApplyController extends HttpServlet {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -24,7 +24,7 @@
                 <td>Select File :</td>
                 <td>
 
-                    <input type="file" required="" name="file">
+                    <input type="file" required="" name="file" accept="image/*" >
                 </td>
                 </tr>
                 <tr>

@@ -124,7 +124,6 @@
                                 <td style="text-align: center">
                                     <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
                                     <a href="apply?op=deleteFile&can_id=${can.id}">Delete</a> 
-                                    <%--  <a href="apply?op=yesup&can_id=${can.id}">Accept</a> --%>
                                 </td>
                             </tr>
 

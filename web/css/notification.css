@@ -8,20 +8,20 @@ and open the template in the editor.
     Author     : dinht
 */
 
-#notification-container{
+#notification-container {
     background-color: white;
     border: 1px solid rgba(100, 100, 100, .4);
     -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
     overflow: visible;
     position: absolute;
-    top: 50px;
+    top: 55px;
     margin-left: -170px;
     width: 400px;
     z-index: 1000;
-    display: none; 
+    display: none;
 }
 
-#notification-body:before{
+#notification-body:before {
     content: ' ';
     display: block;
     position: absolute;
@@ -34,25 +34,29 @@ and open the template in the editor.
     margin-left: 188px;
 }
 
-#notification-title{
+#notification-title {
     text-align: center;
     font-weight: bold;
-    font-size:13px;
+    font-size: 13px;
     padding: 10px;
     background-color: white;
-    position: fixed;
+    position: absolute;
     z-index: 1000;
     width: 384px;
     border-bottom: 1px solid #dddddd;
 }
 
-#notification-body{
-    padding: 35px 0 0 0 !important;
-    min-height: 340px;
+#notification-body a{
+    padding: 35px 0 0 0 ;
+    /*min-height: 340px;*/
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: black;
 }
 
-#notification-footer{
-    background-color:   #e9eaed;
+#notification-footer {
+    background-color: #e9eaed;
     text-align: center;
     font-weight: bold;
     padding: 8px;
@@ -60,3 +64,15 @@ and open the template in the editor.
     border-top: 1px solid #dddddd;
 }
 
+#notification_count {
+    padding: 3px 7px 3px 7px;
+    background: #cc0000;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 9px;
+    -moz-border-radius: 9px;
+    -webkit-border-radius: 9px;
+    position: absolute;
+    margin-top: -11px;
+    font-size: 15px;
+}

@@ -224,6 +224,16 @@
                                     <li><a <c:choose><c:when test="${not empty info}"> href="<c:url value="/user?op=info"/>"</c:when>
                                                                                            <c:otherwise><a  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
                                                                                            </c:choose>>My Application</a></li>
+                                    <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
+                                        <ul class="header__menu__dropdown">
+                                            <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
+                                            <li><a class="link" href="<c:url value="/apply?op=list0"/>">Newest Applications</a></li>
+                                            <li><a class="link" href="<c:url value="/apply?op=listInprocess"/>">Inprocess Applications</a></li>
+                                            <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
+                                        </ul>
+                                    </li>    
+                                    <li><a href="<c:url value="/qa?op=index_qa"/>">Q&A</a></li>
+                                    <li><a href="<c:url value="/user?op=listNotification"/>">See All</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -244,24 +254,28 @@
                                 </ul>-->
                                     <ul>
                                         <li>
-                                            <a id="notification-link"><i class="fa fa-bell"></i></a>
+                                            <!--id="notification-link"-->
+                                            <a id="notification-link" >
+                                                <i class="fa fa-bell"></i>
+                                            </a>
+                                            <c:if test="${count!=0}">
+                                                <span id="notification_count">${count}</span>
+                                            </c:if>
                                             <div id="notification-container">
                                                 <div id="notification-title">Notifications</div>
                                                 <div id="notification-body">
-                                                    <c:forEach items="${listNotification}" var="notification">
-                                                        ${notification.title}<br/>
-                                                        (${notification.timeAgo}) <br/>
-                                                        <c:if test="${notification.linkTitle != null && notification.link != null}">
-                                                            <a href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>">${notification.linkTitle}</a>
-                                                        </c:if><br/>
-                                                        <c:if test="${notification.isRead}">
-                                                            Readed | <a href="<c:url value="/user?op=delete&nId=${notification.nId}"/>">Delete</a>
+                                                    <c:forEach items="${listNotification}" var="notification" varStatus="loop" step="1" begin="1" end="5">
+                                                        <c:if test="${notification.linkTitle != null && notification.link != null}" >
+                                                            <a id="notification-content-${loop.count}" 
+                                                               <c:if test="${notification.linkTitle != null && notification.link != null}" >href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>" </c:if>>
+                                                                ${notification.title}
+                                                                <br>
+                                                                (${notification.timeAgo}) 
+                                                                <br/>
+                                                                <hr>
+                                                            </a>
+                                                            <br/>
                                                         </c:if>
-                                                        <c:if test="${!notification.isRead}">
-                                                            New | <a href="<c:url value="/user?op=read&nId=${notification.nId}"/>">Mark as read</a>
-                                                        </c:if>
-
-                                                        <hr/>
                                                     </c:forEach>
                                                 </div>
                                                 <div id="notification-footer"><a href="<c:url value="/user?op=listNotification"/>">See All</a></div>

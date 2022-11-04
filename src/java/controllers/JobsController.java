@@ -6,19 +6,14 @@
 package controllers;
 
 import config.Config;
-import daos.CandidateDAO;
 import daos.JobsDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
-import daos.RoleDAO;
-import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.JobsDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
-import dtos.RoleDTO;
-import dtos.UserDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -63,7 +58,7 @@ public class JobsController extends HttpServlet {
 
             List<MajorDTO> listMajor = MajorDAO.listAll();
             request.setAttribute("listMajor", listMajor);
-            
+
             request.setAttribute("controller", "job");
             String op = request.getParameter("op");
             request.setAttribute("action", op);
@@ -82,6 +77,19 @@ public class JobsController extends HttpServlet {
                     break;
                 case "filter_job":
                     filter_job(request, response);
+                    break;
+                case "update_job":
+                    update_job(request, response);
+                    break;
+                case "update_job_handler":
+                    update_job_handler(request, response);
+                    break;
+//                case "delete_job":
+//                    delete_job(request, response);
+//                    break;
+//                case "delete_job_handler":
+//                    delete_job_handler(request, response);
+//                    break;
             }
         } catch (SQLException ex) {
             Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
@@ -89,32 +97,27 @@ public class JobsController extends HttpServlet {
             Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     protected void list_jobs(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            List<JobsDTO> list = JobsDAO.list_job();
-            MajorDAO majorDao = new MajorDAO();
-            List<MajorDTO> listMajor = majorDao.listAll();
-            HttpSession session = request.getSession();
-            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            if (google != null) {
-                List<CandidateDTO> sea = CandidateDAO.listCan(google.getEmail());
-                System.out.println("List: "+ google.getEmail());
-                System.out.println("List: "+ sea);
-                request.setAttribute("applied", sea);
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            try {
+                List<JobsDTO> list = JobsDAO.list_job();
+                MajorDAO majorDao = new MajorDAO();
+                List<MajorDTO> listMajor = majorDao.listAll();
+                request.setAttribute("listMajor", listMajor);
+                request.setAttribute("list", list);
+                request.setAttribute("action", "search");
+                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            request.setAttribute("listMajor", listMajor);
-            request.setAttribute("list", list);
-            request.setAttribute("action", "search");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     protected void search_jobs(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -135,7 +138,7 @@ public class JobsController extends HttpServlet {
             }
         }
     }
-    
+
     protected void add_job(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -143,7 +146,7 @@ public class JobsController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         }
     }
-    
+
     protected void add_job_handler(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -173,7 +176,7 @@ public class JobsController extends HttpServlet {
             Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     protected void filter_job(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -200,7 +203,63 @@ public class JobsController extends HttpServlet {
         }
     }
 
+    protected void update_job(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            String job_id = request.getParameter("job_id");
+            try {
+                JobsDTO job = JobsDAO.search_update_job(job_id);
+                MajorDAO majorDao = new MajorDAO();
+                List<MajorDTO> listMajor = majorDao.listAll();
+                request.setAttribute("listMajor", listMajor);
+                request.setAttribute("job", job);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        }
+    }
+
+    protected void update_job_handler(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try {
+            String job_id = request.getParameter("job_id");
+            String job_name = request.getParameter("job_name");
+            int major_id = Integer.parseInt(request.getParameter("major_id"));
+            String job_description = request.getParameter("job_description");
+            int job_vacancy = Integer.parseInt(request.getParameter("job_vacancy"));
+            int level_id = Integer.parseInt(request.getParameter("level_id"));
+            double salary = Double.parseDouble(request.getParameter("salary"));
+            Date postDate = new Date();
+            JobsDTO up_job = new JobsDTO();
+            up_job.setJob_id(job_id);
+            up_job.setJob_name(job_name);
+            up_job.setMajor_id(major_id);
+            up_job.setJob_description(job_description);
+            up_job.setJob_vacancy(job_vacancy);
+            up_job.setLevel_id(level_id);
+            up_job.setSalary(salary);
+            up_job.setPost_date(postDate);
+            JobsDAO.update_job(up_job);
+            NotificationDAO nDao = new NotificationDAO();
+            List<CandidateDTO> list_mail = JobsDAO.list_mail("job_id");
+            for (CandidateDTO c : list_mail) {
+                nDao.add(c.getEmail(), "Job " + job_id + " have been updated",
+                        "The job what you applied have been updated!",
+                        "Click to see more about the job have been updated",
+                        "job?op=list");
+            }
+            request.getRequestDispatcher("/job?op=list").forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *

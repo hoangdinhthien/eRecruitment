@@ -25,6 +25,18 @@ $(document).ready(function ()
         return false;
     });
 
+    $("#notification-footer").click(function () {
+        window.location.href = '/recruitment-system/user?op=listNotification';
+    });
+
+    $("#notification-content").click(function () {
+        a_href = $(this).attr('href');
+        window.location.href = a_href;
+        alert(a_href);
+        console.log(a_href);
+        console.log(queryString);
+        console.log(urlParams);
+        console.log(nId);
+
+    });
 });
-
-

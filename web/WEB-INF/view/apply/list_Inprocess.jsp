@@ -29,6 +29,12 @@
     </head>
     <body>
     <center>
+        <c:if test="${not empty Reject}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Reject}!</strong>
+            </div>
+        </c:if>
         <h1>Inprocess Applications</h1> <br>
         <nav class="header__menu">
             <ul>
@@ -102,7 +108,7 @@
                             <td style="text-align: center">
                                 <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
                                 <%--                            <a href="apply?op=yesup&can_id=${can.id}">Accept</a> |--%>
-                                <a href="apply?op=deleteFile&can_id=${can.id}">Reject</a> 
+                                <a href="apply?op=rejectFileInprocess&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Reject</a> 
 
                             </td>
                         </tr>

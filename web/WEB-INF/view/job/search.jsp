@@ -4,8 +4,10 @@
     Author     : DELL
 --%>
 
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn"  uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -180,35 +182,46 @@
                                 </p>
                                 <c:set var="check" value="0" />
                                 <p style="text-align: right;">
-                                    <c:forEach items="${applied}" var="applied" >
-                                        <c:if  test="${applied.jobId == job.job_id }">
-                                            <c:set var="check" value="1" />
 
-                                        </c:if>
-                                    </c:forEach>
-                                    <c:choose>
-                                        <c:when test="${check == 1}">
-                                            <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
-                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                               width: 100px" >
-                                                Applied
-                                            </a>
-                                            <c:set var="check" value="0" />
-                                        </c:when>
-                                        <c:otherwise>
-                                            <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
-                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                               width: 100px" 
-                                               <c:choose>
-                                                   <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"
-                                                   </c:when>
-                                                   <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
-                                               </c:choose>>Apply
-                                            </a>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <%
+                                        ArrayList list = new ArrayList();
+                                        list.add("one");
+                                        list.add("two");
+                                        list.add("three");
+                                    %>
+                                    <c:set var="list" value="<%=list%>" />
+                                <html>
+                                    <body>
+                                        <c:forEach items="${applied}" var="app" >
+                                            <c:if  test="${app.jobId == job.job_id }">
+                                                <c:set var="check" value="1" />
+                                                hello
+                                            </c:if>
+                                        </c:forEach>
+                                        <c:choose>
+                                            <c:when test="${check == 1}">
+                                                <%--<c:when test="${app.jobId == job.job_id}">--%>
+                                                <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                   background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                   width: 100px" >
+                                                    Applied
+                                                </a>
+                                                <c:set var="check" value="0" />
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                   background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                   width: 100px" 
+                                                   <c:choose>
+                                                       <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"
+                                                       </c:when>
+                                                       <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                                   </c:choose>>Apply
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
 
-                                </p>
+                                        </p>
                             </div>
                         </div>
 
@@ -247,8 +260,8 @@
                                         </p>
                                         <c:set var="check" value="0" />
                                         <p style="text-align: right;">
-                                            <c:forEach items="${applied}" var="applied" >
-                                                <c:if  test="${applied.jobId == job.job_id }">
+                                            <c:forEach items="${applied}" var="app" >
+                                                <c:if  test="${app.jobId == job.job_id }">
                                                     <c:set var="check" value="1" />
 
                                                 </c:if>
