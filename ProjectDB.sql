@@ -338,7 +338,7 @@ CREATE TABLE [Q&A_answer]
 (
 	[aId] char(5) PRIMARY KEY NOT NULL,--A0000
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
-	[qId] char(5) FOREIGN KEY REFERENCES dbo.[Q&A_question] NOT NULL,
+	[qId] char(4) FOREIGN KEY REFERENCES dbo.[Q&A_question] NOT NULL,
 	[detail] text NOT NULL,
 	[datetime] datetime NOT NULL,
 )

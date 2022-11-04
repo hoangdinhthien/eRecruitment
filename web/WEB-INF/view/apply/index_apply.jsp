@@ -27,11 +27,12 @@
                 <input type="hidden" value="${cv}" name="cv">
                 <p>Select Your CV:</p>
                 <div class="custom-file mb-3" style="width: 45%">
-                    <input type="file" class="custom-file-input" id="customFile" name="filename">
+                    <input type="file" class="custom-file-input" id="customFile" name="filename" accept="image/*" onchange="validateFileType()">
                     <label class="custom-file-label" for="customFile">Choose file</label>
                 </div>
+                <i>*Only accept image file</i>>
                 <div >
-                    <button type="submit" class="btn btn-success">Apply CV</button>
+                    <button type="submit" class="btn btn-success" id="submitbutton">Apply CV</button>
                 </div>
             </form>
 
@@ -50,6 +51,20 @@
                 var fileName = $(this).val().split("\\").pop();
                 $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
             });
+            function validateFileType() {
+                var fileName = document.getElementById("files").value;
+                var idxDot = fileName.lastIndexOf(".") + 1;
+                var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
+                if (extFile == "jpg" || extFile == "jpeg" || extFile == "png"
+                        || extFile == "apng" || extFile == "avif" || extFile == "jfif"
+                        || extFile == "pjpeg" || extFile == "pjp" || extFile == "svg"
+                        || extFile == "webp") {
+                    document.getElementById('submitbutton').disabled = false;
+                } else {
+                    alert("Only image files are allowed (except .gif file)!");
+                    document.getElementById('submitbutton').disabled = true;
+                }
+            }
         </script>
     </body>
 </html>

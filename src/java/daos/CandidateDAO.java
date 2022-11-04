@@ -27,8 +27,7 @@ import utils.MailUtils;
  * @author Thien's
  */
 public class CandidateDAO {
-    
-    
+
     public static List<CandidateDTO> viewUserApplication(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus "
@@ -260,7 +259,7 @@ public class CandidateDAO {
         return list;
     }
 
-    public List<CandidateDTO> hrstatus0() throws ClassNotFoundException, SQLException {
+    public static List<CandidateDTO> hrstatus0() throws ClassNotFoundException, SQLException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         try {
@@ -395,7 +394,7 @@ public class CandidateDAO {
         return list;
     }
 
-    public List<CandidateDTO> hrstatus14() throws ClassNotFoundException, SQLException {
+    public static List<CandidateDTO> hrstatus14() throws ClassNotFoundException, SQLException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         try {
@@ -422,7 +421,7 @@ public class CandidateDAO {
         return list;
     }
 
-    public List<CandidateDTO> hrstatus4() throws ClassNotFoundException, SQLException {
+    public static List<CandidateDTO> hrstatus4() throws ClassNotFoundException, SQLException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         try {
@@ -1075,15 +1074,6 @@ public class CandidateDAO {
         con.close();
     }
 
-    public void updateup(String can_id) throws SQLException, ClassNotFoundException {
-        System.out.println("Update up");
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET isStatus = isStatus + 1 WHERE can_id = ?");
-        stm.setString(1, can_id);
-        stm.executeUpdate();
-        con.close();
-    }
-
     public void removeUnusedApplication(String email) throws SQLException, ClassNotFoundException {
         System.out.println("remove unused");
         deleteCanResult(email);
@@ -1103,16 +1093,53 @@ public class CandidateDAO {
         con.close();
     }
 
+    public void updateup01(String can_id, String email) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET [isStatus] = 1 WHERE [can_id] = ?;"
+                + "UPDATE [User] SET role_id = 4 WHERE email = ? ");
+        stm.setString(1, can_id);
+        stm.setString(2, email);
+        stm.executeUpdate();
+        con.close();
+    }
+
+    public void updateup45(String can_id, String email) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("UPDATE [Candidate] SET [isStatus] = 5 WHERE [can_id] = ?;"
+                + "UPDATE [User] SET role_id = 4 WHERE email = ? ");
+        stm.setString(1, can_id);
+        stm.setString(2, email);
+        stm.executeUpdate();
+        con.close();
+    }
+
+    //Delete
     public void delete(String can_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         System.out.println("Connection done [Delete]");
-
-        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE can_id = ?");
+        PreparedStatement stm = con.prepareStatement(
+                "DELETE FROM Interviewing "
+                + "WHERE [can_id] = ? ; "
+                + "DELETE FROM [Candidate] "
+                + "WHERE [can_id] = ? "
+        );
         stm.setString(1, can_id);
+        stm.setString(2, can_id);
         stm.executeUpdate();
         System.out.println("Deleted(1): " + can_id);
         con.close();
+    }
 
+    public void rejectFileNewest(String can_id) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        System.out.println("Connection done [Delete]");
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] "
+                + "WHERE [can_id] = ? "
+        );
+        stm.setString(1, can_id);
+        stm.executeUpdate();
+        System.out.println("Deleted(Newest): " + can_id);
+        con.close();
     }
 
     public int getMajor(String canId) throws ClassNotFoundException, SQLException {
