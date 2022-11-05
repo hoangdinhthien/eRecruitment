@@ -6,6 +6,7 @@
 package controllers;
 
 import config.Config;
+import daos.CandidateDAO;
 import daos.JobsDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;

@@ -21,6 +21,7 @@
                 <tr>
                 <input type="hidden" value="uploadFile" name="op">
                 <input type="" value="${job_id}" name="job_id">
+                <input type="" value="${job_name}" name="job_name">
                 <td>Select File :</td>
                 <td>
 
@@ -29,7 +30,16 @@
                 </tr>
                 <tr>
                     <td></td>
-                    <td><button type="submit" name="op" value="uploadFile">Upload File</button></td>
+                    <td>
+                        <!--<button type="submit" name="op" value="uploadFile">Upload File</button>-->
+                        <button
+                            <c:choose>
+                                <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
+                                </c:when>
+                                <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                            </c:choose>>Apply
+                        </button>
+                    </td>
                 </tr>
             </table> 
 

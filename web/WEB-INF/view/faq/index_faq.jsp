@@ -24,13 +24,13 @@
         <style>        
 
 
-            h1 {
+            .faqh h1 {
                 text-align: center;
                 font-family: "Roboto Slab", serif;
                 font-size: 40px;
             }
 
-            li {
+            .faq li {
                 list-style: none;
                 margin-bottom: 10px;
                 padding: 15px;
@@ -68,7 +68,7 @@
 
         <!-- Featured Section Begin -->
         <div class="container" >
-            <h1>FAQs</h1>
+            <h1 class="faqh">FAQs</h1>
             <ul>
                 <li class="faq">
                     <div class="question">
@@ -213,39 +213,39 @@
                         You can find <a href="job?op=list"style="color: #66D7A7">all job postings here</a>.
                     </p>
                 </li>
-<!--                <li class="faq">
-                    <div class="question">
-                        a
-                        <span class="icon-main">
-                            <i class="fa-solid fa-plus"></i>
-                        </span>
-                    </div>
-                    <p class="answer non-active">
-                        a
-                    </p>
-                </li>
-                <li class="faq">
-                    <div class="question">
-                        a
-                        <span class="icon-main">
-                            <i class="fa-solid fa-plus"></i>
-                        </span>
-                    </div>
-                    <p class="answer non-active">
-                        a
-                    </p>
-                </li>
-                <li class="faq">
-                    <div class="question">
-                        a
-                        <span class="icon-main">
-                            <i class="fa-solid fa-plus"></i>
-                        </span>
-                    </div>
-                    <p class="answer non-active">
-                        a
-                    </p>
-                </li>-->
+                <!--                <li class="faq">
+                                    <div class="question">
+                                        a
+                                        <span class="icon-main">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </span>
+                                    </div>
+                                    <p class="answer non-active">
+                                        a
+                                    </p>
+                                </li>
+                                <li class="faq">
+                                    <div class="question">
+                                        a
+                                        <span class="icon-main">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </span>
+                                    </div>
+                                    <p class="answer non-active">
+                                        a
+                                    </p>
+                                </li>
+                                <li class="faq">
+                                    <div class="question">
+                                        a
+                                        <span class="icon-main">
+                                            <i class="fa-solid fa-plus"></i>
+                                        </span>
+                                    </div>
+                                    <p class="answer non-active">
+                                        a
+                                    </p>
+                                </li>-->
             </ul>
             <center>
                 <!--                <input style="text-align: center" type="button" id="feedback-form" name="feedback" value="We'd like your feedback" >-->

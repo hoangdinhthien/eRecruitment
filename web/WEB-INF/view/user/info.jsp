@@ -65,7 +65,7 @@
 
             <span class="account-management-item">-Edit your info <button onclick="document.querySelector('dialog').showModal()" >Update </button></span>
             <dialog >
-                <p>Update Infomation</p>
+                <p>Update Information</p>
                 <form action="<c:url value="/user"/>">
                     <input type="hidden" value="${user.email}" name="email"/>
                     <input class="input" type="text" value="${user.name}" name="name" placeholder="Name"/><br/>
@@ -99,28 +99,68 @@
                                 <td style="text-align: center;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
                                 <td>${can.jobname.job_name}</td>
                                 <td>${can.cv}</td>
-                                <td>${can.score}</td>
                                 <td><c:choose>
-                                        <c:when test="${can.isStatus==0}">
-                                            Hasn't Accepted
+                                        <c:when test="${can.isStatus <2}">
+                                            Not Available
                                         </c:when>
-                                        <c:when test="${can.isStatus==1}">
-                                            Accepted
+                                        <c:when test="${can.score!= null}">
+                                            ${can.score}
                                         </c:when>
-                                        <c:when test="${can.isStatus==2}">
-                                            Tested
-                                        </c:when>
-                                        <c:when test="${can.isStatus==3}">
-                                            Has Scheduled
-                                        </c:when>
-                                        <c:when test="${can.isStatus==4}">
-                                            Has Been Interviewed
-                                        </c:when>
-                                        <c:when test="${can.isStatus==5}">
-                                            Hired
-                                        </c:when>
+                                        <c:otherwise>
+                                            Not
+                                        </c:otherwise>
                                     </c:choose>
                                 </td>
+                                <c:choose>
+                                    <c:when test="${ can.score<4 && can.isStatus >= 2}">
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${can.isStatus==0}">
+                                                    Hasn't Accepted
+                                                </c:when>
+                                                <c:when test="${can.isStatus==1}">
+                                                    Accepted
+                                                </c:when>
+                                                <c:when test="${can.isStatus==2}">
+                                                    <strong style="color: red">Failed</strong>
+                                                </c:when>
+                                                <c:when test="${can.isStatus==3}">
+                                                    Has Scheduled
+                                                </c:when>
+                                                <c:when test="${can.isStatus==4}">
+                                                    Has Been Interviewed
+                                                </c:when>
+                                                <c:when test="${can.isStatus==5}">
+                                                    Hired
+                                                </c:when>
+                                            </c:choose>
+                                        </td>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${can.isStatus==0}">
+                                                    Hasn't Accepted
+                                                </c:when>
+                                                <c:when test="${can.isStatus==1}">
+                                                    Accepted
+                                                </c:when>
+                                                <c:when test="${can.isStatus==2}">
+                                                    <strong style="color: #66D7A">Passed</strong>
+                                                </c:when>
+                                                <c:when test="${can.isStatus==3}">
+                                                    Has Scheduled
+                                                </c:when>
+                                                <c:when test="${can.isStatus==4}">
+                                                    Has Been Interviewed
+                                                </c:when>
+                                                <c:when test="${can.isStatus==5}">
+                                                    Hired
+                                                </c:when>
+                                            </c:choose>
+                                        </td>
+                                    </c:otherwise>
+                                </c:choose>
                                 <td style="text-align: center">
                                     <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
                                     <a href="apply?op=deleteFile&can_id=${can.id}">Delete</a> 
@@ -147,15 +187,15 @@
                                     <td>
         ${user.email}
     </td>
-</tr>
-<tr>
+    </tr>
+    <tr>
     <td>
         Name :
     </td>
     <td>
         ${user.name}
     </td>
-</tr>
+    </tr>
         <%--<c:if test="${user.role_id!=4}">--%>
             <tr>
                 <td>
@@ -164,7 +204,7 @@
                 <td>
         ${user.roleId}
     </td>
-</tr>
+    </tr>
         <%--</c:if>--%>
         <tr>
             <td>
@@ -173,16 +213,16 @@
             <td>
         ${user.phone}
     </td>
-</tr>
-<tr>
+    </tr>
+    <tr>
     <td>
         Address : 
     </td> 
     <td>
         ${user.address}
     </td>
-</tr>
-</tbody>
-</table>-->
+    </tr>
+    </tbody>
+    </table>-->
     </body>
 </html>

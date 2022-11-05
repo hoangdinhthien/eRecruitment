@@ -72,6 +72,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6">
                                 <div class="header__top__right">
+                                    <a class="link" href="<c:url value="/user?op=info"/>">${info.name}</a>
                                     <div class="header__top__right__auth">
                                         <c:choose>
                                             <c:when test="${not empty info && role == 'Admin'}">
@@ -196,7 +197,7 @@
                             <nav class="header__menu">
                                 <ul>
                                     <li class="${empty list?'active':'link'}"><a href="<c:url value='/home?op=index'/>">Home</a></li>
-                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
+                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list&email=${email}"/>">Jobs</a></li>
 
                                     <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
                                         <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
@@ -220,7 +221,6 @@
                                     </c:if>
 
 
-                                    <li><a href="<c:url value="/faq?op=index_faq"/>">FAQ</a></li>
                                     <li><a <c:choose><c:when test="${not empty info}"> href="<c:url value="/user?op=info"/>"</c:when>
                                                                                            <c:otherwise><a  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
                                                                                            </c:choose>>My Application</a></li>
@@ -232,8 +232,10 @@
                                             <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
                                         </ul>
                                     </li>    
+                                    <!--Testing - DO NOT MERGE-->
                                     <li><a href="<c:url value="/qa?op=index_qa"/>">Q&A</a></li>
                                     <li><a href="<c:url value="/user?op=listNotification"/>">See All</a></li>
+                                    <!--Testing - DO NOT MERGE-->
                                 </ul>
                             </nav>
                         </div>
@@ -322,15 +324,6 @@
                                         <input type="text" name="search" placeholder="What do you need?">
                                         <button type="submit" class="site-btn" name="op" value="search">SEARCH</button>
                                     </form>
-                                </div>
-                                <div class="hero__search__phone">
-                                    <div class="hero__search__phone__icon">
-                                        <i class="fa fa-phone"></i>
-                                    </div>
-                                    <div class="hero__search__phone__text">
-                                        <h5>+65 11.188.888</h5>
-                                        <span>support 24/7 time</span>
-                                    </div>
                                 </div>
                             </div>
                         </div>

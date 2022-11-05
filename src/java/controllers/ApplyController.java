@@ -238,11 +238,13 @@ public class ApplyController extends HttpServlet {
     protected void upload(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
-            String jobId = request.getParameter("job_id");
+            String job_id = request.getParameter("job_id");
+            String job_name = request.getParameter("job_name");
             CandidateDAO tf = new CandidateDAO();
             List<CandidateDTO> list = tf.selectAll();
-            System.out.println(list);
-            request.setAttribute("job_id", jobId);
+            System.out.println("Upload: " +list);
+            request.setAttribute("job_id", job_id);
+            request.setAttribute("job_name", job_name);
             request.setAttribute("list", list);
             request.setAttribute("action", "index_apply");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -372,7 +374,10 @@ public class ApplyController extends HttpServlet {
                 UserDAO uDao = new UserDAO();
                 UserDTO user = uDao.searchUserByEmail(google.getEmail());
                 System.out.println("Email :" + user.getEmail());
+
                 String job_id = request.getParameter("job_id");
+                String job_name = request.getParameter("job_name");
+                System.out.println(job_name);
                 System.out.println(job_id);
                 JobsDAO uj = new JobsDAO();
                 // Mã của can_id : Cxxx
@@ -397,7 +402,8 @@ public class ApplyController extends HttpServlet {
                     System.out.println(job_id);
                     if (status > 0) {
                         session.setAttribute("fileName", fileName);
-                        String msg = "" + fileName + " file uploaded successfully...";
+                        String msg = fileName + " file uploaded successfully...<br/>"
+                                + "Job: <strong>" + job_name +"</strong>";
                         request.setAttribute("msg", msg);
                         List<JobsDTO> list = JobsDAO.list_job();
                         request.setAttribute("controller", "job");
@@ -408,10 +414,9 @@ public class ApplyController extends HttpServlet {
                         System.out.println("Uploaded Path: " + uploadPath);
                     }
                 } catch (SQLException ex) {
-//                    out.println("Exception: " + ex);
                     System.out.println("Exception1: " + ex);
                     session.setAttribute("fileName", fileName);
-                    request.setAttribute("msgFailed", "That Job already apply.");
+                    request.setAttribute("msgFailed", "That Job : " + job_name + " already applied.");
                     List<JobsDTO> list = JobsDAO.list_job();
                     request.setAttribute("controller", "job");
                     request.setAttribute("list", list);
@@ -428,10 +433,12 @@ public class ApplyController extends HttpServlet {
                         }
                     } catch (SQLException e) {
                         out.println(e);
+                        System.out.println("upload failed");
                     }
                 }
             } else {
                 System.out.println("Error when connect to account");
+                response.sendRedirect("job?op=list");
             }
 
         } catch (IOException | ServletException e) {
@@ -527,7 +534,7 @@ public class ApplyController extends HttpServlet {
             String job_name = request.getParameter("job_name"); // lấy job_name
             CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
             String to = can.getEmail();
-            System.out.println("Data: " + job_name + " " + to+" "+ email);
+            System.out.println("Data: " + job_name + " " + to + " " + email);
             String subject = "3HTD: Your Resume has been rejected";
             String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
                     + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
