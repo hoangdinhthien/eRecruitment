@@ -6,6 +6,7 @@
 package controllers;
 
 import config.Config;
+import daos.CandidateDAO;
 import daos.JobsDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
@@ -99,20 +100,23 @@ public class JobsController extends HttpServlet {
     protected void list_jobs(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            try {
-                List<JobsDTO> list = JobsDAO.list_job();
-                MajorDAO majorDao = new MajorDAO();
-                List<MajorDTO> listMajor = majorDao.listAll();
-                request.setAttribute("listMajor", listMajor);
-                request.setAttribute("list", list);
-                request.setAttribute("action", "search");
-                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        String email = request.getParameter("email");
+        try {
+            List<JobsDTO> list = JobsDAO.list_job();
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor = majorDao.listAll();
+            CandidateDAO can = new CandidateDAO();
+            List<CandidateDTO> listApplied = can.listCandidateByEmail(email);
+            request.setAttribute("listMajor", listMajor);
+            request.setAttribute("listApplied", listApplied);
+            request.setAttribute("list", list);
+            request.setAttribute("action", "search");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 

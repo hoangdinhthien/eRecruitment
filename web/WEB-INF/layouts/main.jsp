@@ -197,7 +197,7 @@
                             <nav class="header__menu">
                                 <ul>
                                     <li class="${empty list?'active':'link'}"><a href="<c:url value='/home?op=index'/>">Home</a></li>
-                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
+                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list&email=${info.email}"/>">Jobs</a></li>
 
                                     <c:if test="${not empty info}" >
                                         <c:if test="${ role == 'Interviewer' || role == 'HR Staff'|| role == 'Admin'}" >

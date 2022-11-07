@@ -9,6 +9,7 @@ import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.InterviewingDTO;
 import dtos.JobsDTO;
+import dtos.MajorDTO;
 import dtos.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -72,7 +73,7 @@ public class CandidateDAO {
             float score = rs.getFloat("score");
             int isStatus = rs.getInt("isStatus");
             int apply = rs.getInt("apply");
-            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus,apply);
+            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus, apply);
             list.add(join);
         }
         con.close();
@@ -158,6 +159,22 @@ public class CandidateDAO {
             c.setIsStatus(rs.getInt("isStatus"));
             c.setPhone(rs.getString("phone"));
             list.add(c);
+        }
+        con.close();
+        return list;
+    }
+
+    public List<CandidateDTO> listCandidateByEmail(String email) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [Candidate]"
+                + "WHERE [email]= ?");
+        stm.setString(1, email);
+        ResultSet rs = stm.executeQuery();
+        List<CandidateDTO> list = new LinkedList();
+        while (rs.next()) {
+            CandidateDTO can = new CandidateDTO();
+            can.setJobId(rs.getString("job_id"));
+            list.add(can);
         }
         con.close();
         return list;
@@ -1105,9 +1122,9 @@ public class CandidateDAO {
                 + "UPDATE [Candidate] "
                 + "SET [isStatus] = 1 , [apply] = 1 "
                 + "WHERE [email] = ? AND [can_id]= ? ; "
-                //===
-//                + "UPDATE [User] SET role_id = 4"
-//                + " WHERE email = ? "
+        //===
+        //                + "UPDATE [User] SET role_id = 4"
+        //                + " WHERE email = ? "
         );
         stm.setString(1, email);
         stm.setString(2, email);
@@ -1144,7 +1161,7 @@ public class CandidateDAO {
         con.close();
     }
 
-    public void deleteApplied(String can_id,String email) throws SQLException, ClassNotFoundException {
+    public void deleteApplied(String can_id, String email) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         System.out.println("Connection done [Delete Applied]");
         PreparedStatement stm = con.prepareStatement(
