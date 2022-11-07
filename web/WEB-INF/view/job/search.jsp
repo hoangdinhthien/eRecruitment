@@ -23,7 +23,7 @@
                 top: 0;
                 right: 0px;
                 border: 3px solid black;
-                z-index: 100;
+                z-index: 1;
                 background-color: white; 
                 margin-bottom: 50px;
                 padding-left: 20px;
@@ -149,42 +149,32 @@
                     <div class="row">
                         <div class="col-md-6" onclick="job_detail(${loop.count})">
                             <div style="background-color: #59c5dc; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;" >
-                                <h3 style="text-align: left;color: black">
+                                <h2 style="text-align: left;color: black">
                                     Job Name: ${job.job_name}
-                                </h3> <br/>
+                                </h2> <br/>
                                 <div style="text-align: left; width: 100%" >
-                                    <p id="${job.job_id}" id="job_id" style="display: inline-block; margin-right: 30px;">
-                                        Job ID: ${job.job_id} 
-                                    </p>    
                                     <p style="display: inline-block; margin-right: 30px;">
-                                        Major ID: ${job.major_id} 
-                                    </p>    
+                                        Major Name: ${job.major_name} 
+                                    </p>
+                                    <p style="display: inline-block; margin-right: 30px">
+                                        Level: ${job.level_name} <br/>
+                                    </p>
                                     <p style="display: inline-block; margin-right: 30px;">
                                         Vacancy: ${job.job_vacancy} 
                                     </p>
                                 </div>
-                                <p style="text-align: left;">
-                                    Description: ${job.job_description} <br/>
-                                </p>
-                                <div style="text-align: left; width: 100%">
-                                    <p style="display: inline-block; margin-right: 30px">
-                                        Level ID: ${job.level_id} <br/>
-                                    </p>
-                                    <p style="display: inline-block;">
-                                        Salary: ${job.salary}$ <br/>
-                                    </p>
-                                </div>
-                                <p style="text-align: left;">
+                                <p style="text-align: left;font-style: italic;">
                                     Post Date: ${job.post_date} <br/>
                                 </p>
-                                <p style="text-align: right;">
-                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
-                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                       width: 100px" 
-                                       <c:choose>
-                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
-                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
-                                       </c:choose>>Apply</a>
+                                <!--                                    
+                                <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                                       width: 100px" 
+                                <c:choose>
+                                    <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
+                                    <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                </c:choose>>Apply</a>
+                                -->
                             </div>
                         </div>
 
@@ -193,35 +183,37 @@
                                 <div class="form-popup form-container" id="view_job_detail${loop.count}">
                                     <div>
                                         <c:if test="${not empty info && role == 'HR Staff'}">
-                                            <a class="link" style="float: right" href="<c:url value="/job?op=delete_job&job_id=${job.job_id}"/>">Delete job</a>
+                                            <c:if test="${job.job_vacancy==0}">
+                                                <a class="link" style="float: right" href="<c:url value="/job?op=delete_job&job_id=${job.job_id}"/>">Delete job</a>
+                                            </c:if>
                                             <a class="link" style="float: right; margin-right: 5px" href="<c:url value="/job?op=update_job&job_id=${job.job_id}"/>">Update job</a>
                                         </c:if>
-                                        <h3 style="text-align: center; color: black">
+                                        <h2 style="text-align: center; color: black">
                                             Job Name: ${job.job_name}
-                                        </h3> <br/>
+                                        </h2> <br/>
                                         <div style="text-align: left; width: 100%;">
                                             <p style="display: inline-block; margin-right: 30px; color: black">
-                                                Job ID: ${job.job_id} 
+                                                Major: ${job.major_name} 
                                             </p>    
                                             <p style="display: inline-block; margin-right: 30px; color: black">
-                                                Major ID: ${job.major_id} 
-                                            </p>    
-                                            <p style="display: inline-block; margin-right: 30px; color: black">
-                                                Vacancy: ${job.job_vacancy} 
+                                                Level: ${job.level_name} <br/>
                                             </p>
                                         </div>
                                         <p style="text-align: left; color: black">
                                             Description: ${job.job_description} <br/>
                                         </p>
+                                        <p style="text-align: left; color: black">
+                                            Required Skill: ${job.job_skill} <br/>
+                                        </p>
                                         <div style="text-align: left; width: 100%;">
                                             <p style="display: inline-block; margin-right: 30px; color: black">
-                                                Level ID: ${job.level_id} <br/>
+                                                Vacancy: ${job.job_vacancy} 
                                             </p>
                                             <p style="display: inline-block; color: black">
                                                 Salary: ${job.salary}$ <br/>
                                             </p>
                                         </div>
-                                        <p style="text-align: left;color: black">
+                                        <p style="text-align: left;color: black;font-style: italic;">
                                             Post Date: ${job.post_date} <br/>
                                         </p>
                                         <p style="text-align: right; margin-bottom: 0;">
@@ -231,7 +223,12 @@
                                                    <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
                                                    <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
                                                </c:choose>>Apply</a>
-                                        </p>
+                                            <!--                                            <a class="btn btn-success" style=" float: left;color: #ffffff !important; border-color: #66D7A7;
+                                                                                           background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                                                           width: 100px" <c:choose>
+                                                <c:when test="${not empty info}"> href="<c:url value="/job?op=save_job&job_id=${job.job_id}"/>"</c:when>
+                                                <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                            </c:choose>>Save</a>-->
                                     </div>
                                 </div>
                             </c:if>
@@ -239,34 +236,37 @@
                                 <div title="lastDiv" class="form-popup form-container" id="view_job_detail${loop.count}" style="background-color: white; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;">
                                     <div>
                                         <c:if test="${not empty info && role == 'HR Staff'}">
-                                            <a class="link" style="float: right" href="<c:url value="/job?op=update_job&job_id=${job.job_id}"/>">Update job</a>
+                                            <c:if test="${job.job_vacancy==0}">
+                                                <a class="link" style="float: right" href="<c:url value="/job?op=delete_job&job_id=${job.job_id}"/>">Delete job</a>
+                                            </c:if>
+                                            <a class="link" style="float: right; margin-right: 5px" href="<c:url value="/job?op=update_job&job_id=${job.job_id}"/>">Update job</a>
                                         </c:if>
-                                        <h3 style="text-align: center; color: black">
+                                        <h2 style="text-align: center; color: black">
                                             Job Name: ${job.job_name}
-                                        </h3> <br/>
+                                        </h2> <br/>
                                         <div style="text-align: left; width: 100%;">
                                             <p style="display: inline-block; margin-right: 30px; color: black">
-                                                Job ID: ${job.job_id} 
+                                                Major: ${job.major_name} 
                                             </p>    
                                             <p style="display: inline-block; margin-right: 30px; color: black">
-                                                Major ID: ${job.major_id} 
-                                            </p>    
-                                            <p style="display: inline-block; margin-right: 30px; color: black">
-                                                Vacancy: ${job.job_vacancy} 
+                                                Level: ${job.level_name} <br/>
                                             </p>
                                         </div>
                                         <p style="text-align: left; color: black">
                                             Description: ${job.job_description} <br/>
                                         </p>
+                                        <p style="text-align: left; color: black">
+                                            Require Skill: ${job.job_skill} <br/>
+                                        </p>
                                         <div style="text-align: left; width: 100%;">
                                             <p style="display: inline-block; margin-right: 30px; color: black">
-                                                Level ID: ${job.level_id} <br/>
+                                                Vacancy: ${job.job_vacancy} 
                                             </p>
                                             <p style="display: inline-block; color: black">
                                                 Salary: ${job.salary}$ <br/>
                                             </p>
                                         </div>
-                                        <p style="text-align: left;color: black">
+                                        <p style="text-align: left;color: black;font-style: italic;">
                                             Post Date: ${job.post_date} <br/>
                                         </p>
                                         <p style="text-align: right;">
@@ -276,6 +276,12 @@
                                                    <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}"/>"</c:when>
                                                    <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
                                                </c:choose>>Apply</a>
+                                            <!--                                            <a class="btn btn-success" style=" float: left;color: #ffffff !important; border-color: #66D7A7;
+                                                                                           background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                                                           width: 100px" <c:choose>
+                                                <c:when test="${not empty info}"> href="<c:url value="/job?op=save_job&job_id=${job.job_id}"/>"</c:when>
+                                                <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                            </c:choose>>Save</a>-->
                                         </p>
                                     </div>
                                 </div>

@@ -22,12 +22,12 @@ public class CandidateDTO {
     private float score;
     private String status;
     private InterviewingDTO interid;
-    private JobsDTO jobname;
+    private JobDTO jobname;
 
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv, float score, int isStatus) {
+    public CandidateDTO(String id, JobDTO jobname, String cv, float score, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
@@ -35,7 +35,7 @@ public class CandidateDTO {
         this.isStatus = isStatus;
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv, String email, float score, int isStatus) {
+    public CandidateDTO(String id, JobDTO jobname, String cv, String email, float score, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
@@ -44,7 +44,7 @@ public class CandidateDTO {
         this.isStatus = isStatus;
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv, String email, float score, InterviewingDTO interid, int isStatus) {
+    public CandidateDTO(String id, JobDTO jobname, String cv, String email, float score, InterviewingDTO interid, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
@@ -54,7 +54,7 @@ public class CandidateDTO {
         this.isStatus = isStatus;
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv, float score, InterviewingDTO interid, int isStatus) {
+    public CandidateDTO(String id, JobDTO jobname, String cv, float score, InterviewingDTO interid, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
@@ -84,11 +84,11 @@ public class CandidateDTO {
         this.interid = interid;
     }
 
-    public JobsDTO getJobname() {
+    public JobDTO getJobname() {
         return jobname;
     }
 
-    public void setJobname(JobsDTO jobname) {
+    public void setJobname(JobDTO jobname) {
         this.jobname = jobname;
     }
 
