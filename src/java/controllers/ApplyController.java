@@ -7,6 +7,7 @@ import daos.JobDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
 import daos.RoleDAO;
+import daos.UserCvDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
@@ -14,6 +15,7 @@ import dtos.JobDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
 import dtos.RoleDTO;
+import dtos.UserCvDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +30,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -85,7 +89,6 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("controller", "apply");
             String op = request.getParameter("op");
             request.setAttribute("action", op);
-            System.out.println(op);
             switch (op) {
                 case "index":
                     upload(request, response);
@@ -267,13 +270,14 @@ public class ApplyController extends HttpServlet {
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             String jobId = request.getParameter("job_id");
-            String cv = UserDAO.getCandidateCv(google.getEmail());
-            System.out.println(cv);
+            List<UserCvDTO> cvs = UserCvDAO.listCvByEmail(google.getEmail());
+            request.setAttribute("cvs", cvs);
             request.setAttribute("job_id", jobId);
-            request.setAttribute("cv", cv);
             request.setAttribute("action", "index_apply");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
             Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -385,7 +389,6 @@ public class ApplyController extends HttpServlet {
             List< FileItem> fields = upload.parseRequest(request);
             Iterator<FileItem> it = fields.iterator();
             if (!it.hasNext()) {
-                System.out.println(it.hasNext());
                 return;
             }
 
@@ -408,14 +411,20 @@ public class ApplyController extends HttpServlet {
                         fileName = fileItem.getName();
                         fileItem.write(new File("D:\\SWP391-GroupHHHTD-SE1610\\web\\cvs\\" + fileName));
                     } else {
-                        fileName = UserDAO.getCandidateCv(google.getEmail());;
+//                        fileName = UserDAO.getCandidateCv(google.getEmail());;
+                        fileName = cv;
                     }
                 }
             }
 //===============================
 
             if (google != null) {
-                UserDAO.update(fileName, google.getEmail());
+                System.out.println(fileName);
+                if (UserCvDAO.searchCv(google.getEmail(), fileName).isEmpty()) {
+                    Date currentDate = new Date();
+                    UserCvDTO userCv = new UserCvDTO(google.getEmail(), fileName, currentDate);
+                    UserCvDAO.addUserCv(userCv);
+                }
 
                 CandidateDAO cd = new CandidateDAO();
                 String can_id = cd.newId();
@@ -424,8 +433,6 @@ public class ApplyController extends HttpServlet {
                     con = DBUtils.makeConnection();
                     String sql = "insert into candidate(can_id,job_id,email,can_cv,isStatus) "
                             + "values(?,?,?,?,?)";
-                    System.out.println("Job:" + job_id);
-                    System.out.println("CV:" + fileName);
                     ps = con.prepareStatement(sql);
                     ps.setString(1, can_id);
                     //1 email - 1 job_id
@@ -437,7 +444,10 @@ public class ApplyController extends HttpServlet {
                     //
                     if (status > 0) {
                         session.setAttribute("fileName", fileName);
-                        String msg = "" + fileName + " file uploaded successfully...";
+                        String msg = null;
+                        msg = "Your aplliction to <strong>"
+                            + JobDAO.search_update_job(job_id).getJob_name()
+                            + "</strong> sucessfully! Please wait for the next notification." ;
                         request.setAttribute("msg", msg);
                         List<JobDTO> list = JobDAO.list_job();
                         request.setAttribute("controller", "job");
@@ -448,8 +458,9 @@ public class ApplyController extends HttpServlet {
                 } catch (SQLException ex) {
 //                    out.println("Exception: " + ex);
                     System.out.println("Exception1: " + ex);
-                    session.setAttribute("fileName", fileName);
-                    String msgFailed = "You has applied this job!";
+                    String msgFailed = "You has applied to <strong>"
+                            + JobDAO.search_update_job(job_id).getJob_name()
+                            + "</strong> before!" ;
                     request.setAttribute("msgFailed", msgFailed);
                     List<JobDTO> list = JobDAO.list_job();
                     request.setAttribute("controller", "job");

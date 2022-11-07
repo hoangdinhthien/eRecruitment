@@ -91,25 +91,5 @@ public class UserDAO {
         con.close();
         return list;
     }
-    public static String getCandidateCv(String email) throws ClassNotFoundException, SQLException {
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT TOP(1)[can_cv] FROM [dbo].[User] WHERE [email]=?");
-        stm.setString(1, email);
-        ResultSet rs = stm.executeQuery();
-        String cv=null;
-        if (rs.next()) {
-            cv = rs.getString("can_cv");
-        }
-        con.close();
-        return cv;
-    }
-    public static void update(String cv, String email) throws SQLException, ClassNotFoundException {
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("UPDATE [dbo].[User] SET [can_cv] = ? WHERE [email] = ? ");
-        stm.setString(1, cv);
-        stm.setString(2, email);
-        stm.executeUpdate();
-        con.close();
-    }
     
 }

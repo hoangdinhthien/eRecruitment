@@ -126,19 +126,18 @@
         </c:if>
         <br>
         <c:if test="${not empty msg}">
-            <div class="alert alert-success alert-dismissible">
+            <div class="alert alert-success alert-dismissible container">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Success!</strong> ${msg}
+                ${msg}
             </div>
         </c:if>
         <c:if test="${not empty msgFailed}">
-            <div class="alert alert-danger alert-dismissible">
+            <div class="alert alert-danger alert-dismissible container">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>Warning!</strong> ${msgFailed} <br>
+                 ${msgFailed} <br>
                 <script>
                     var message = "${msgFailed}";
-                    alert(message + "\n"
-                            + "");
+                    alert(message);
                 </script>
 
             </div>

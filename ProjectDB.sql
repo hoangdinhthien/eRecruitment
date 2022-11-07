@@ -31,8 +31,16 @@ CREATE TABLE [User]
 	[name] NVARCHAR(60) NOT NULL,
 	[role_id] int FOREIGN KEY REFERENCES dbo.[Role] DEFAULT(5) not null,
 	[phone] varchar(11),
-	[address] nvarchar(200),
-	[can_cv] NVARCHAR(200) NULL
+	[address] nvarchar(200)
+)
+GO
+
+CREATE TABLE [User_cv]
+(
+	[id] int identity(1,1) PRIMARY KEY,
+	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
+	[can_cv] NVARCHAR(200) NOT NULL,
+	[date] Date NOT NULL
 )
 GO
 
