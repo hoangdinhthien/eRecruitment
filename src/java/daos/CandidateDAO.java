@@ -269,7 +269,6 @@ public class CandidateDAO {
                     + "where c.isStatus =0");
             list = new ArrayList<>();
             while (rs.next()) {
-                rs.getBlo
                 JobsDTO j = new JobsDTO();
                 String id = rs.getString(1);
                 j.setJob_name(rs.getString(2));
