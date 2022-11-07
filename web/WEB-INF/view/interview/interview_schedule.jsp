@@ -81,9 +81,11 @@
 
                                         </div>
                                     </c:if> 
-                                    <button class="interview-table-content-btn" onclick="openForm(${loop.count})">View CV</button>
+                                    <button class="interview-table-content-btn" onclick="openForm(${loop.count})"
+                                            href="<c:url value="/cvs/${i.can_cv}"/>">View CV</button>
                                     <div class="form-popup-cv form-container-cv" id="myBox${loop.count}">
-                                        <button type="button" class="btn cancel" onclick="closeForm(${loop.count})">Close</button>
+                                        <button type="button" class="btn cancel" onclick="closeForm(${loop.count})"
+                                                href="<c:url value="/cvs/${i.can_cv}"/>">Close</button>
                                         <img src="<c:url value="/cvs/${i.can_cv}"/>" alt=""
                                              style="    height: 90%; 
                                              width: 90%; 

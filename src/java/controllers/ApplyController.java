@@ -66,7 +66,7 @@ public class ApplyController extends HttpServlet {
 
     //Download
     public static int BUFFER_SIZE = 1024 * 100;
-    public static final String UPLOAD_DIR = "cv";
+    public static final String UPLOAD_DIR = "cvs";
     public static String fileName = null;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -409,7 +409,7 @@ public class ApplyController extends HttpServlet {
                 } else {
                     if (fileItem.getSize() > 0) {
                         fileName = fileItem.getName();
-                        fileItem.write(new File("D:\\SWP391-GroupHHHTD-SE1610\\web\\cvs\\" + fileName));
+                        fileItem.write(new File(getServletContext().getRealPath("/cvs/").replace('\\', '/')+ fileName));
                     } else {
 //                        fileName = UserDAO.getCandidateCv(google.getEmail());;
                         fileName = cv;
@@ -507,7 +507,8 @@ public class ApplyController extends HttpServlet {
             System.out.println("Error Downloading :" + fileName);
         } else {
             System.out.println("Downloading(2) :" + fileName);
-            String applicationPath = getServletContext().getRealPath("");
+            String applicationPath = getServletContext().getRealPath("/").replace('\\', '/');
+            System.out.println(applicationPath);
             String downloadPath = applicationPath
                     + UPLOAD_DIR;
             String filePath = downloadPath + File.separator + fileName;
