@@ -11,6 +11,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
+        <style>
+            textarea {
+                resize: none;
+            }
+        </style>
         <script>
             function validateForm() {
                 var x = document.forms["myForm"]["job_id"].value;
@@ -38,23 +43,23 @@
                     alert("Salary must be filled out");
                     return false;
                 }
-                if (!/^[a-zA-Z]*$/g.test(document.myForm.job_name.value)) {
+                if (!/^[a-zA-Z &nbsp]*$/g.test(document.myForm.job_name.value)) {
                     alert("Invalid job name");
                     document.myForm.job_name.focus();
                     return false;
                 }
-                if (!/^[a-zA-Z]*$/g.test(document.myForm.job_description.value)) {
-                    alert("Invalid job description");
-                    document.myForm.job_description.focus();
-                    return false;
-                }
+//                if (!/^[a-zA-Z &nbsp\p{Punct}?]*$/g.test(document.myForm.job_description.value)) {
+//                    alert("Invalid job description");
+//                    document.myForm.job_description.focus();
+//                    return false;
+//                }
             }
         </script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
 
     </head>
     <body>
@@ -63,12 +68,8 @@
 
                 <form action="<c:url value="/job"/>" style="" name="myForm" onsubmit="return validateForm()" method="post" required >
                     <div class="input-group mb-3">
-                        <span class="input-group-text">Job ID:</span>    
-                        <input class="form-control" type="number" name="job_id"/>
-                    </div>
-                    <div class="input-group mb-3">
                         <span class="input-group-text" >Job name:</span>
-                        <input class="form-control" type="text" name="job_name"/>
+                        <input placeholder="Enter Job Name" class="form-control" type="text" name="job_name"/>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Major ID:</span>
@@ -87,11 +88,11 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Job vacancy:</span>
-                        <input class="form-control" type="number" name="job_vacancy"/>
+                        <input placeholder="Enter Job Vacancy" class="form-control" type="number" name="job_vacancy" min="0" cols="50"/>
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3" s>
                         <span class="input-group-text">Job Description</span>
-                        <textarea class="form-control" type="text" name="job_description" rows="1" cols="5"></textarea>
+                        <textarea placeholder="Enter Job Description" class="form-control" type="text" name="job_description" rows="1" cols="50"></textarea>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Level ID:</span>
@@ -106,7 +107,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Salary:</span>
-                        <input class="form-control" type="number" name="salary"/>
+                        <input placeholder="Enter Job Salary" class="form-control" type="number" name="salary" min="0"/>
                     </div>
                     <button class="btn btn-primary" type="submit" name="op" value="add_job_handler">ADD</button>
                 </form>

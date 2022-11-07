@@ -4,6 +4,11 @@
     Author     : ADMIN
 --%>
 
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="utils.DBUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -16,19 +21,8 @@
 
     </head>
     <body>
+        <br><br><br><br>
     <center>
-        <c:if test="${not empty Reject}">
-            <div class="alert alert-success alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>${Reject}!</strong>
-            </div>
-        </c:if>
-        <c:if test="${not empty Accept}">
-            <div class="alert alert-success alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>${Accept}!</strong> 
-            </div>
-        </c:if>
         <h1>List Recruitment</h1> <br>
         <nav class="header__menu">
             <ul>
@@ -38,12 +32,6 @@
                         <li><a href="apply?op=sortByCanDESCRecruit">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <%--<li><a href="<c:url value="/apply?op=sortByJobASCRecruit"/>"> Sort by Job Id </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByJobASCRecruit">Job Id Ascending</a></li>
-                        <li><a href="apply?op=sortByJobDESCRecruit">Job Id Descending</a></li>
-                    </ul>
-                </li>--%>
                 <li><a href="<c:url value="/apply?op=sortByScoreASCRecruit"/>"> Sort by Exam Score </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByScoreASCRecruit">Score Ascending</a></li>
@@ -54,7 +42,6 @@
             </ul>
         </nav>
         <br><br>
-
         <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">
             <c:choose>
                 <c:when test="${ not empty list4 }">
@@ -86,8 +73,8 @@
                                     </c:when></c:choose></td>-->
                                     <td style="text-align: center">
                                         <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                    <a href="apply?op=yesupRecruit&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Accept</a> |
-                                    <a href="apply?op=rejectFileRecruit&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Reject</a> 
+                                    <a href="apply?op=yesupRecruit&can_id=${can.id}">Accept</a> |
+                                    <a href="apply?op=rejectFileRecruit&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Reject</a>
                                 </td>
 
 

@@ -78,7 +78,7 @@
                                             <c:when test="${not empty info && role == 'Admin'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
@@ -93,7 +93,7 @@
                                             <c:when test="${not empty info && role == 'Member'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
@@ -108,7 +108,7 @@
                                             <c:when test="${not empty info && role == 'HR Staff'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul><li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
                                                             </li>
@@ -125,7 +125,7 @@
                                             <c:when test="${not empty info && role == 'Interviewer'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
@@ -144,7 +144,7 @@
                                             <c:when test="${not empty info && role == 'Candidate'}">
                                                 <ul class="login-ava">
                                                     <li style="list-style-type:none">
-                                                        <img src="${info.picture}" alt="" class="avatar"/> 
+                                                        <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
                                                                 <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
@@ -197,16 +197,20 @@
                             <nav class="header__menu">
                                 <ul>
                                     <li class="${empty list?'active':'link'}"><a href="<c:url value='/home?op=index'/>">Home</a></li>
-                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list&email=${email}"/>">Jobs</a></li>
+                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
 
-                                    <c:if test="${not empty info && role == 'Interviewer' || role == 'HR Staff'}" >
-                                        <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
-                                            <ul class="header__menu__dropdown">
-                                                <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
-                                                <li><a href="<c:url value="/exam?op=takeExam&canId=C001"/>">Test Exam</a></li>
-                                                <!--<li><a href="#">Shoping Cart</a></li>-->
-                                            </ul>
-                                        </li>
+                                    <c:if test="${not empty info}" >
+                                        <c:if test="${ role == 'Interviewer' || role == 'HR Staff'|| role == 'Admin'}" >
+                                            <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
+                                                <ul class="header__menu__dropdown">
+                                                    <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
+                                                    <li><a href="<c:url value="/exam?op=confirmExam&canId=C001"/>">Test Exam</a></li>
+                                                    <!--<li><a href="#">Shoping Cart</a></li>-->
+                                                </ul>
+                                            </li>
+                                        </c:if>
+                                    </c:if>
+                                    <c:if test="${not empty info && role == 'HR Staff' || role == 'Admin'}">
                                         <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
                                             <ul class="header__menu__dropdown">
                                                 <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
@@ -217,25 +221,10 @@
                                         </li>
                                     </c:if>
                                     <c:if test="${not empty info && role == 'Member' || role == 'Candidate'}" >
+                                        <li><a href="<c:url value="/faq?op=index_faq"/>">FAQs</a></li>
+                                        </c:if>
 
-                                    </c:if>
 
-
-                                    <li><a <c:choose><c:when test="${not empty info}"> href="<c:url value="/user?op=info"/>"</c:when>
-                                                                                           <c:otherwise><a  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
-                                                                                           </c:choose>>My Application</a></li>
-                                    <li ><a href="<c:url value="/apply?op=listAll"/>"> Application </a>
-                                        <ul class="header__menu__dropdown">
-                                            <li><a class="link" href="<c:url value="/apply?op=listAll"/>">List All Applications</a></li>
-                                            <li><a class="link" href="<c:url value="/apply?op=list0"/>">Newest Applications</a></li>
-                                            <li><a class="link" href="<c:url value="/apply?op=listInprocess"/>">Inprocess Applications</a></li>
-                                            <li><a class="link" href="<c:url value="/apply?op=list4"/>">Recruit Candidates</a></li>
-                                        </ul>
-                                    </li>    
-                                    <!--Testing - DO NOT MERGE-->
-                                    <li><a href="<c:url value="/qa?op=index_qa"/>">Q&A</a></li>
-                                    <li><a href="<c:url value="/user?op=listNotification"/>">See All</a></li>
-                                    <!--Testing - DO NOT MERGE-->
                                 </ul>
                             </nav>
                         </div>
@@ -270,18 +259,21 @@
                                                         <c:if test="${notification.linkTitle != null && notification.link != null}" >
                                                             <a id="notification-content-${loop.count}" 
                                                                <c:if test="${notification.linkTitle != null && notification.link != null}" >href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>" </c:if>>
-                                                                ${notification.title}
-                                                                <br>
-                                                                (${notification.timeAgo}) 
-                                                                <br/>
-                                                                <hr>
+
+                                                               ${notification.title}
+                                                               <br>
+                                                               (${notification.timeAgo}) 
+                                                               <br/>
+                                                               <hr>
                                                             </a>
                                                             <br/>
                                                         </c:if>
                                                     </c:forEach>
                                                 </div>
                                                 <div id="notification-footer"><a href="<c:url value="/user?op=listNotification"/>">See All</a></div>
+
                                             </div>
+
                                         </li>
                                     </ul>
                                 </div>
@@ -368,7 +360,7 @@
                                     <li><a href="#">Who We Are</a></li>
                                     <li><a href="#">Our Services</a></li>
                                     <li><a href="#">Projects</a></li>
-                                    <li><a href="#">Contact</a></li>
+                                    <li><a href="<c:url value="/home?op=viewFeedback"/>">Feedback</a></li>
                                     <li><a href="#">Innovation</a></li>
                                     <li><a href="#">Testimonials</a></li>
                                 </ul>

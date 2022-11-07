@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : view
     Created on : Oct 5, 2022, 4:27:07 PM
     Author     : ACER
@@ -48,7 +48,7 @@
                             <c:if test="${user.roleId!=5}">
                                 <h5 class="user-content-item">
                                     Role: <c:forEach items="${listRole}" var="role">
-                                        <c:if test="${user.roleId==role.id}">${role.name}</c:if>
+                                        <c:if test="${role.id==user.roleId}">${role.name}</c:if>
                                     </c:forEach>
                                 </h5>
                             </c:if>
@@ -65,15 +65,15 @@
 
             <span class="account-management-item">-Edit your info <button onclick="document.querySelector('dialog').showModal()" >Update </button></span>
             <dialog >
-                <p>Update Information</p>
-                <form action="<c:url value="/user"/>">
+                <p>Update Infomation</p>
+                <form action="<c:url value="/user"/>" method="post">
                     <input type="hidden" value="${user.email}" name="email"/>
                     <input class="input" type="text" value="${user.name}" name="name" placeholder="Name"/><br/>
                     <input class="input" type="text" value="${user.phone}" name="phone" placeholder="Phone Number" pattern="[0]{1}[1-9]{1}[0-9]{8}"/><br/>
                     <input class="input" type="text" value="${user.address}" name="address" placeholder="address"/><br/>
                     <input type="hidden" name="op" value="updatehandler"/>
                     <button type="submit" >Update</button>
-                </form> 
+                </form>
                 <button onclick="document.querySelector('dialog').close()" class="btn btn-secondary"  >Cancel</button>
             </dialog>
         </div>
@@ -82,7 +82,7 @@
                 My Application
             </h3>
 
-            <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">      
+            <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">
                 <c:choose>
                     <c:when test="${not empty listEmail}">
                         <thead>
@@ -91,7 +91,7 @@
                                 <th>File Upload</th>
                                 <th>Exam Score</th>
                                 <!--                    <th>Interview Score</th>-->
-                                <th>Status</th><th style="text-align: center">Operations</th>    
+                                <th>Status</th><th style="text-align: center">Operations</th>
                             </tr>
                         </thead>
                         <c:forEach var="can" items="${listEmail}" varStatus="loop">
@@ -99,7 +99,9 @@
                                 <td style="text-align: center;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
                                 <td>${can.jobname.job_name}</td>
                                 <td>${can.cv}</td>
-                                <td><c:choose>
+                                <td>
+                                    <!--Score-->
+                                    <c:choose>
                                         <c:when test="${can.isStatus <2}">
                                             Not Available
                                         </c:when>
@@ -111,9 +113,11 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
+                                <!--Status-->
                                 <c:choose>
                                     <c:when test="${ can.score<4 && can.isStatus >= 2}">
                                         <td>
+                                            <!--Failed-->
                                             <c:choose>
                                                 <c:when test="${can.isStatus==0}">
                                                     Hasn't Accepted
@@ -138,6 +142,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <td>
+                                            <!--Passed-->
                                             <c:choose>
                                                 <c:when test="${can.isStatus==0}">
                                                     Hasn't Accepted
@@ -146,7 +151,7 @@
                                                     Accepted
                                                 </c:when>
                                                 <c:when test="${can.isStatus==2}">
-                                                    <strong style="color: #66D7A">Passed</strong>
+                                                    <strong style="color: #4aba76">Passed</strong>
                                                 </c:when>
                                                 <c:when test="${can.isStatus==3}">
                                                     Has Scheduled
@@ -161,14 +166,59 @@
                                         </td>
                                     </c:otherwise>
                                 </c:choose>
-                                <td style="text-align: center">
-                                    <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                    <a href="apply?op=deleteFile&can_id=${can.id}">Delete</a> 
+                                <td>
+                                    <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>
+                                    <c:choose>
+                                        <c:when test="${can.apply==0 || can.apply==1 && can.isStatus==0}">
+                                            <!--Xóa những CV dự phòng (Standby=1) hoặc chưa đc Accepted--> 
+                                            <c:choose>
+                                                <c:when test="${can.score < 4}" >
+                                                    | <a href="apply?op=deleteFile&can_id=${can.id}"
+                                                         onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ?')">Delete</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    | <a href="apply?op=deleteFile&can_id=${can.id}"
+                                                         onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} ')">Delete</a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:when>
+                                        <c:when test="${can.apply==1}">
+                                            <!--Xóa CV chính (Standby=1) : đã được Accepted trở lên, isStatus2345-->
+                                            <c:choose>
+                                                <c:when test="${can.score < 4}" >
+                                                    | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                         onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ?')">Delete</a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:choose>
+                                                        <c:when test="${can.isStatus == 2}">
+                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [2/5]: Tested')">Delete</a>
+                                                        </c:when>
+                                                        <c:when test="${can.isStatus == 3}">
+                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [3/5]: Scheduled')">Delete</a>
+                                                        </c:when>
+                                                        <c:when test="${can.isStatus == 4}">
+                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [4/5]: Interviewed')">Delete</a>
+                                                        </c:when>
+                                                        <c:when test="${can.isStatus == 5}">
+                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [5/5]: Hired')">Delete</a>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </c:otherwise>
+
+                                            </c:choose>
+                                        </c:when>
+                                    </c:choose>
+                                    <c:if test="${can.isStatus==1}">
+                                        | <a href="exam?op=confirmExam&canId=${can.id}">Attempt Exam</a>
+                                    </c:if> 
                                 </td>
                             </tr>
-
                         </c:forEach>
-
                         </tbody>
                     </c:when>
                     <c:otherwise>
@@ -177,52 +227,17 @@
                 </c:choose>
             </table>
         </div>
-
-        <!--                <table>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        Email :
-                                    </td>
-                                    <td>
-        ${user.email}
-    </td>
-    </tr>
-    <tr>
-    <td>
-        Name :
-    </td>
-    <td>
-        ${user.name}
-    </td>
-    </tr>
-        <%--<c:if test="${user.role_id!=4}">--%>
-            <tr>
-                <td>
-                    Role :
-                </td>
-                <td>
-        ${user.roleId}
-    </td>
-    </tr>
-        <%--</c:if>--%>
-        <tr>
-            <td>
-                Phone Number :
-            </td>
-            <td>
-        ${user.phone}
-    </td>
-    </tr>
-    <tr>
-    <td>
-        Address : 
-    </td> 
-    <td>
-        ${user.address}
-    </td>
-    </tr>
-    </tbody>
-    </table>-->
+        <style>
+            a:hover {
+                color: red;
+                background-color: transparent;
+                text-decoration: underline;
+            }
+            a:active {
+                color: #66D7A7;
+                background-color: transparent;
+                text-decoration: underline;
+            }
+        </style>
     </body>
 </html>

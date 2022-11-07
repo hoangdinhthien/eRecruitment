@@ -29,14 +29,10 @@ $(document).ready(function ()
         window.location.href = '/recruitment-system/user?op=listNotification';
     });
 
-    $("#notification-content").click(function () {
-        a_href = $(this).attr('href');
-        window.location.href = a_href;
-        alert(a_href);
-        console.log(a_href);
-        console.log(queryString);
-        console.log(urlParams);
-        console.log(nId);
-
-    });
+    for (i = 1; i <= 5; i++) {
+        $("#notification-content-" + i).click(function () {
+            a_href = $(this).attr('href');
+            window.location.href = a_href;
+        });
+    }
 });

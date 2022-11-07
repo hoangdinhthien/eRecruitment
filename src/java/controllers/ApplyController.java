@@ -2,45 +2,55 @@ package controllers;
 
 import config.Config;
 import daos.CandidateDAO;
+import daos.ExamDAO;
 import daos.JobsDAO;
+import daos.MajorDAO;
 import daos.NotificationDAO;
 import daos.RoleDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.JobsDTO;
+import dtos.MajorDTO;
+import dtos.NotificationDTO;
 import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+//import java.io.InputStream;
+//import java.nio.file.Files;
+//import java.nio.file.Paths;
+//import java.nio.file.StandardCopyOption;
+//import javax.servlet.http.Part;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
+//import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
 import utils.DBUtils;
 import utils.MailUtils;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 @WebServlet(name = "ApplyController", urlPatterns = {"/apply"})
-@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10,
-        maxFileSize = 1024 * 1024 * 1000,
-        maxRequestSize = 1024 * 1024 * 1000)
+//@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10,
+//        maxFileSize = 1024 * 1024 * 1000,
+//        maxRequestSize = 1024 * 1024 * 1000)
 
 public class ApplyController extends HttpServlet {
 
@@ -52,151 +62,170 @@ public class ApplyController extends HttpServlet {
 
     //Download
     public static int BUFFER_SIZE = 1024 * 100;
-    public static final String UPLOAD_DIR = "cvs";
+    public static final String UPLOAD_DIR = "cv";
     public static String fileName = null;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException, Exception {
-        request.setAttribute("controller", "apply");
-        String op = request.getParameter("op");
-        request.setAttribute("action", op);
-        switch (op) {
-            case "index":
-                upload(request, response);
-                break;
-            // Upload File
-            case "uploadFile":
-                uploadFile(request, response);
-                break;
-            case "downloadFile":
-                downloadFile(request, response);
-                break;
-            // Custom
-            case "deleteFile":
-                deleteFile(request, response);
-                break;
-            case "rejectFileNewest":
-                rejectFileNewest(request, response);
-                break;
-            case "rejectFileInprocess":
-                rejectFileInprocess(request, response);
-                break;
-            case "rejectFileRecruit":
-                rejectFileRecruit(request, response);
-                break;
-            case "yesupNewest":
-                yesupNewest(request, response);
-                break;
-            case "yesupRecruit":
-                yesupRecruit(request, response);
-                break;
-            // Display Applications
-            case "listAll":
-                listAll(request, response);
-                break;
-            case "viewUserApplication":
-                viewUserApplication(request, response);
-                break;
-            case "list0":
-                list0(request, response);
-                break;
-            case "listInprocess":
-                listInprocess(request, response);
-                break;
-            case "list4":
-                list4(request, response);
-                break;
+        session = request.getSession();
+        if (session.getAttribute("info") == null) {
+            response.sendRedirect("https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force");
+        } else {
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            if (google != null) {
+                NotificationDAO nDao = new NotificationDAO();
+                List<NotificationDTO> notify = nDao.select(google.getEmail());
+                request.setAttribute("listNotification", notify);
+                request.setAttribute("count", nDao.count(google.getEmail()));
+            }
+            List<MajorDTO> listMajor = MajorDAO.listAll();
+            request.setAttribute("listMajor", listMajor);
 
-            // Sort STATUS ALL
-            case "sortByStatusASCAll":
-                sortByStatusASCAll(request, response);
-                break;
-            case "sortByStatusDESCAll":
-                sortByStatusDESCAll(request, response);
-                break;
-            //==== SORT CAN_ID ALL
-            case "sortByCanASCAll":
-                sortByCanASCAll(request, response);
-                break;
-            case "sortByCanDESCAll":
-                sortByCanDESCAll(request, response);
-                break;
-            //==== SORT EXAM SCORE ALL
-            case "sortByScoreASCAll":
-                sortByScoreASCAll(request, response);
-                break;
-            case "sortByScoreDESCAll":
-                sortByScoreDESCAll(request, response);
-                break;
-            //==== SORT CAN_ID RECRUIT
-            case "sortByCanASCRecruit":
-                sortByCanASCRecruit(request, response);
-                break;
-            case "sortByCanDESCRecruit":
-                sortByCanDESCRecruit(request, response);
-                break;
-            //==== SORT EXAM SCORE RECRUIT
-            case "sortByScoreASCRecruit":
-                sortByScoreASCRecruit(request, response);
-                break;
-            case "sortByScoreDESCRecruit":
-                sortByScoreDESCRecruit(request, response);
-                break;
+            request.setAttribute("controller", "apply");
+            String op = request.getParameter("op");
+            request.setAttribute("action", op);
+            System.out.println(op);
+            switch (op) {
+                case "index":
+                    upload(request, response);
+                    break;
+                // Upload File
+                case "uploadFile":
+                    uploadFile(request, response);
+                    break;
+                case "downloadFile":
+                    downloadFile(request, response);
+                    break;
+                // Custom
+                case "deleteFile":
+                    deleteFile(request, response);
+                    break;
+                case "deleteApplied":
+                    deleteApplied(request, response);
+                    break;
+                case "rejectFileNewest":
+                    rejectFileNewest(request, response);
+                    break;
+                case "rejectFileInprocess":
+                    rejectFileInprocess(request, response);
+                    break;
+                case "rejectFileRecruit":
+                    rejectFileRecruit(request, response);
+                    break;
+                case "yesupNewest":
+                    yesupNewest(request, response);
+                    break;
+                case "yesupRecruit":
+                    yesupRecruit(request, response);
+                    break;
+                // Display Applications
+                case "listAll":
+                    listAll(request, response);
+                    break;
+                case "viewUserApplication":
+                    viewUserApplication(request, response);
+                    break;
+                case "list0":
+                    list0(request, response);
+                    break;
+                case "listInprocess":
+                    listInprocess(request, response);
+                    break;
+                case "list4":
+                    list4(request, response);
+                    break;
+
+                // Sort STATUS ALL
+                case "sortByStatusASCAll":
+                    sortByStatusASCAll(request, response);
+                    break;
+                case "sortByStatusDESCAll":
+                    sortByStatusDESCAll(request, response);
+                    break;
+                //==== SORT CAN_ID ALL
+                case "sortByCanASCAll":
+                    sortByCanASCAll(request, response);
+                    break;
+                case "sortByCanDESCAll":
+                    sortByCanDESCAll(request, response);
+                    break;
+                //==== SORT EXAM SCORE ALL
+                case "sortByScoreASCAll":
+                    sortByScoreASCAll(request, response);
+                    break;
+                case "sortByScoreDESCAll":
+                    sortByScoreDESCAll(request, response);
+                    break;
+                //==== SORT CAN_ID RECRUIT
+                case "sortByCanASCRecruit":
+                    sortByCanASCRecruit(request, response);
+                    break;
+                case "sortByCanDESCRecruit":
+                    sortByCanDESCRecruit(request, response);
+                    break;
+                //==== SORT EXAM SCORE RECRUIT
+                case "sortByScoreASCRecruit":
+                    sortByScoreASCRecruit(request, response);
+                    break;
+                case "sortByScoreDESCRecruit":
+                    sortByScoreDESCRecruit(request, response);
+                    break;
 //            ==== SORT CAN NEWEST
-            case "sortByCanASCNewest":
-                sortByCanASCNewest(request, response);
-                break;
-            case "sortByCanDESCNewest":
-                sortByCanDESCNewest(request, response);
-                break;
-            //==== SORT STATUS Inprocess
-            case "sortByStatusASCInprocess":
-                sortByStatusASCInprocess(request, response);
-                break;
-            case "sortByStatusDESCInprocess":
-                sortByStatusDESCInprocess(request, response);
-                break;
-            //==== SORT SCORE Inprocess
-            case "sortByScoreASCInprocess":
-                sortByScoreASCInprocess(request, response);
-                break;
-            case "sortByScoreDESCInprocess":
-                sortByScoreDESCInprocess(request, response);
-                break;
-            //==== SORT CAN_ID Inprocess
-            case "sortByCanASCInprocess":
-                sortByCanASCInprocess(request, response);
-                break;
-            case "sortByCanDESCInprocess":
-                sortByCanDESCInprocess(request, response);
-                break;
-            //==== FILTER STATUS 012345 ALL
-            case "filterStatus0All":
-                filterStatus0All(request, response);
-                break;
-            case "filterStatus1All":
-                filterStatus1All(request, response);
-                break;
-            case "filterStatus2All":
-                filterStatus2All(request, response);
-                break;
-            case "filterStatus3All":
-                filterStatus3All(request, response);
-                break;
-            case "filterStatus4All":
-                filterStatus4All(request, response);
-                break;
-            case "filterStatus5All":
-                filterStatus5All(request, response);
-                break;
-            // Search Job_id
-            case "search":
-                search(request, response);
-                break;
+                case "sortByCanASCNewest":
+                    sortByCanASCNewest(request, response);
+                    break;
+                case "sortByCanDESCNewest":
+                    sortByCanDESCNewest(request, response);
+                    break;
+                //==== SORT STATUS Inprocess
+                case "sortByStatusASCInprocess":
+                    sortByStatusASCInprocess(request, response);
+                    break;
+                case "sortByStatusDESCInprocess":
+                    sortByStatusDESCInprocess(request, response);
+                    break;
+                //==== SORT SCORE Inprocess
+                case "sortByScoreASCInprocess":
+                    sortByScoreASCInprocess(request, response);
+                    break;
+                case "sortByScoreDESCInprocess":
+                    sortByScoreDESCInprocess(request, response);
+                    break;
+                //==== SORT CAN_ID Inprocess
+                case "sortByCanASCInprocess":
+                    sortByCanASCInprocess(request, response);
+                    break;
+                case "sortByCanDESCInprocess":
+                    sortByCanDESCInprocess(request, response);
+                    break;
+                //==== FILTER STATUS 012345 ALL
+                case "filterStatus0All":
+                    filterStatus0All(request, response);
+                    break;
+                case "filterStatus1All":
+                    filterStatus1All(request, response);
+                    break;
+                case "filterStatus2All":
+                    filterStatus2All(request, response);
+                    break;
+                case "filterStatus3All":
+                    filterStatus3All(request, response);
+                    break;
+                case "filterStatus4All":
+                    filterStatus4All(request, response);
+                    break;
+                case "filterStatus5All":
+                    filterStatus5All(request, response);
+                    break;
+                // Search Job_id
+                case "search":
+                    search(request, response);
+                    break;
+            }
         }
     }
 
-    // VIEW USER APPLICATION ( HR STAFF )
     protected void viewUserApplication(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
         String email = request.getParameter("email"); // lấy id
@@ -238,14 +267,15 @@ public class ApplyController extends HttpServlet {
     protected void upload(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException {
         try {
-            String job_id = request.getParameter("job_id");
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            String jobId = request.getParameter("job_id");
             String job_name = request.getParameter("job_name");
-            CandidateDAO tf = new CandidateDAO();
-            List<CandidateDTO> list = tf.selectAll();
-            System.out.println("Upload: " +list);
-            request.setAttribute("job_id", job_id);
+            String cv = UserDAO.getCandidateCv(google.getEmail());
+            System.out.println("job_id + job_name + cv " + jobId + job_name + cv);
+            request.setAttribute("job_id", jobId);
             request.setAttribute("job_name", job_name);
-            request.setAttribute("list", list);
+            request.setAttribute("cv", cv);
             request.setAttribute("action", "index_apply");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
@@ -344,79 +374,96 @@ public class ApplyController extends HttpServlet {
     //===== FILE
     protected void uploadFile(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, SQLException {
-        response.setContentType("text/html;charset=UTF-8");
+        boolean isMultipartContent = ServletFileUpload.isMultipartContent(request);
+        if (!isMultipartContent) {
+            return;
+        }
+        response.setContentType("text/html");
         try {
-            out = response.getWriter();
-            session = request.getSession(false);
-            String folderName = "cvs";
-            Part filePart = request.getPart("file");//Textbox name FILE
-            String fileName = filePart.getSubmittedFileName();
-
-            //Đường dẫn đến Nơi Lưu
-            // C:\Users\ADMIN\OneDrive\Máy tính\PRJ\UploadFileProPro\build\web\cvs\
-            String uploadPath
-                    = request.getServletContext().getRealPath("")
-                    + folderName + File.separator;
-
-            File dir = new File(uploadPath);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            UserDTO userDTO = new UserDTO();
-            userDTO.getEmail();
-
-            System.out.println("fileName:" + fileName);
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            String job_id = null;
+            String job_name = null;
+            String cv = null;
+
+            FileItemFactory factory = new DiskFileItemFactory();
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            List< FileItem> fields = upload.parseRequest(request);
+            Iterator<FileItem> it = fields.iterator();
+            if (!it.hasNext()) {
+                System.out.println("hasNext " + it.hasNext());
+                return;
+            }
+
+            while (it.hasNext()) {
+                FileItem fileItem = it.next();
+                boolean isFormField = fileItem.isFormField();
+                if (isFormField) {
+                    if (job_id == null) {
+                        if (fileItem.getFieldName().equals("job_id")) {
+                            job_id = fileItem.getString();
+                        }
+                    }
+                    if (job_name == null) {
+                        if (fileItem.getFieldName().equals("job_name")) {
+                            job_name = fileItem.getString();
+                        }
+                    }
+                    if (cv == null) {
+                        if (fileItem.getFieldName().equals("cv")) {
+                            cv = fileItem.getString();
+                        }
+                    }
+                } else {
+                    if (fileItem.getSize() > 0) {
+                        fileName = fileItem.getName();
+                        fileItem.write(new File("D:\\SWP391-GroupHHHTD-SE1610\\web\\cvs\\" + fileName));
+                    } else {
+                        fileName = UserDAO.getCandidateCv(google.getEmail());;
+                    }
+                }
+            }
+//===============================
+
             if (google != null) {
+                UserDAO.update(fileName, google.getEmail());
 
-                System.out.println("Info");
-                UserDAO uDao = new UserDAO();
-                UserDTO user = uDao.searchUserByEmail(google.getEmail());
-                System.out.println("Email :" + user.getEmail());
-
-                String job_id = request.getParameter("job_id");
-                String job_name = request.getParameter("job_name");
-                System.out.println(job_name);
-                System.out.println(job_id);
-                JobsDAO uj = new JobsDAO();
-                // Mã của can_id : Cxxx
-                // Mã của job_id : Jxxx
                 CandidateDAO cd = new CandidateDAO();
                 String can_id = cd.newId();
-                InputStream is = filePart.getInputStream();
-                Files.copy(is, Paths.get(uploadPath + fileName), StandardCopyOption.REPLACE_EXISTING);
                 try {
+                    //DB
                     con = DBUtils.makeConnection();
-                    System.out.println("Connection done [Upload]");
-                    String sql = "insert into candidate(can_id,job_id,email,can_cv,isStatus) "
-                            + "values(?,?,?,?,?)";
+                    String sql = "insert into candidate(can_id,job_id,email,can_cv,isStatus,apply) "
+                            + "values(?,?,?,?,?,?)";
+                    System.out.println("Job:" + job_id);
+                    System.out.println("CV:" + fileName);
                     ps = con.prepareStatement(sql);
                     ps.setString(1, can_id);
                     //1 email - 1 job_id
                     ps.setString(2, job_id);
-                    ps.setString(3, user.getEmail());
+                    ps.setString(3, google.getEmail());
                     ps.setString(4, fileName);
                     ps.setInt(5, 0);
+                    ps.setInt(6, 0);
                     int status = ps.executeUpdate();
-                    System.out.println(job_id);
+                    //
                     if (status > 0) {
                         session.setAttribute("fileName", fileName);
                         String msg = fileName + " file uploaded successfully...<br/>"
-                                + "Job: <strong>" + job_name +"</strong>";
+                                + "Job: <strong>" + job_name + "</strong>";
+                        System.out.println("Data: " + job_id + job_name);
                         request.setAttribute("msg", msg);
                         List<JobsDTO> list = JobsDAO.list_job();
                         request.setAttribute("controller", "job");
                         request.setAttribute("list", list);
                         request.setAttribute("action", "search");
                         request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-                        System.out.println("File upload successfully");
-                        System.out.println("Uploaded Path: " + uploadPath);
                     }
                 } catch (SQLException ex) {
                     System.out.println("Exception1: " + ex);
                     session.setAttribute("fileName", fileName);
                     request.setAttribute("msgFailed", "That Job : " + job_name + " already applied.");
+                    System.out.println("Data: " + job_id + job_name);
                     List<JobsDTO> list = JobsDAO.list_job();
                     request.setAttribute("controller", "job");
                     request.setAttribute("list", list);
@@ -433,19 +480,21 @@ public class ApplyController extends HttpServlet {
                         }
                     } catch (SQLException e) {
                         out.println(e);
-                        System.out.println("upload failed");
                     }
                 }
             } else {
                 System.out.println("Error when connect to account");
-                response.sendRedirect("job?op=list");
             }
 
         } catch (IOException | ServletException e) {
             out.println("Exception: " + e);
             System.out.println("Exception2: " + e);
-            String msgFailed = "" + fileName + " file uploaded failed...";
+            String msgFailed = fileName + "Application failed...";
             request.setAttribute("msgFailed", msgFailed);
+        } catch (FileUploadException ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -521,6 +570,19 @@ public class ApplyController extends HttpServlet {
             ex.printStackTrace();
         }
     }
+    protected void deleteApplied(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ClassNotFoundException {
+        try {
+            String can_id = request.getParameter("can_id"); // lấy id
+            String email = request.getParameter("email"); // lấy email
+            CandidateDAO tf = new CandidateDAO();
+            tf.deleteApplied(can_id,email);
+            //Cho hiện lại danh sách 
+            response.sendRedirect("user?op=info");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     protected void rejectFileNewest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ClassNotFoundException, Exception {
@@ -528,27 +590,27 @@ public class ApplyController extends HttpServlet {
             String can_id = request.getParameter("can_id"); // lấy id
             String email = request.getParameter("email"); // lấy id
             CandidateDAO tf = new CandidateDAO();
-            tf.rejectFileNewest(can_id);
+            tf.rejectFileNewest(can_id,email);
             List<CandidateDTO> list0 = CandidateDAO.hrstatus0();
             //=== Notification + Send Email
-            String job_name = request.getParameter("job_name"); // lấy job_name
-            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
-            String to = can.getEmail();
-            System.out.println("Data: " + job_name + " " + to + " " + email);
-            String subject = "3HTD: Your Resume has been rejected";
-            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
-                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
-                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
-                    + " Through the review of the profile, we found that there are some points that you do not match our requirements."
-                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.</p>"
-                    + "<p>Wishing you the best of luck and success in your job search.</p><br/>"
-                    + "<p>We look forward to you becoming our member.</p>"
-                    + "<p>Best regards,</p>"
-                    + "<p>3HTD</p>";
-            MailUtils.send(email, subject, body);
-            NotificationDAO.add(email, "Rejected Resume",
-                    "<p>Your Resume has been rejected.</p>",
-                    null, null);
+//            String job_name = request.getParameter("job_name"); // lấy job_name
+//            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+//            String to = can.getEmail();
+//            System.out.println("Data: " + job_name + " " + to + " " + email);
+//            String subject = "3HTD: Your Resume has been rejected";
+//            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+//                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
+//                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+//                    + " Through the review of the profile, we found that there are some points that you do not match our requirements."
+//                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.</p>"
+//                    + "<p>Wishing you the best of luck and success in your job search.</p><br/>"
+//                    + "<p>We look forward to you becoming our member.</p>"
+//                    + "<p>Best regards,</p>"
+//                    + "<p>3HTD</p>";
+//            MailUtils.send(email, subject, body);
+//            NotificationDAO.add(email, "Rejected Resume",
+//                    "<p>Your Resume has been rejected.</p>",
+//                    null, null);
             //Cho hiện lại danh sách 
             String Reject = can_id + " have been Reject";
             request.setAttribute("Reject", Reject);
@@ -564,28 +626,28 @@ public class ApplyController extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, Exception {
         try {
             String can_id = request.getParameter("can_id"); // lấy id
-            String email = request.getParameter("email"); // lấy email
+            String email = request.getParameter("email"); // lấy id
             CandidateDAO tf = new CandidateDAO();
-            tf.delete(can_id);
+            tf.rejectFileInprocess(can_id,email);
             List<CandidateDTO> listInprocess = CandidateDAO.hrstatus14();
 //            //=== Notification + Send Email
-            String job_name = request.getParameter("job_name"); // lấy job_name
-            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
-            String to = can.getEmail();
-            System.out.println("Data Reject Inprocess: " + job_name + " " + to + " " + email);
-            String subject = "3HTD: Your Resume has been rejected";
-            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
-                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
-                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
-                    + " Through the review of the profile, we found that there are some points that you do not match our requirements."
-                    + " However, please keep in touch with us because in the future, we still have the need to recruit again. Wishing you the best of luck and success in your job search.</p><br/>"
-                    + "<p>We look forward to you becoming our member.</p>"
-                    + "<p>Best regards,</p>"
-                    + "<p>3HTD</p>";
-            MailUtils.send(email, subject, body);
-            NotificationDAO.add(email, "Rejected Resume",
-                    "<p>Your Resume has been rejected.</p>",
-                    null, null);
+//            String job_name = request.getParameter("job_name"); // lấy job_name
+//            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+//            String to = can.getEmail();
+//            System.out.println("Data: " + job_name + " " + to);
+//            String subject = "3HTD: Your Resume has been rejected";
+//            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+//                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
+//                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+//                    + " Through the review of the profile, we found that there are some points that you do not match our requirements."
+//                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
+//                    + "<p>We look forward to you becoming our member.</p>"
+//                    + "<p>Best regards,</p>"
+//                    + "<p>3HTD</p>";
+//            MailUtils.send(to, subject, body);
+//            NotificationDAO.add(to, "Rejected Resume",
+//                    "<p>Your Resume has been rejected.</p>",
+//                    null, null);
             //Cho hiện lại danh sách 
             String Reject = can_id + " have been Reject";
             request.setAttribute("Reject", Reject);
@@ -601,28 +663,28 @@ public class ApplyController extends HttpServlet {
             throws ServletException, IOException, ClassNotFoundException, Exception {
         try {
             String can_id = request.getParameter("can_id"); // lấy id
-            String email = request.getParameter("email"); // lấy email
+            String email = request.getParameter("email");
             CandidateDAO tf = new CandidateDAO();
-            tf.delete(can_id);
+            tf.rejectFileInprocess(can_id,email);
             String job_name = request.getParameter("job_name"); // lấy job_name   
             List<CandidateDTO> list4 = CandidateDAO.hrstatus4();
             //=== Notification + Send Email
-            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
-            String to = can.getEmail();
-            System.out.println("Data Reject Recruit: " + job_name + " " + to + email + can.getName());
-            String subject = "3HTD: Your Resume has been rejected";
-            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
-                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
-                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
-                    + " Through the review of the profile and the results of the interview, we found that there are some points that you do not match our requirements."
-                    + " However, please keep in touch with us because in the future, we still have the need to recruit again. Wishing you the best of luck and success in your job search.</p><br/>"
-                    + "<p>We look forward to you becoming our member.</p>"
-                    + "<p>Best regards,</p>"
-                    + "<p>3HTD</p>";
-            MailUtils.send(email, subject, body);
-            NotificationDAO.add(email, "Rejected Resume",
-                    "<p>Your Resume has been rejected.</p>",
-                    null, null);
+//            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+//            String to = can.getEmail();
+//            System.out.println("Data Reject Recruit: " + job_name + " " + to + email + can.getName());
+//            String subject = "3HTD: Your Resume has been rejected";
+//            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+//                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
+//                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+//                    + " Through the review of the profile and the results of the interview, we found that there are some points that you do not match our requirements."
+//                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
+//                    + "<p>We look forward to you becoming our member.</p>"
+//                    + "<p>Best regards,</p>"
+//                    + "<p>3HTD</p>";
+//            MailUtils.send(email, subject, body);
+//            NotificationDAO.add(email, "Rejected Resume",
+//                    "<p>Your Resume has been rejected.</p>",
+//                    null, null);
             //Cho hiện lại danh sách 
             String Reject = can_id + " have been Reject";
             request.setAttribute("Reject", Reject);
@@ -642,29 +704,30 @@ public class ApplyController extends HttpServlet {
             String job_name = request.getParameter("job_name"); // lấy job_name        
             CandidateDAO tf = new CandidateDAO();
             tf.updateup01(can_id, email);
+//            tf.updateup01( email);
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
             List<CandidateDTO> list0 = CandidateDAO.hrstatus0();
             //=== Notification + Send Email
-            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
-            String to = can.getEmail();
-            String subject = "3HTD: Your Resume has been accepted";
-            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
-                    + "<p>We thank you for applying for the job: <strong>" + job_name + " </strong> of 3HTD.</p>"
-                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
-                    + "You have completed the first stage in the recruitment of our company."
-                    + "<p>This includes <strong> Posting A CV, Taking A Test, Going To An Interview, and Waiting To Receive A Notification Of Matriculation. </strong> </p>"
-                    + "<p>Have a nice day and don't forget to check your email regularly! We look forward to the opportunity to meet you.</p><br/>"
-                    + "<p>We look forward to you becoming our member.</p>"
-                    + "<p>Sincerely</p>"
-                    + "<p>3HTD</p>";
-            MailUtils.send(to, subject, body);
-            NotificationDAO.add(to, "Accepted Resume",
-                    "<p>Your Resume already accepted.</p>",
-                    null, null);
+//            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+//            String to = can.getEmail();
+//            String subject = "3HTD: Your Resume has been accepted";
+//            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+//                    + "<p>We thank you for applying for the job: <strong>" + job_name + " </strong> of 3HTD.</p>"
+//                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+//                    + "You have completed the first stage in the recruitment of our company."
+//                    + "<p>This includes <strong> Posting A CV, Taking A Test, Going To An Interview, and Waiting To Receive A Notification Of Matriculation. </strong> </p>"
+//                    + "<p>Have a nice day and don't forget to check your email regularly! We look forward to the opportunity to meet you.</p><br/>"
+//                    + "<p>We look forward to you becoming our member.</p>"
+//                    + "<p>Sincerely</p>"
+//                    + "<p>3HTD</p>";
+//            MailUtils.send(to, subject, body);
+//            NotificationDAO.add(to, "Accepted Resume",
+//                    "<p>Your Resume already accepted.</p>",
+//                    null, null);
             //Cho hiện lại danh sách 
             String Accept = can_id + " have been Accept";
-            request.setAttribute("Accept", Accept);
+            request.setAttribute("Accept", Accept); //Notify ở list_Newest
             request.setAttribute("list0", list0);
             request.setAttribute("action", "list_Newest");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -721,7 +784,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -735,7 +799,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -750,7 +815,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -764,7 +830,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -779,7 +846,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -793,7 +861,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -808,7 +877,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -822,7 +892,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -837,7 +908,8 @@ public class ApplyController extends HttpServlet {
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -849,9 +921,9 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("listInprocess", sortPen);
             request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            System.out.println("Inprocess" + sortPen);
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -865,8 +937,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -879,8 +953,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -894,8 +970,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -908,8 +986,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list4", sortRecruit);
             request.setAttribute("action", "list_Recruit");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -923,8 +1003,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list0", sortRecruit);
             request.setAttribute("action", "list_Newest");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -936,8 +1018,10 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("list0", sort);
             request.setAttribute("action", "list_Newest");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -12,7 +12,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
         <link rel="stylesheet" href="css/notification.css" type="text/css">
     </head>
     <body>
@@ -20,7 +20,8 @@
             <div class="notification_item>"
                  <c:choose>
                      <c:when test="${listNotification != null}">
-                         <a href="<c:url value="/user?op=readAll"/>">Mark all as read</a> | 
+                         <a></a>
+                         <a href="<c:url value="/user?op=readAll"/>">Mark all as read</a> |
                          <a href="<c:url value="/user?op=deleteRead"/>">Delete all that read</a> <hr/>
                          <c:forEach items="${listNotification}" var="notification">
                              ${notification.title}<br/>
@@ -28,7 +29,6 @@
                              <fmt:formatDate type = "both" value = "${notification.date}" /> (${notification.timeAgo}) <br/>
                              <c:if test="${notification.linkTitle != null && notification.link != null}">
                                  <a href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>">${notification.linkTitle}</a>
-                                 <%--&email=${notification.email}--%>
                              </c:if><br/>
                              <c:if test="${notification.isRead}">
                                  Readed | <a href="<c:url value="/user?op=delete&nId=${notification.nId}"/>">Delete</a>

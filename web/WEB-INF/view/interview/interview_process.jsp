@@ -19,14 +19,16 @@
                 <table class="table table-striped">
                     <thead>
                     <th>Name</th>
+                    <th>Job Name</th>
                     <th>Interview's Date</th>
                     <th>Location</th>
                     <th>Status</th>
                     </thead>
                     <tbody>
-                        <c:forEach var="i" items="${interview}">
+                        <c:forEach var="i" items="${interview}" varStatus="loop">
                             <tr>
                                 <td>${i.can_name}</td>
+                                <td>${job_name[loop.count-1]}</td>
                                 <td>
                                     <fmt:formatDate value="${i.date}" pattern="dd-MM-yyyy HH:mm"/>
                                 </td>

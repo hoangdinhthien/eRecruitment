@@ -18,9 +18,7 @@ import dtos.NotificationDTO;
 import dtos.RoleDTO;
 import dtos.UserDTO;
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.time.Instant;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,12 +55,14 @@ public class UserController extends HttpServlet {
             response.setContentType("text/html;charset=UTF-8");
             try {
 
+                HttpSession session = request.getSession();
                 GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-                NotificationDAO nDao = new NotificationDAO();
-                List<NotificationDTO> notify = nDao.select(google.getEmail());
-                request.setAttribute("listNotification", notify);
-                request.setAttribute("count", nDao.count(google.getEmail()));
-
+                if (google != null) {
+                    NotificationDAO nDao = new NotificationDAO();
+                    List<NotificationDTO> notify = nDao.select(google.getEmail());
+                    request.setAttribute("listNotification", notify);
+                    request.setAttribute("count", nDao.count(google.getEmail()));
+                }
                 List<MajorDTO> listMajor = MajorDAO.listAll();
                 request.setAttribute("listMajor", listMajor);
 
@@ -124,7 +124,8 @@ public class UserController extends HttpServlet {
             session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
             UserDAO uDao = new UserDAO();
-            UserDTO user = uDao.find(google.getEmail());
+            UserDTO user = uDao.searchUserByEmail(google.getEmail());
+            user.setEmail(google.getEmail());
             RoleDAO rDao = new RoleDAO();
             List<RoleDTO> listRole = rDao.selectAll();
             String email = google.getEmail();
@@ -132,6 +133,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("listEmail", sea);
             request.setAttribute("listRole", listRole);
             request.setAttribute("user", user);
+            request.setAttribute("action", "info");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
 
         } catch (SQLException ex) {
@@ -168,12 +170,7 @@ public class UserController extends HttpServlet {
             String address = request.getParameter("address");
             UserDAO uDao = new UserDAO();
             uDao.update(email, name, phone, address);
-            UserDTO user = uDao.searchUserByEmail(email);
-            System.out.println("");
-            request.setAttribute("user", user);
-            request.setAttribute("action", "info");
-            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-
+            view(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(UserController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

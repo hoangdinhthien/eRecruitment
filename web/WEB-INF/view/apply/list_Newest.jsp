@@ -1,9 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : Oct 5, 2022, 4:44:35 PM
-    Author     : ADMIN
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -14,20 +8,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-
     <center>
-        <c:if test="${not empty Reject}">
-            <div class="alert alert-success alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>${Reject}!</strong>
-            </div>
-        </c:if>
-        <c:if test="${not empty Accept}">
-            <div class="alert alert-success alert-dismissible">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>${Accept}!</strong> 
-            </div>
-        </c:if>
         <h1>Newest Applications</h1> <br>
         <c:choose>
             <c:when test="${not empty list0  }">
@@ -42,7 +23,7 @@
                             </li>
                         </ul>
                     </nav>
-                    <br><br>
+                   
                     <thead>
                         <tr>
                             <th>No.</th><th>Can_id</th><th>Job Name</th>
@@ -60,15 +41,15 @@
                             <td>${can.jobname.job_name}</td>
                             <td>${can.email}</td>
                             <td>${can.cv}</td>
-                            <!--                            <td><c:choose>
-                                <c:when test="${can.isStatus==0}">
-                                    Hasn't Accepted
-                                </c:when>
-                            </c:choose></td>-->
+<!--                            <td><c:choose>
+                                    <c:when test="${can.isStatus==0}">
+                                        Hasn't Accepted
+                                    </c:when>
+                                </c:choose></td>-->
                             <td style="text-align: center">
                                 <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                <a href="apply?op=yesupNewest&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Accept</a> |
-                                <a href="apply?op=rejectFileNewest&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Reject</a> 
+                                <a href="apply?op=yesupNewest&can_id=${can.id}&email=${can.email}">Accept</a> |
+                                <a href="apply?op=deleteFile&can_id=${can.id}&email=${can.email}">Reject</a> 
                             </td>
                         </tr>
                     </c:forEach>

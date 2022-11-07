@@ -49,23 +49,6 @@ public class UserDAO {
         return u;
     }
 
-    public UserDTO find(String email) throws SQLException, ClassNotFoundException {
-        UserDTO user = null;
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("select * from [User] where email = ? ");
-        stm.setString(1, email);
-        ResultSet rs = stm.executeQuery();
-        if (rs.next()) {
-            user = new UserDTO();
-            user.setEmail(rs.getString("email"));
-            user.setName(rs.getString("name"));
-            user.setRoleId(rs.getInt("role_id"));
-            user.setPhone(rs.getString("phone"));
-            user.setAddress(rs.getString("address"));
-        }
-        con.close();
-        return user;
-    }
 
     public void update(String email, String phone, String address) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
@@ -108,4 +91,25 @@ public class UserDAO {
         con.close();
         return list;
     }
+    public static String getCandidateCv(String email) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT TOP(1)[can_cv] FROM [dbo].[User] WHERE [email]=?");
+        stm.setString(1, email);
+        ResultSet rs = stm.executeQuery();
+        String cv=null;
+        if (rs.next()) {
+            cv = rs.getString("can_cv");
+        }
+        con.close();
+        return cv;
+    }
+    public static void update(String cv, String email) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("UPDATE [dbo].[User] SET [can_cv] = ? WHERE [email] = ? ");
+        stm.setString(1, cv);
+        stm.setString(2, email);
+        stm.executeUpdate();
+        con.close();
+    }
+    
 }

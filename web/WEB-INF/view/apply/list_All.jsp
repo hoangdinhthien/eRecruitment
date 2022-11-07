@@ -21,6 +21,7 @@
     <body>
     <center>
         <h1>List All Applications</h1>
+
         <div class="pt-3 align-items-center justify-content-center d-flex">
             <!--===Filter===-->
             <nav class="header__menu" >
@@ -30,8 +31,7 @@
                            background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
                            width: 100px"
                            href="<c:url value="apply?op=listAll"/>" 
-                           type="button" 
-                           > 
+                           type="button"> 
                             Status 
                             <span class="arrow_carrot-down"></span>
                         </a>
@@ -48,7 +48,6 @@
             </nav>
             <!--===SEARCH===-->
             <form action="<c:url value="apply?op=search"/>" class="d-flex w-50 m-3">
-
                 <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"> <i class="fa fa-search"></i></span>
                     <input class="form-control me-2"  placeholder="Search Job" type="text" name="search" 
@@ -83,6 +82,8 @@
                 </li>
             </ul>
         </nav>
+
+
         <!--TABLE-->
         <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">      
             <c:choose>

@@ -93,7 +93,7 @@
             <dialog>
                 <div class="modal-content">
                     <h5 class="modal-title">Create Exam</h5>
-                    <form action="<c:url value="/exam"/>">  
+                    <form action="<c:url value="/exam"/>" method="post">  
                         <div class="input-group mb-3">
                             <input type="hidden" value="CreateExam" name="op"/>
                             <span class="input-group-text">Exam name:</span>

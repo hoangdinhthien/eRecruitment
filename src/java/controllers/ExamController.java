@@ -13,6 +13,7 @@ import daos.MajorDAO;
 import daos.NotificationDAO;
 import daos.OptionDAO;
 import daos.QuestionDAO;
+import dtos.ExamDTO;
 import dtos.GoogleDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
@@ -55,10 +56,12 @@ public class ExamController extends HttpServlet {
 //        String action = (String) request.getAttribute("action");
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
-            NotificationDAO nDao = new NotificationDAO();
-            List<NotificationDTO> notify = nDao.select(google.getEmail());
-            request.setAttribute("listNotification", notify);
-            request.setAttribute("count", nDao.count(google.getEmail()));
+            if (google != null) {
+                NotificationDAO nDao = new NotificationDAO();
+                List<NotificationDTO> notify = nDao.select(google.getEmail());
+                request.setAttribute("listNotification", notify);
+                request.setAttribute("count", nDao.count(google.getEmail()));
+            }
             List<MajorDTO> listMajor = MajorDAO.listAll();
             request.setAttribute("listMajor", listMajor);
 
@@ -89,6 +92,10 @@ public class ExamController extends HttpServlet {
                 }
                 case "CreateExam": {
                     createExam(request, response);
+                    break;
+                }
+                case "confirmExam": {
+                    confirmTakeExam(request, response);
                     break;
                 }
                 case "takeExam": {
@@ -264,6 +271,39 @@ public class ExamController extends HttpServlet {
         }
     }
 
+    protected void confirmTakeExam(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            System.out.println("Confirm Exam");
+            String canId = request.getParameter("canId");
+            System.out.println("canId: " + canId);
+            ExamDAO eDao = new ExamDAO();
+            String eId = eDao.getExam(canId);
+            if (eId == null || eDao.check(canId)) {
+                System.out.println("Step 2");
+                if (eId == null) {
+                    request.setAttribute("message", "You don't have any exam. ");
+                } else {
+                    request.setAttribute("message", "You have taken this exam. ");
+                }
+            } else {
+                ExamDTO testInfo = eDao.selectExam(eId);
+                request.setAttribute("canId", canId);
+                request.setAttribute("testInfo", testInfo);
+            }
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            if (google != null) {
+                request.setAttribute("action", "result");
+                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+            } else {
+                request.getRequestDispatcher("/result.jsp").forward(request, response);
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     protected void takeExam(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -272,8 +312,6 @@ public class ExamController extends HttpServlet {
             System.out.println(canId);
             ExamDAO eDao = new ExamDAO();
             String eId = eDao.getExam(canId);
-            System.out.println("Step 1");
-            System.out.println(eId);
             if (eId == null || eDao.check(canId)) {
                 System.out.println("Step 2");
                 if (eId == null) {
@@ -289,7 +327,7 @@ public class ExamController extends HttpServlet {
                 System.out.println("Step 4");
                 OptionDAO opDao = new OptionDAO();
                 List<OptionDTO> listOption = opDao.listOneQExam(eId);
-                eDao.confirmTakingExam(canId); 
+                eDao.confirmTakingExam(canId);
                 System.out.println("Step 5");
 //            System.out.println(listOption);
                 request.setAttribute("canId", canId);
@@ -330,7 +368,7 @@ public class ExamController extends HttpServlet {
                 System.out.println("Mark : " + mark);
                 cDao.result(mark, canId);
                 request.setAttribute("message", "You have finish the exam. ");
-            }else{
+            } else {
                 request.setAttribute("message", "You have taken this exam. ");
             }
             request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);

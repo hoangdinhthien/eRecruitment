@@ -12,6 +12,7 @@ import java.util.Date;
  * @author DELL
  */
 public class JobsDTO {
+
     private String job_id;
     private String job_name;
     private int major_id;
@@ -20,8 +21,23 @@ public class JobsDTO {
     private int level_id;
     private double salary;
     private Date post_date;
+    private CandidateDTO jobid;
+    private CandidateDTO jobname;
 
-    public JobsDTO() {
+    public CandidateDTO getJobid() {
+        return jobid;
+    }
+
+    public void setJobid(CandidateDTO jobid) {
+        this.jobid = jobid;
+    }
+
+    public CandidateDTO getJobname() {
+        return jobname;
+    }
+
+    public void setJobname(CandidateDTO jobname) {
+        this.jobname = jobname;
     }
 
     public String getJob_id() {
@@ -88,5 +104,4 @@ public class JobsDTO {
         this.post_date = post_date;
     }
 
-       
 }
