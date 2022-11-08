@@ -7,13 +7,14 @@ package dtos;
 
 /**
  *
-<<<<<<< HEAD
- * @author Thien
-=======
- * @author ACER
->>>>>>> origin/Thien-Hoang
+ * <<<<<<< HEAD @a
+ *
+ *
+ * uthor Thien =======
+ * @author ACER >>>>>>> origin/Thien-Hoang
  */
 public class UserDTO {
+
     private String email;
     private String name;
     private int roleId;
@@ -21,6 +22,15 @@ public class UserDTO {
     private String phone;
     private String address;
     private String can_cv;
+    private JobDTO userjobid;
+
+    public JobDTO getUserjobid() {
+        return userjobid;
+    }
+
+    public void setUserjobid(JobDTO userjobid) {
+        this.userjobid = userjobid;
+    }
 
     public UserDTO() {
     }
@@ -57,7 +67,6 @@ public class UserDTO {
     public void setCan_cv(String can_cv) {
         this.can_cv = can_cv;
     }
-    
 
     public String getEmail() {
         return email;
@@ -106,5 +115,5 @@ public class UserDTO {
     public void setAddress(String address) {
         this.address = address;
     }
-    
+
 }

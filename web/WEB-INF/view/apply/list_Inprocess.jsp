@@ -38,12 +38,6 @@
                         <li><a href="apply?op=sortByCanDESCInprocess">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <%--<li><a href="<c:url value="/apply?op=sortByJobASCInprocess"/>"> Sort by Job Id </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByJobASCInprocess">Job Id Ascending</a></li>
-                        <li><a href="apply?op=sortByJobDESCInprocess">Job Id Descending</a></li>
-                    </ul>
-                </li>--%>
                 <li><a href="<c:url value="/apply?op=sortByScoreASCInprocess"/>"> Sort by Exam Score </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByScoreASCInprocess">Score Ascending</a></li>
@@ -101,8 +95,7 @@
                             </td>
                             <td style="text-align: center">
                                 <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                <%--                            <a href="apply?op=yesup&can_id=${can.id}">Accept</a> |--%>
-                                <a href="apply?op=deleteFile&can_id=${can.id}">Reject</a> 
+                                <a href="apply?op=rejectFileInprocess&can_id=${can.id}&email=${can.email}">Reject</a> 
 
                             </td>
                         </tr>

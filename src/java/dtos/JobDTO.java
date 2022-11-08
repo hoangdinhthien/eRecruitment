@@ -22,6 +22,9 @@ public class JobDTO {
     private String level_name;
     private String job_skill;
     private boolean save_job;
+
+    public JobDTO() {
+    }
     public boolean isSave_job() {
         return save_job;
     }
@@ -55,8 +58,23 @@ public class JobDTO {
     }
     private double salary;
     private Date post_date;
+    private CandidateDTO jobid;
+    private CandidateDTO jobname;
 
-    public JobDTO() {
+    public CandidateDTO getJobid() {
+        return jobid;
+    }
+
+    public void setJobid(CandidateDTO jobid) {
+        this.jobid = jobid;
+    }
+
+    public CandidateDTO getJobname() {
+        return jobname;
+    }
+
+    public void setJobname(CandidateDTO jobname) {
+        this.jobname = jobname;
     }
 
     public String getJob_id() {
@@ -123,5 +141,4 @@ public class JobDTO {
         this.post_date = post_date;
     }
 
-       
 }

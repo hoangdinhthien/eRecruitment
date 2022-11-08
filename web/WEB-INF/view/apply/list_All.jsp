@@ -45,13 +45,11 @@
             <nav class="header__menu" >
                 <ul>
                     <li>
-
                         <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
                            background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
                            width: 100px"
                            href="<c:url value="apply?op=listAll"/>" 
-                           type="button" 
-                           > 
+                           type="button"> 
                             Status 
                             <span class="arrow_carrot-down"></span>
                         </a>
@@ -68,7 +66,6 @@
             </nav>
             <!--===SEARCH===-->
             <form action="<c:url value="apply?op=search"/>" class="d-flex w-50 m-3">
-
                 <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"> <i class="fa fa-search"></i></span>
                     <input class="form-control me-2"  placeholder="Search by Job" type="text" name="search" 
@@ -89,12 +86,6 @@
                         <li><a href="apply?op=sortByCanDESCAll">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <%--<li><a href="<c:url value="/apply?op=sortByJobASCAll"/>"> Sort by Job Id </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByJobASCAll">Job Id Ascending</a></li>
-                        <li><a href="apply?op=sortByJobDESCAll">Job Id Descending</a></li>
-                    </ul>
-                </li> --%>
                 <li><a href="<c:url value="/apply?op=sortByScoreASCAll"/>"> Sort by Exam Score </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByScoreASCAll">Score Ascending</a></li>

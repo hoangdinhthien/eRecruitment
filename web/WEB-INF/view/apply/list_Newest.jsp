@@ -1,14 +1,3 @@
-<%-- 
-    Document   : index
-    Created on : Oct 5, 2022, 4:44:35 PM
-    Author     : ADMIN
---%>
-
-<%@page import="java.sql.PreparedStatement"%>
-<%@page import="java.sql.Statement"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="java.sql.Connection"%>
-<%@page import="utils.DBUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -59,8 +48,8 @@
                                 </c:choose></td>-->
                             <td style="text-align: center">
                                 <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                <a href="apply?op=yesupNewest&can_id=${can.id}">Accept</a> |
-                                <a href="apply?op=deleteFile&can_id=${can.id}">Reject</a> 
+                                <a href="apply?op=yesupNewest&can_id=${can.id}&email=${can.email}">Accept</a> |
+                                <a href="apply?op=deleteFile&can_id=${can.id}&email=${can.email}">Reject</a> 
                             </td>
                         </tr>
                     </c:forEach>

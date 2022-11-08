@@ -224,9 +224,6 @@
                                             </ul>
                                         </li>
                                     </c:if>
-                                    <c:if test="${not empty info && role == 'Member' || role == 'Candidate'}" >
-<!--                                        <li><a href="<c:url value="/faq?op=index_faq"/>">FAQs</a></li>-->
-                                    </c:if>
 
 
                                 </ul>

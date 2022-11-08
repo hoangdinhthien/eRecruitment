@@ -32,12 +32,6 @@
                         <li><a href="apply?op=sortByCanDESCRecruit">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <%--<li><a href="<c:url value="/apply?op=sortByJobASCRecruit"/>"> Sort by Job Id </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByJobASCRecruit">Job Id Ascending</a></li>
-                        <li><a href="apply?op=sortByJobDESCRecruit">Job Id Descending</a></li>
-                    </ul>
-                </li>--%>
                 <li><a href="<c:url value="/apply?op=sortByScoreASCRecruit"/>"> Sort by Exam Score </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByScoreASCRecruit">Score Ascending</a></li>
@@ -48,7 +42,6 @@
             </ul>
         </nav>
         <br><br>
-
         <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">
             <c:choose>
                 <c:when test="${ not empty list4 }">
@@ -81,7 +74,7 @@
                                     <td style="text-align: center">
                                         <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
                                     <a href="apply?op=yesupRecruit&can_id=${can.id}">Accept</a> |
-                                    <a href="apply?op=deleteFile&can_id=${can.id}">Reject</a> 
+                                    <a href="apply?op=rejectFileRecruit&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Reject</a>
                                 </td>
 
 
