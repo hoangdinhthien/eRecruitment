@@ -17,7 +17,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.DBUtils;
+import utils.MailUtils;
 
 /**
  *
@@ -67,7 +70,7 @@ public class JobDAO {
         PreparedStatement stm = con.prepareStatement("Select j.[job_id],j.[job_name],j.[major_id],j.[job_description],j.[level_id],j.[job_vacancy],j.[salary],j.[post_date],m.[major_name],l.[level_name]"
                 + "                  from ([dbo].[Job] j FULL OUTER JOIN [dbo].[Major] m on j.major_id=m.major_id )"
                 + "                  FULL OUTER JOIN [dbo].[Level] l on j.level_id=l.level_id"
-                + "                  where [job_name] like ? and [job_vacancy] > 0 order by [post_date] desc");
+                + "                  where [job_name] like ? order by [post_date] desc");
         stm.setString(1, "%" + job_name + "%");
         ResultSet rs = stm.executeQuery();
         List<JobDTO> list = new ArrayList<>();
@@ -89,12 +92,12 @@ public class JobDAO {
         return list;
     }
 
-     public static List<JobDTO> list_job() throws ClassNotFoundException, SQLException {
+    public static List<JobDTO> list_job() throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select j.[job_id],j.[job_name],j.[major_id],j.[job_description],j.[level_id],j.[job_vacancy],j.[salary],j.[post_date],m.[major_name],l.[level_name]\n"
                 + "  from ([dbo].[Job] j FULL OUTER JOIN [dbo].[Major] m on j.major_id=m.major_id ) "
                 + "FULL OUTER JOIN [dbo].[Level] l on j.level_id=l.level_id"
-                + "  where [job_vacancy] > 0 order by [post_date] desc ");
+                + "  order by [post_date] desc ");
         ResultSet rs = stm.executeQuery();
         List<JobDTO> list = new ArrayList<>();
         while (rs.next()) {
@@ -149,7 +152,7 @@ public class JobDAO {
         return false;
     }
 
-     public void add(String job_id, String job_skill) throws SQLException, ClassNotFoundException {
+    public void add(String job_id, String job_skill) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Insert into Job_skill(job_id,detail) values(?,?)");
         stm.setString(1, job_id);
@@ -157,7 +160,7 @@ public class JobDAO {
         stm.executeUpdate();
         con.close();
     }
-    
+
     public static List<JobDTO> filter_job(int fmajor, int flevel, int fsalary) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         String sql = "Select j.[job_id],j.[job_name],j.[major_id],j.[job_description],j.[level_id],j.[job_vacancy],j.[salary],j.[post_date],m.[major_name],l.[level_name]\n"
@@ -270,7 +273,7 @@ public class JobDAO {
         return check;
     }
 
-     public static boolean update_job(JobDTO j) throws SQLException, ClassNotFoundException {
+    public static boolean update_job(JobDTO j) throws SQLException, ClassNotFoundException {
         Connection con = null;
         PreparedStatement stm = null;
         try {
@@ -303,6 +306,15 @@ public class JobDAO {
         return false;
     }
 
+    public void update(String job_id, String job_skill) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Update [dbo].[Job_skill] set detail=? where job_id=?");
+        stm.setString(1, job_skill);
+        stm.setString(2, job_id);
+        stm.executeUpdate();
+        con.close();
+    }
+
     public static JobDTO search_update_job(String job_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select [job_id],[job_name],[major_id],[job_description],[level_id],[job_vacancy],[salary],[post_date] from [dbo].[Job] where job_id = ? order by [post_date] desc");
@@ -323,31 +335,53 @@ public class JobDAO {
         return r;
     }
 
-    public static boolean delete_job(String job_id) throws SQLException, ClassNotFoundException {
-        Connection con = null;
-        PreparedStatement stm = null;
-        try {
-            con = DBUtils.makeConnection();
-            if (con != null) {
-                String sql = "Delete [dbo].[Job] where job_id=?";
-                stm = con.prepareStatement(sql);
-                stm.setString(1, job_id);
-                int row = stm.executeUpdate();
-                if (row > 0) {
-                    return true;
-                }
-            }
-        } finally {
-            if (stm != null) {
-                stm.close();
-            }
-            if (con != null) {
-                con.close();
+   public static void delete_job(String job_id) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Job] WHERE [job_id] = ?");
+        stm.setString(1, job_id);
+        stm.executeUpdate();
+        con.close();
+    }
+
+    public void deleteSavedJob(String job_id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Saved_job] WHERE [job_id] = ? ");
+        stm.setString(1, job_id);
+        stm.executeUpdate();
+        con.close();
+    }
+
+    public void deleteJobSkill(String job_id) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Job_skill] WHERE [job_id] = ? ");
+        stm.setString(1, job_id);
+        stm.executeUpdate();
+        con.close();
+    }
+
+
+    public static void deleteJobResult(String job_id) throws SQLException, ClassNotFoundException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [Job] WHERE [job_id] = ?");
+        stm.setString(1, job_id);
+        ResultSet rs = stm.executeQuery();
+        JobDAO jDao = new JobDAO();
+        CandidateDAO canDao = new CandidateDAO();
+        if (rs.next()) {
+            try {
+                String jobId = rs.getString("job_id");
+                jDao.deleteSavedJob(jobId);
+                jDao.deleteJobSkill(jobId);
+                canDao.deleteSuperfluousCan(jobId);
+                canDao.deleteJobCan(jobId);
+                //remove candidate skill
+            } catch (Exception ex) {
+                Logger.getLogger(JobDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return false;
+        con.close();
     }
-    
+
     public static JobDTO find_job_by_id(String job_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("  Select j.[job_id],j.[job_name],j.[major_id],j.[job_description],s.[detail],j.[level_id],j.[job_vacancy],j.[salary],j.[post_date] from [dbo].[Job]as j join [dbo].[Job_skill] as s on j.job_id=s.job_id where j.job_id = ? order by [post_date] desc");
@@ -368,7 +402,7 @@ public class JobDAO {
         con.close();
         return r;
     }
-    
+
     public static List<String> list_job_skill(String job_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select [detail] from [dbo].[Job_skill] where job_id=?");

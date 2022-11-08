@@ -8,20 +8,20 @@ and open the template in the editor.
     Author     : dinht
 */
 
-#notification-container {
+#notification_container {
     background-color: white;
     border: 1px solid rgba(100, 100, 100, .4);
     -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
     overflow: visible;
     position: absolute;
-    top: 55px;
+    top: 50px;
     margin-left: -170px;
     width: 400px;
     z-index: 1000;
     display: none;
 }
 
-#notification-body:before {
+#notification_container:before {
     content: ' ';
     display: block;
     position: absolute;
@@ -34,32 +34,32 @@ and open the template in the editor.
     margin-left: 188px;
 }
 
-#notification-title {
+#notification_title {
     text-align: center;
     font-weight: bold;
     font-size: 13px;
     padding: 10px;
-    background-color: white;
+    background-color: #ffffff;
     position: absolute;
     z-index: 1000;
     width: 384px;
     border-bottom: 1px solid #dddddd;
 }
 
-#notification-body a{
+#notification_body {
     padding: 35px 0 0 0 !important;
-    /*min-height: 340px;*/
+    min-height: 340px;
     display: block;
     text-align: center;
     text-decoration: none;
     color:black;
 }
 
-#notification-body a:hover{
+#notification_body a:hover{
     color: gray;
 }
 
-#notification-footer {
+#notification_footer {
     background-color: #e9eaed;
     text-align: center;
     font-weight: bold;
@@ -67,7 +67,6 @@ and open the template in the editor.
     font-size: 12px;
     border-top: 1px solid #dddddd;
 }
-
 #notification_count {
     padding: 3px 7px 3px 7px;
     background: #cc0000;

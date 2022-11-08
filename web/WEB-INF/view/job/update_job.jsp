@@ -97,7 +97,7 @@
                         <input type="hidden" id="countInput" name="count" value="${count}"/>
                     </div>
                     <input type="button" id="addButton" class="opbutton" value="Add More Job Skill" onclick="add(i)"  style="width: auto"/>
-                    <input type="button" id="removeButton"  value="Remove" onclick="remove(1)"  style="width: 12%" disabled="true"/>
+                    <input type="button" id="removeButton"  value="Remove" onclick="remove(i)"  style="width: 12%" disabled="true"/>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Level:</span>
                         <select name="level_id" class="form-control">

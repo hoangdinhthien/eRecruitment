@@ -244,6 +244,9 @@ public class JobController extends HttpServlet {
                 request.setAttribute("job", job);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
+                request.getRequestDispatcher("/job?op=list").forward(request, response);
             }
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         }
@@ -252,14 +255,16 @@ public class JobController extends HttpServlet {
     protected void update_job_handler(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        String job_name = null;
         try {
             String job_id = request.getParameter("job_id");
-            String job_name = request.getParameter("job_name");
+            job_name = request.getParameter("job_name");
             int major_id = Integer.parseInt(request.getParameter("major_id"));
             String job_description = request.getParameter("job_description");
             int job_vacancy = Integer.parseInt(request.getParameter("job_vacancy"));
             int level_id = Integer.parseInt(request.getParameter("level_id"));
             double salary = Double.parseDouble(request.getParameter("salary"));
+            int count = Integer.parseInt(request.getParameter("count"));
             Date postDate = new Date();
             JobDTO up_job = new JobDTO();
             up_job.setJob_id(job_id);
@@ -271,6 +276,11 @@ public class JobController extends HttpServlet {
             up_job.setSalary(salary);
             up_job.setPost_date(postDate);
             JobDAO.update_job(up_job);
+            for (int i = 1; i <= count; i++) {
+                String job_skill = request.getParameter("job_skill" + i);
+                JobDAO dao = new JobDAO();
+                dao.update(job_id, job_skill);
+            }
             NotificationDAO nDao = new NotificationDAO();
             List<CandidateDTO> list_mail = JobDAO.list_mail(job_id);
             for (CandidateDTO c : list_mail) {
@@ -282,8 +292,14 @@ public class JobController extends HttpServlet {
             request.getRequestDispatcher("/job?op=search&search=" + job_name).forward(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("message", "Updation"
+                    + job_name
+                    + " failed!!");
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
+            request.setAttribute("message", "Updation"
+                    + job_name
+                    + "successfully!");
         }
     }
 
@@ -292,22 +308,25 @@ public class JobController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             String job_id = request.getParameter("job_id");
+            String job_name = null;
             try {
-                List<CandidateDTO> list_mail = JobDAO.list_mail(job_id);
-                NotificationDAO nDao = new NotificationDAO();
-                for (CandidateDTO c : list_mail) {
-                    nDao.add(c.getEmail(), "Job " + job_id + " have been deleted",
-                            "The job what you applied have been deleted!",
-                            null,
-                            null);
-                }
+                job_name = JobDAO.search_update_job(job_id).getJob_name();
                 MajorDAO majorDao = new MajorDAO();
                 List<MajorDTO> listMajor = majorDao.listAll();
                 request.setAttribute("listMajor", listMajor);
                 JobDAO.delete_job(job_id);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
+                request.setAttribute("message", "Deletion failed!! There is still candidates apply to "
+                        + job_name
+                        + " job");
+                request.getRequestDispatcher("/job?op=list").forward(request, response);
             }
+            request.setAttribute("message", "Delete"
+                    + job_name
+                    + " successfully");
             request.getRequestDispatcher("/job?op=list").forward(request, response);
         }
     }

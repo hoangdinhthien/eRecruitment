@@ -36,8 +36,13 @@
             </c:if>
             <div class="result">
                 <h2>${message}</h2>
+                <c:if test="${mark != null}">
+                    Score : ${mark} <br/>
+                </c:if>
                 <a class="return-home-btn" href="<c:url value="/home?op=index"/>">
                     <button class=" btn btn-info">Return to home page</button>
+                <a class="return-home-btn" href="<c:url value="/user?op=info"/>">
+                    <button class=" btn btn-info">Return to Info page</button>
                 </a>
             </div>
         </div>

@@ -98,7 +98,7 @@
                         <input type="text" placeholder="Enter Job Skill"  style="width: 680px;" id="option1" required="true" name="job_skill1"/>
                         <input type="hidden" id="countInput" name="count" value="2"/>
                     </div>
-                    <input type="button" id="addButton" class="opbutton" value="Add More Job Skill" onclick="add(1)"  style="width: auto"/>
+                    <input type="button" id="addButton" class="opbutton" value="Add More Job Skill" onclick="add(i)"  style="width: auto"/>
                     <input type="button" id="removeButton"  value="Remove" onclick="remove(1)"  style="width: 12%" disabled="true"/>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Level:</span>
