@@ -235,7 +235,10 @@
                                     <ul>
                                         <li>
                                             <!--id="notification-link"-->
-                                            <a id="notification-link" >
+                                             <!--popup chưa xài được thì để id là--> 
+                                            <a id="notification_bell" 
+                                               href="<c:url value="/user?op=listNotification"/> "
+                                               >
                                                 <i class="fa fa-bell"></i>
                                             </a>
                                             <c:if test="${count!=0}">

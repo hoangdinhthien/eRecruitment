@@ -15,8 +15,11 @@
     </head>
     <body>
         <div class="container">
+            <p style="background-color: #99ff99">
+                ${message}
+            </p>
             <c:choose>
-                <c:when test="${not empty info && role == 'Admin' || role == 'HR Staff'}">
+                <c:when test="${role == 'Admin' || role == 'HR Staff' && not empty info}">
                     <c:if test="${listFeedback==null}">
                         <h2>Nothing at the moment!</h2>
                     </c:if>
@@ -34,16 +37,16 @@
                         <form action="<c:url value="/home"/>" >
                             <div class="feedback_item">
                                 <label>Feedback Subject:</label>
-                                <input  class="feedback_input" type="text" name="subject"  maxlength="150" size="35"/>
+                                <input  class="feedback_input" type="text" name="subject"  maxlength="150" size="35" required="true"/>
                             </div>
                             <div class="feedback_item">
                                 <label> Email:</label> 
-                                <input class="feedback_input" type="text" name="email" maxlength="60" value="${feedbackEmail}"  size="35"/>
+                                <input class="feedback_input" type="text" name="email" maxlength="60" value="${feedbackEmail}"  size="35" required="true"/>
                             </div>
                             <div class="feedback_item">
                                 <label>Detail:</label> 
                                 <textarea class="feedback_input" type="text" name="detail"  maxlength="1000"  placeholder="Enter message ..."></textarea>
-                                <input type="hidden" name="op" value="sendFeedback"/>
+                                <input type="hidden" name="op" value="sendFeedback" required="true"/>
                             </div>
                             <p>
                                 <input type="submit" class="btn btn-primary"/>

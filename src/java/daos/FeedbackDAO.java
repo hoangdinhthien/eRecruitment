@@ -71,4 +71,16 @@ public class FeedbackDAO {
         stm.executeUpdate();
         con.close();
     }
+
+    public int check() throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        Statement stm = con.createStatement();
+        ResultSet rs = stm.executeQuery("SELECT COUNT(id) AS count FROM [Feedback]");
+        int count = 0;
+        while (rs.next()) {
+            count = rs.getInt("count");
+        }
+        con.close();
+        return count;
+    }
 }
