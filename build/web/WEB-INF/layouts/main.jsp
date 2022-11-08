@@ -228,13 +228,16 @@
                                 <div class="header__cart">
                                     <ul>
                                         <li>
-                                            <a id="notification_link" >
+                                            <!--popup chưa xài được thì để id là--> 
+                                            <a id="notification_bell" 
+                                               href="<c:url value="/user?op=listNotification"/> "
+                                               >
                                                 <i class="fa fa-bell"></i>
                                             </a>
                                             <c:if test="${count != 0}">
                                                 <span id="notification_count">${count}</span>
                                             </c:if>
-                                            <div id="notification_container">
+<!--                                            <div id="notification_container">
                                                 <div id="notification_title">
                                                     Notifications
                                                 </div>
@@ -257,7 +260,7 @@
                                                 <div id="notification_footer">
                                                     <a href="<c:url value="/user?op=listNotification"/>">See All</a>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </li>
                                     </ul>
                                 </div>

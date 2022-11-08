@@ -26,13 +26,15 @@
             }
 
             .update-selection{
-                padding:  0 0 30px 0;
+                border-radius: 10px;
+                background-color: #E3E3E3;
+                margin:  20px;
+                padding: 20px;
             }
 
             .update-title{
-                text-align: left;
+                text-align: center;
                 display: block;
-                padding:  50px 0 5px 0 ;
             }
 
             .update-option{
@@ -47,59 +49,71 @@
                 margin: 0 auto;
                 padding-bottom: 30px;
             }
+
+            .update-exam{
+                border-radius: 10px;
+                background:  #C7C7C7;
+                padding: 25px 30px;
+            }   
         </style>
     </head>
     <body>
+        <h2>Update question</h2>
         <div class="container">
-            <h2>Update question</h2>
-            <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()" method="post">
-                <div class="update-question">
-                    <textarea type="text" placeholder="Question" name="question" cols="150" rows="10" style="resize: none;" required="true">${question.questiontxt}</textarea><br/>
+            <div class="update-exam">
+                <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()" method="post">
+                    <div class="update-question">
+                        <textarea type="text" placeholder="Question" name="question" cols="140" rows="10" style="resize: none;" required="true">${question.questiontxt}</textarea>
+                    </div>
                     <input type="hidden" name="q_id" value="${question.q_id}"/>
                     <select name="major">
                         <c:forEach var="major" items="${listMajor}">
                             <option value="${major.major_id}" <c:if test="${major.major_id == question.major_id}"> selected="selected" </c:if> >${major.major_name}</option>
                         </c:forEach>
                     </select>
-                </div>
 
-                <div class="update-selection">
-                    <table id = "main">
-                        <h4 class="update-title">Choose correct option:</h4>
-                        <tbody id = "main"></tbody>
-                        <c:set var="numOfOption" value="0"/>
-                        <c:forEach var="option" items="${listOption}">
-                            <c:set var="numOfOption" value="${numOfOption+1}"/>
-                            <!--<div class="update-option">-->
-                            <tr>
-                                <td class="text-center" >
-                                    <input type="radio" value="${numOfOption}"  name="correctOptions" required="true" <c:if test="${option.isCorrect}"> checked </c:if>/>
-                                    </td>
+                    <div class="update-selection">
+                        <table>
+                            <tbody id = "main">
+                            <h4 class="update-title">Choose correct option:</h4>
+                            <c:set var="numOfOption" value="0"/>
+                            <c:forEach var="option" items="${listOption}">
+                                <c:set var="numOfOption" value="${numOfOption+1}"/>
+                                <tr>
                                     <td class="text-center" >
-                                        <input type="text" placeholder="Option"  name="option${numOfOption}" value="${option.content}" required="true" /> 
-                                </td>
-                            </tr>   
-                            <!--</div>-->
-                        </c:forEach>
-                        </tbody>
-                    </table>
+                                        <input type="radio" value="${numOfOption}"  name="correctOptions" required="true" <c:if test="${option.isCorrect}"> checked </c:if>/>
+                                        </td>
+                                        <td class="text-center" >
+                                            <input type="text" placeholder="Enter Option"  name="option${numOfOption}" value="${option.content}" required="true" style="width:680px"/> 
+                                    </td>
+                                </tr>   
+                            </c:forEach>
+                            </tbody>
+                            <input type="hidden" id="countInput" name="count" value="2" class="update-btn btn btn-primary"/>
+                        </table>
+                        <div>
+                            <input type="button" id="addButton" value="Add" onclick="add(${numOfOption})" <c:if test="${numOfOption == 10}"> disabled="true"  </c:if> style="width: 12%"/>
+                            <input type="button" id="removeButton" value="Remove" onclick="remove(${numOfOption})" <c:if test="${numOfOption <= 2}"> disabled="true" </c:if>style="width: 12%"/>
+                            </div>
+                        </div>
+                        <div>
+                            <input type="hidden" name="op" value="UpdateHandler"/>
+                            <button type="submit" style="font-size: 15px" class="btn btn-primary" name="op" value="Update">Update</button>
+                        </div>
+                    </form>
+                    <br/>
+                    <div>
+                        <a href="<c:url value="/exam?op=QuestionBank"/>">
+                        <button class="btn">Cancel</button>
+                    </a>
                 </div>
-
-                <div class="update-btn">       
-                    <input type="hidden" id="countInput" name="count" value="2" class="update-btn btn btn-primary"/>
-                    <input type="button" id="addButton" value="Add" onclick="add(${numOfOption})" <c:if test="${numOfOption == 10}"> disabled="true" </c:if>/>
-                    <input type="button" id="removeButton" value="Remove" onclick="remove(${numOfOption})" <c:if test="${numOfOption <= 2}"> disabled="true" </c:if>/>
-                        <input type="hidden" name="op" value="UpdateHandler"/>
-                        <input type="submit" value="Update"/>
-                    </div>
-                </form>
-                        <a href="<c:url value="/exam?op=QuestionBank"/>"><button>Cancel</button></a>
             </div>
+        </div>
 
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-            <script src="<c:url value="/js/hoang.js"/>"></script> 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="<c:url value="/js/hoang.js"/>"></script> 
     </body>
 </html>

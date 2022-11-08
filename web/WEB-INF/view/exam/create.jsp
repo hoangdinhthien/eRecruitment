@@ -56,7 +56,7 @@
             <div class="create-exam">
                 <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()" method="post">
                     <div>
-                        <textarea type="text" placeholder="Enter Question" name="question" cols="150" rows="10" style="resize: none;" required="true"></textarea>
+                        <textarea type="text" placeholder="Enter Question" name="question" cols="140" rows="10" style="resize: none;" required="true"></textarea>
                     </div>
                     <select name="major">
                         <c:forEach var="major" items="${listMajor}">
@@ -92,7 +92,7 @@
                         </div>
                     </div>
                     <div >
-                        <button style="font-size: 20px" class="btn btn-primary" type="submit" name="op" value="Create">Create</button>
+                        <button style="font-size: 15px" class="btn btn-primary" type="submit" name="op" value="Create">Create</button>
                     </div>
                 </form>
                 <br/>
