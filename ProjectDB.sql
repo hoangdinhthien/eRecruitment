@@ -156,6 +156,7 @@ CREATE TABLE [Candidate]
 	[can_cv] NVARCHAR(200) NOT NULL,-- comment 
 	[score] FLOAT,
 	[isStatus] int DEFAULT (0) NOT NULL,
+	[apply] int DEFAULT (0) NOT NULL,
 	/*	Note: 
 		0 : HR hasn't accepted
 		1 : HR had accepted
