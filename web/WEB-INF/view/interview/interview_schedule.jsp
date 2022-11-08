@@ -21,7 +21,8 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <link rel="stylesheet" href="<c:url value='/css/thien.css'/>" type="text/css">
-        <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">-->
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
     <body>
         <div class="container">
@@ -81,20 +82,28 @@
 
                                         </div>
                                     </c:if> 
-                                    <button class="interview-table-content-btn" onclick="openForm(${loop.count})"
-                                            href="<c:url value="/cvs/${i.can_cv}"/>">View CV</button>
-                                    <div class="form-popup-cv form-container-cv" id="myBox${loop.count}">
-                                        <button type="button" class="btn cancel" onclick="closeForm(${loop.count})"
-                                                href="<c:url value="/cvs/${i.can_cv}"/>">Close</button>
-                                        <img src="<c:url value="/cvs/${i.can_cv}"/>" alt=""
-                                             style="    height: 90%; 
-                                             width: 90%; 
-                                             float: left;
-                                             object-fit: fill;
-                                             position: absolute;
-                                             bottom: 20px;
-                                             left: 45px"/>
+                                    <div class="interview-table-content-btn">
+                                        <a href="apply?op=downloadFile&fileName=${i.can_cv}">
+                                            <div >
+                                                <span class="fa fa-download">
+                                                    Download CV
+                                                </span>
+                                            </div>
+                                        </a>
                                     </div>
+<!--                                    <div class="form-popup-cv form-container-cv" id="myBox${loop.count}">
+            <button type="button" class="btn cancel" onclick="closeForm(${loop.count})"
+                    href="<c:url value="/cvs/${i.can_cv}"/>">Close</button>
+            <img src="<c:url value="/cvs/${i.can_cv}"/>" alt=""
+                 style="    height: 90%; 
+                 width: 90%; 
+                 float: left;
+                 object-fit: fill;
+                 position: absolute;
+                 bottom: 20px;
+                 left: 45px"/>
+        </div>
+                 <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>-->
                                 </div>
                                 <c:if test="${i.status=='Hasn\'t Interviewed'}">
                                     <div class="interview-record set-can" style="text-align: left;">
@@ -134,13 +143,6 @@
             </c:if>
         </div>
         <script>
-            function openForm(count) {
-                document.getElementById("myBox" + count).style.display = "block";
-            }
-
-            function closeForm(count) {
-                document.getElementById("myBox" + count).style.display = "none";
-            }
 
             // Get the modal
             var modal = document.getElementById("myModal");
@@ -163,7 +165,7 @@
 
 // When the user clicks anywhere outside of the modal, close it
             window.onclick = function (event) {
-                if (event.target == modal) {
+                if (event.target === modal) {
                     modal.style.display = "none";
                 }
             }

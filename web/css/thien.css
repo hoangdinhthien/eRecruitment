@@ -148,20 +148,26 @@ body {font-family: Arial, Helvetica, sans-serif;}
     margin-left: 0;
     padding-left:  0;
 }
+
 .interview-table-content-btn{
     position: absolute;
     bottom: 10px;
     right: 20px;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    padding: 13px 30px 12px;
+    font-size: 15px;
+
+}
+.interview-table-content-btn a:link,.interview-table-content-btn a:visited {
+    background-color: #66D7A7 ;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
     display: inline-block;
-    color: #ffffff;
-    border-radius: 5px;
-    border: none;
-    background: #66D7A7;
-    width: 150px;
+}
+
+/* Darker background on mouse-over */
+.interview-table-content-btn a:hover, .interview-table-content-btn a:active {
+    background-color: #04AA6D ;
 }
 
 .interview-record{
@@ -182,53 +188,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
     background: #66D7A7;
     border: none;
     border-radius: 5px;
-}
-
-/* The popup form - hidden by default */
-.form-popup-cv {
-    display: none;
-    position: absolute;
-    top: 40%;
-    right: -0.5%;
-    border: 3px solid #f1f1f1;
-    z-index: 100;
-}
-
-/* Add styles to the form container */
-.form-container-cv {
-    width: 800px;
-    height: 1000px;
-    padding: 10px;
-    background-color: white;
-}
-
-/* Set a style for the submit/login button */
-.form-container-cv .btn {
-    background-color: #04AA6D;
-    border: none;
-    cursor: pointer;
-    width: 150px;
-    opacity: 0.8;
-    position: absolute;
-    top: 3%;
-    right: 2.8%;
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    padding: 13px 30px 12px;
-    display: inline-block;
-    color: #ffffff;
-    border-radius: 5px;
-}
-
-/* Add a red background color to the cancel button */
-.form-container-cv .cancel {
-    background-color: red;
-}
-
-/* Add some hover effects to buttons */
-.form-container-cv .btn:hover{
-    opacity: 1;
 }
 
 

@@ -97,10 +97,10 @@
                                     </div>
                                 </div>
                                 <c:forEach var="can" items="${sublist}">
-                                    <input  name="cId" value="${can.id}"/>
+                                    <input type="hidden"  name="cId" value="${can.id}"/>
                                 </c:forEach>
-                                <input  name="major_id" value="${chosenMajor}"/>
-                                <input  name="page" value="${page}"/>
+                                <input type="hidden" name="major_id" value="${chosenMajor}"/>
+                                <input type="hidden" name="page" value="${page}"/>
                                 <button type="button" class="btn cancel" onclick="closeForm()" style="float: right">Close</button><br/>
                                 <button title="Set" type="submit" class="btn" name="op" value="set_schedule_handler">Set</button>
                             </form>

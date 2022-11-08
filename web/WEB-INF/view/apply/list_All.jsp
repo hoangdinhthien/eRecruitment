@@ -19,6 +19,24 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
+        <style>
+            tr a:link, tr a:visited {
+                color: #ffffff !important; 
+                background: #66D7A7; 
+                color: black;
+                border: 2px solid #66D7A7;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+            tr a:hover, tr a:active {
+                background-color: #66F1A1;
+                border: 2px solid #66F1A1;
+                color: white;
+            }
+        </style>
     <center>
         <h1>List All Applications</h1>
 
@@ -53,7 +71,7 @@
 
                 <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"> <i class="fa fa-search"></i></span>
-                    <input class="form-control me-2"  placeholder="Search Job" type="text" name="search" 
+                    <input class="form-control me-2"  placeholder="Search by Job" type="text" name="search" 
                            value="${search}"/>
                 </div>
                 <button class="btn btn-success" style=" color: #ffffff !important; border-color: #66D7A7;background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500"  
