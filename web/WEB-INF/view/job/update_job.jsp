@@ -93,11 +93,15 @@
                         <textarea placeholder="Enter Job Description" class="form-control" type="text" name="job_description" rows="1" cols="50">${job.job_description}</textarea>
                     </div>
                     <div  id = "main">
-                        <input type="text" placeholder="Enter Job Skill"  style="width: 680px;" id="option1" required="true" name="job_skill1" value="${job.job_skill}"/>
-                        <input type="hidden" id="countInput" name="count" value="${count}"/>
+                        <c:set var="numOfOption" value="0"/>
+                        <c:forEach var="sk" items="${skill}">
+                            <c:set var="numOfOption" value="${numOfOption+1}"/>
+                            <input type="text" placeholder="Enter Job Skill"  style="width: 680px;" id="option${numOfOption}" required="true" name="job_skill${numOfOption}" value="${sk}"/>
+                        </c:forEach>
                     </div>
-                    <input type="button" id="addButton" class="opbutton" value="Add More Job Skill" onclick="add(i)"  style="width: auto"/>
-                    <input type="button" id="removeButton"  value="Remove" onclick="remove(i)"  style="width: 12%" disabled="true"/>
+                    <input type="hidden" id="countInput" name="count" value="${numOfOption}"/>
+                    <input type="button" id="addButton" class="opbutton" value="Add More Job Skill" onclick="add(${numOfOption})"  style="width: auto"/>
+                    <input type="button" id="removeButton"  value="Remove" onclick="remove(${numOfOption})"  style="width: 12%" />
                     <div class="input-group mb-3">
                         <span class="input-group-text">Level:</span>
                         <select name="level_id" class="form-control">
@@ -139,7 +143,6 @@
                 row.appendChild(td1);
                 row.appendChild(td2);
                 main.appendChild(row);
-
                 var ad = "add(" + (i + 1) + ")";
                 var addButton = document.getElementById("addButton");
                 if (i === 9) {
@@ -180,4 +183,3 @@
         </script> 
     </body>
 </html>
-

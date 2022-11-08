@@ -244,7 +244,7 @@
                                             <c:if test="${count!=0}">
                                                 <span id="notification_count">${count}</span>
                                             </c:if>
-                                            <div id="notification_container">
+<!--                                            <div id="notification_container">
                                                 <div id="notification_title">
                                                     Notifications
                                                 </div>
@@ -267,7 +267,7 @@
                                                 <div id="notification_footer">
                                                     <a href="<c:url value="/user?op=listNotification"/>">See All</a>
                                                 </div>
-                                            </div>
+                                            </div>-->
 
                                         </li>
                                     </ul>

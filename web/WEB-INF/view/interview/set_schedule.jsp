@@ -24,7 +24,7 @@
         <div class="container">
             <form action="<c:url value="/interview"/>" style="float: left; width: 100%;text-align: left;">
                 <select name="major_id" title="Select">
-                    <option disabled="" selected="">Please choose a major</option>
+                    <option selected="">All</option>
                     <c:forEach var="major" items="${listOfMajor}">
                         <c:choose>
                             <c:when test="${not empty chosenMajor}">

@@ -57,7 +57,7 @@
         </style>
     </head>
     <body>
-         <h2>Update question</h2>
+        <h2>Update question</h2>
         <div class="container">
             <div class="update-exam">
                 <form action="<c:url value="/exam"/>" id="mainform" onsubmit="return validateForm()" method="post">

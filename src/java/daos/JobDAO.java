@@ -307,10 +307,10 @@ public class JobDAO {
     }
 
     public void update(String job_id, String job_skill) throws SQLException, ClassNotFoundException {
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Update [dbo].[Job_skill] set detail=? where job_id=?");
-        stm.setString(1, job_skill);
-        stm.setString(2, job_id);
+         Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("Insert into Job_skill(job_id,detail) values(?,?)");
+        stm.setString(1, job_id);
+        stm.setString(2, job_skill);
         stm.executeUpdate();
         con.close();
     }
@@ -351,7 +351,7 @@ public class JobDAO {
         con.close();
     }
 
-    public void deleteJobSkill(String job_id) throws ClassNotFoundException, SQLException {
+    public static void deleteJobSkill(String job_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("DELETE FROM [Job_skill] WHERE [job_id] = ? ");
         stm.setString(1, job_id);

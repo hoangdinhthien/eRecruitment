@@ -238,10 +238,12 @@ public class JobController extends HttpServlet {
             String job_id = request.getParameter("job_id");
             try {
                 JobDTO job = JobDAO.find_job_by_id(job_id);
+                List<String> skill = JobDAO.list_job_skill(job_id);
                 MajorDAO majorDao = new MajorDAO();
                 List<MajorDTO> listMajor = majorDao.listAll();
                 request.setAttribute("listMajor", listMajor);
                 request.setAttribute("job", job);
+                request.setAttribute("skill", skill);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
@@ -276,6 +278,7 @@ public class JobController extends HttpServlet {
             up_job.setSalary(salary);
             up_job.setPost_date(postDate);
             JobDAO.update_job(up_job);
+            JobDAO.deleteJobSkill(job_id);
             for (int i = 1; i <= count; i++) {
                 String job_skill = request.getParameter("job_skill" + i);
                 JobDAO dao = new JobDAO();
