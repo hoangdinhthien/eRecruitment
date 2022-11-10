@@ -116,13 +116,18 @@ public class ExamController extends HttpServlet {
     protected void questionBank(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            int paging = 0;
+            String page = request.getParameter("page");
+            if (page != null) {
+                paging = Integer.parseInt(page);
+            }
             String major = request.getParameter("major");
-            System.out.println(major);
             QuestionDAO qDao = new QuestionDAO();
             List<QuestionDTO> listQuestion = null;
             if (major != null) {
                 int id = Integer.parseInt(major);
                 listQuestion = qDao.listOneMajor(id);
+                request.setAttribute("viewMajor", id);
             } else {
                 listQuestion = qDao.listAll();
             }
@@ -130,6 +135,8 @@ public class ExamController extends HttpServlet {
             List<OptionDTO> listOption = opDao.listAll();
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
+            request.setAttribute("size", (listQuestion.size() - 1) / 20);
+            request.setAttribute("page", paging);
             request.setAttribute("action", "questionBank");
 
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
