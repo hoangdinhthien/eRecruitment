@@ -385,6 +385,7 @@ public class ExamController extends HttpServlet {
                             + "<a  href=\"http://localhost:8084/recruitment-system/job?op=list \" style=\"font-size: 20px; font-weight:bold;\"> Click here to see similar jobs. </a></br>"
                             + "<p>If this is not you please skip this message!</p>";
                     MailUtils.send(email, subject, body);
+                    eDao.deleteCanExam(canId);
                     cDao.delete(canId);
                 }
                 request.setAttribute("mark", mark);
