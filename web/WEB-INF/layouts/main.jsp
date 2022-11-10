@@ -221,10 +221,11 @@
                                         </li>
                                     </c:if>
                                     <c:if test="${not empty info && role == 'Member' || role == 'Candidate'}" >
-                                        <li><a href="<c:url value="/faq?op=index_faq"/>">FAQs</a></li>
+                                        <li><a class="link" href="<c:url value="/qa?op=index_qa"/>">Q&A</a></li>
                                         </c:if>
-
-
+                                    <!--Dont Merge-->
+                                    <li><a class="link" href="<c:url value="/qa?op=index_qa"/>">Q&A</a></li>
+                                    <!--Dont Merge-->
                                 </ul>
                             </nav>
                         </div>

@@ -20,16 +20,6 @@
             <h2>User profile</h2>
             <div class="container">
                 <div class="row">
-                    <!-- ben trai  -->
-<!--                    <div class="col-2">
-                        <figure>
-                            <img src="${info.picture}" class="user-img"/>
-                        </figure>
-
-                         user name 
-                        <h4>User name</h4>
-                    </div>-->
-
                     <!--ben phai-->
                     <div class="col-12">
                         <div class="user-content">
@@ -155,6 +145,6 @@
                 </c:choose>
             </table>
         </div>
-                            
+
     </body>
 </html>

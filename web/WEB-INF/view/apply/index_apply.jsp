@@ -22,7 +22,7 @@
     <body>
         <div class="container" style="text-align: left">
 
-            <form  action="<c:url value="/apply?op=uploadFile"/>" enctype="multipart/form-data" method="post">
+            <form  action="<c:url value="/apply?op=uploadFile&email=${info.email}"/>" enctype="multipart/form-data" method="post">
                 <input type="" value="${job_id}" name="job_id">
                 <input type="" value="${job_name}" name="job_name">
                 <input type="" value="${cv}" name="cv">

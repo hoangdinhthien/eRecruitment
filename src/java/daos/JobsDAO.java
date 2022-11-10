@@ -89,19 +89,14 @@ public class JobsDAO {
     public static List<JobsDTO> list_job() throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Select j.[job_id],j.[job_name],"
-                //                                + "c.[job_id],"
                 + "[major_id],[job_description],[level_id],[job_vacancy],[salary],[post_date]"
                 + " from [dbo].[Job] j"
-                //                                + " inner JOIN [Candidate] c ON j.[job_id] = c.[job_id]"
                 + " where [job_vacancy] > 0 order by [post_date] desc ");
         ResultSet rs = stm.executeQuery();
         List<JobsDTO> list = new ArrayList<>();
         while (rs.next()) {
             CandidateDTO can = new CandidateDTO();
             can.setJobId(rs.getString("job_id"));
-            
-            UserDTO us = new UserDTO();
-//            System.out.println("aaa" + rs.getString("job_id"));
             JobsDTO r = new JobsDTO();
             r.setJob_id(rs.getString("job_id"));
             r.setJob_name(rs.getString("job_name"));

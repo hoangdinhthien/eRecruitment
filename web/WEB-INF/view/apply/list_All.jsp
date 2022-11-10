@@ -20,8 +20,19 @@
     </head>
     <body>
     <center>
+        <c:if test="${not empty Reject}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Reject}!</strong>
+            </div>
+        </c:if>
+        <c:if test="${not empty Accept}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Accept}!</strong> 
+            </div>
+        </c:if>
         <h1>List All Applications</h1>
-
         <div class="pt-3 align-items-center justify-content-center d-flex">
             <!--===Filter===-->
             <nav class="header__menu" >
@@ -62,28 +73,14 @@
         <br>
         <nav class="header__menu">
             <ul>
-                <li><a href="<c:url value="apply?op=sortByCanASCAll"/>"> Sort by Can Id </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByCanASCAll">Can Id Ascending</a></li>
-                        <li><a href="apply?op=sortByCanDESCAll">Can Id Descending</a></li>
-                    </ul>
-                </li>
                 <li><a href="<c:url value="/apply?op=sortByScoreASCAll"/>"> Sort by Exam Score </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByScoreASCAll">Score Ascending</a></li>
                         <li><a href="apply?op=sortByScoreDESCAll">Score Descending</a></li>
                     </ul>
                 </li>
-                <li><a href="<c:url value="apply?op=sortByStatusASCAll"/>"> Sort by Status </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByStatusASCAll">Status Ascending</a></li>
-                        <li><a href="apply?op=sortByStatusDESCAll">Status Descending</a></li>
-                    </ul>
-                </li>
             </ul>
         </nav>
-
-
         <!--TABLE-->
         <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">      
             <c:choose>
@@ -94,47 +91,47 @@
                             <th>Email</th><th>File Upload</th>
                             <th>Exam Score</th>
                             <!--                    <th>Interview Score</th>-->
-                            <th>Status</th><th style="text-align: center">Operations</th>    
+                            <th>Status</th><th style="text-align: center">Operation</th>    
                         </tr>
                     </thead>
-                    <c:forEach var="can" items="${listAll}" varStatus="loop">
+                    <tbody>
+                        <c:forEach var="can" items="${listAll}" varStatus="loop">
 
-                        <tr>
-                            <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
-                            <td>${can.id}</td>
-                            <td>${can.jobname.job_name}</td>
-                            <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>"> ${can.email} </a></td>
-                            <td>${can.cv}</td>
-                            <td>${can.score}</td>
-                            <td><c:choose>
-                                    <c:when test="${can.isStatus==0}">
-                                        Hasn't Accepted
-                                    </c:when>
-                                    <c:when test="${can.isStatus==1}">
-                                        Accepted
-                                    </c:when>
-                                    <c:when test="${can.isStatus==2}">
-                                        Tested
-                                    </c:when>
-                                    <c:when test="${can.isStatus==3}">
-                                        Has Scheduled
-                                    </c:when>
-                                    <c:when test="${can.isStatus==4}">
-                                        Has Been Interviewed
-                                    </c:when>
-                                    <c:when test="${can.isStatus==5}">
-                                        Hired
-                                    </c:when>
-                                </c:choose>
-                            </td>
-                            <td style="text-align: center">
-                                <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>
-<!--                                <a href="apply?op=yesup&can_id=${can.id}">Accept</a> -->
-                                <!--<a href="apply?op=deleteFile&can_id=${can.id}">Reject</a>--> 
-                            </td>
-                        </tr>
+                            <tr>
+                                <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
+                                <td>${can.id}</td>
+                                <td>${can.jobname.job_name}</td>
+                                <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>"> ${can.email} </a></td>
+                                <td>${can.cv}</td>
+                                <td>${can.score}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${can.isStatus==0}">
+                                            Hasn't Accepted
+                                        </c:when>
+                                        <c:when test="${can.isStatus==1}">
+                                            Accepted
+                                        </c:when>
+                                        <c:when test="${can.isStatus==2}">
+                                            Tested
+                                        </c:when>
+                                        <c:when test="${can.isStatus==3}">
+                                            Has Scheduled
+                                        </c:when>
+                                        <c:when test="${can.isStatus==4}">
+                                            Has Been Interviewed
+                                        </c:when>
+                                        <c:when test="${can.isStatus==5}">
+                                            Hired
+                                        </c:when>
+                                    </c:choose>
+                                </td>
+                                <td style="text-align: center">
+                                    <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>
+                                </td>
+                            </tr>
 
-                    </c:forEach>
+                        </c:forEach>
 
                     </tbody>
                 </c:when>

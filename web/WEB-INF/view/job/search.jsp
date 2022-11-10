@@ -197,15 +197,35 @@
                                             <c:set var="check" value="0" />
                                         </c:when>
                                         <c:otherwise>
-                                            <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
-                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                               width: 100px" 
-                                               <c:choose>
-                                                   <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
-                                                   </c:when>
-                                                   <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
-                                               </c:choose>>Apply
-                                            </a>
+                                            <!--Check Accepted CV ?-->
+                                            <c:choose>
+                                                <c:when test="${not empty info && not empty checkApplied}" >
+                                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                       width: 100px" onclick="return confirm('Your CV had accepted. \nDo you want submit another CV on Job: ${job.job_name}?');"
+                                                       <c:choose>
+                                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
+                                                           </c:when>
+                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"
+                                                           </c:otherwise> 
+                                                       </c:choose>>Apply
+                                                    </a>
+                                                    <c:set var="check" value="0" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                       width: 100px" 
+                                                       <c:choose>
+                                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
+                                                           </c:when>
+                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"
+                                                           </c:otherwise> 
+                                                       </c:choose>>Apply
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <!--Check Accepted CV ?-->
                                         </c:otherwise>
                                     </c:choose>
                                     <!--Validate Applied - Apply-->
@@ -248,17 +268,33 @@
                                         </p>
                                         <p style="text-align: right;">
                                             <!--Validate Applied - Apply-->
-                                            <c:forEach var="app" items="${listApplied}">
-                                                <c:if  test="${app.jobId == job.job_id }">
-                                                    <c:set var="check" value="1" />
-                                                </c:if>
-                                            </c:forEach>
+                                    <c:forEach var="app" items="${listApplied}">
+                                        <c:if  test="${app.jobId == job.job_id }">
+                                            <c:set var="check" value="1" />
+                                        </c:if>
+                                    </c:forEach>
+                                    <c:choose>
+                                        <c:when test="${check == 1}">
+                                            <a class="btn btn-success disabled" style="color: #ffffff !important; border-color: #66D7A7;
+                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                               width: 100px" >
+                                                Applied
+                                            </a>
+                                            <c:set var="check" value="0" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <!--Check Accepted CV ?-->
                                             <c:choose>
-                                                <c:when test="${check == 1}">
-                                                    <a class="btn btn-success disabled" style="color: #ffffff !important; border-color: #66D7A7;
+                                                <c:when test="${not empty info && not empty checkApplied}" >
+                                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
                                                        background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                                       width: 100px" >
-                                                        Applied
+                                                       width: 100px" onclick="return confirm('Your CV had accepted. \nDo you want submit another CV on Job: ${job.job_name}?');"
+                                                       <c:choose>
+                                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
+                                                           </c:when>
+                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"
+                                                           </c:otherwise> 
+                                                       </c:choose>>Apply
                                                     </a>
                                                     <c:set var="check" value="0" />
                                                 </c:when>
@@ -269,12 +305,16 @@
                                                        <c:choose>
                                                            <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
                                                            </c:when>
-                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
+                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"
+                                                           </c:otherwise> 
                                                        </c:choose>>Apply
                                                     </a>
                                                 </c:otherwise>
                                             </c:choose>
-                                            <!--Validate Applied - Apply-->
+                                            <!--Check Accepted CV ?-->
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <!--Validate Applied - Apply-->
                                         </p>
                                     </div>
                                 </div>

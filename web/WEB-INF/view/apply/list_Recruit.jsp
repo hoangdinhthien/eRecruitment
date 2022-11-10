@@ -17,12 +17,21 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-
     </head>
     <body>
-        <br><br><br><br>
     <center>
+        <c:if test="${not empty Reject}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Reject}!</strong>
+            </div>
+        </c:if>
+        <c:if test="${not empty Accept}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Accept}!</strong> 
+            </div>
+        </c:if>
         <h1>List Recruitment</h1> <br>
         <nav class="header__menu">
             <ul>
@@ -67,12 +76,8 @@
                                 <td>${can.cv}</td>
                                 <td>${can.score}</td>
                                 <td>${can.interid.score}</td>
-                                <!--                                <td><c:choose>
-                                    <c:when test="${can.isStatus==5}">
-                                        Hired
-                                    </c:when></c:choose></td>-->
-                                    <td style="text-align: center">
-                                        <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
+                                <td style="text-align: center">
+                                    <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
                                     <a href="apply?op=yesupRecruit&can_id=${can.id}">Accept</a> |
                                     <a href="apply?op=rejectFileRecruit&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}">Reject</a>
                                 </td>

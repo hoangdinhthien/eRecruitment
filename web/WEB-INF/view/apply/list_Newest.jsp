@@ -9,6 +9,18 @@
     </head>
     <body>
     <center>
+        <c:if test="${not empty Reject}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Reject}!</strong>
+            </div>
+        </c:if>
+        <c:if test="${not empty Accept}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Accept}!</strong> 
+            </div>
+        </c:if>
         <h1>Newest Applications</h1> <br>
         <c:choose>
             <c:when test="${not empty list0  }">
@@ -23,7 +35,7 @@
                             </li>
                         </ul>
                     </nav>
-                   
+
                     <thead>
                         <tr>
                             <th>No.</th><th>Can_id</th><th>Job Name</th>
@@ -41,15 +53,15 @@
                             <td>${can.jobname.job_name}</td>
                             <td>${can.email}</td>
                             <td>${can.cv}</td>
-<!--                            <td><c:choose>
-                                    <c:when test="${can.isStatus==0}">
-                                        Hasn't Accepted
-                                    </c:when>
-                                </c:choose></td>-->
+                            <!--                            <td><c:choose>
+                                <c:when test="${can.isStatus==0}">
+                                    Hasn't Accepted
+                                </c:when>
+                            </c:choose></td>-->
                             <td style="text-align: center">
                                 <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
                                 <a href="apply?op=yesupNewest&can_id=${can.id}&email=${can.email}">Accept</a> |
-                                <a href="apply?op=deleteFile&can_id=${can.id}&email=${can.email}">Reject</a> 
+                                <a href="apply?op=deleteFile&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}&stand=Newest">Reject</a> 
                             </td>
                         </tr>
                     </c:forEach>

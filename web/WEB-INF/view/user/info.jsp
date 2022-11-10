@@ -102,14 +102,14 @@
                                 <td>
                                     <!--Score-->
                                     <c:choose>
-                                        <c:when test="${can.isStatus <2}">
+                                        <c:when test="${can.isStatus <2 || can.isStatus ==6}">
                                             Not Available
                                         </c:when>
-                                        <c:when test="${can.score!= null}">
+                                        <c:when test="${can.score!= null && can.isStatus >= 2 && can.isStatus <6}">
                                             ${can.score}
                                         </c:when>
                                         <c:otherwise>
-                                            Not
+                                            Error Value
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -119,7 +119,7 @@
                                         <td>
                                             <!--Failed-->
                                             <c:choose>
-                                                <c:when test="${can.isStatus==0}">
+                                                <c:when test="${can.isStatus==0 || can.isStatus==6}">
                                                     Hasn't Accepted
                                                 </c:when>
                                                 <c:when test="${can.isStatus==1}">
@@ -137,6 +137,9 @@
                                                 <c:when test="${can.isStatus==5}">
                                                     Hired
                                                 </c:when>
+                                                <c:otherwise>
+                                                    Error Value
+                                                </c:otherwise>
                                             </c:choose>
                                         </td>
                                     </c:when>
@@ -144,7 +147,7 @@
                                         <td>
                                             <!--Passed-->
                                             <c:choose>
-                                                <c:when test="${can.isStatus==0}">
+                                                <c:when test="${can.isStatus==0 || can.isStatus==6}">
                                                     Hasn't Accepted
                                                 </c:when>
                                                 <c:when test="${can.isStatus==1}">
@@ -169,28 +172,32 @@
                                 <td>
                                     <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>
                                     <c:choose>
-                                        <c:when test="${can.apply==0 || can.apply==1 && can.isStatus==0}">
+                                        <c:when test="${can.isStatus==6 || can.isStatus==0}">
                                             <!--Xóa những CV dự phòng (Standby=1) hoặc chưa đc Accepted--> 
                                             <c:choose>
                                                 <c:when test="${can.score < 4}" >
-                                                    | <a href="apply?op=deleteFile&can_id=${can.id}"
+                                                    | <a href="apply?op=deleteFile&can_id=${can.id}&stand=info"
                                                          onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ?')">Delete</a>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    | <a href="apply?op=deleteFile&can_id=${can.id}"
+                                                    | <a href="apply?op=deleteFile&can_id=${can.id}&stand=info"
                                                          onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} ')">Delete</a>
                                                 </c:otherwise>
                                             </c:choose>
                                         </c:when>
-                                        <c:when test="${can.apply==1}">
-                                            <!--Xóa CV chính (Standby=1) : đã được Accepted trở lên, isStatus2345-->
+                                        <c:when test="${can.isStatus >0 && can.isStatus < 6}">
+                                            <!--Xóa CV chính : đã được Accepted trở lên, isStatus2345-->
                                             <c:choose>
-                                                <c:when test="${can.score < 4}" >
-                                                    | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                <c:when test="${can.score == null}" >
+                                                    | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}&stand=info"
                                                          onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ?')">Delete</a>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <c:choose>
+                                                        <c:when test="${can.isStatus == 1}">
+                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nStage [1/5]: Accepted')">Delete</a>
+                                                        </c:when>
                                                         <c:when test="${can.isStatus == 2}">
                                                             | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
                                                                  onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [2/5]: Tested')">Delete</a>

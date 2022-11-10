@@ -207,11 +207,11 @@ public class CandidateDAO {
         return list;
     }
 
-    public static CandidateDTO searchCandidateById(String id) throws ClassNotFoundException, SQLException {
+    public static CandidateDTO searchCandidateById(String can_id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT c.can_id, j.major_id, c.email, c.can_cv, u.[name] FROM [dbo].[Candidate] c JOIN [dbo].[Job] j "
                 + " on j.[job_id] = c.[job_id] JOIN [dbo].[User] u on c.[email] = u.[email] WHERE c.[can_id]=?");
-        stm.setString(1, id);
+        stm.setString(1, can_id);
         ResultSet rs = stm.executeQuery();
         CandidateDTO c = new CandidateDTO();
         if (rs.next()) {
@@ -285,7 +285,7 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.[isStatus] =0 AND c.[apply] =0");
+                    + "where c.[isStatus] =0 ");
             list = new ArrayList<>();
             while (rs.next()) {
                 JobsDTO j = new JobsDTO();
@@ -658,45 +658,6 @@ public class CandidateDAO {
         return list;
     }
 
-    // SORT JOB_ID Inprocess
-//    public List<CandidateDTO> sortByJobASCInprocess() throws SQLException, ClassNotFoundException {
-//        List<CandidateDTO> list = null;
-//        Connection con = DBUtils.makeConnection();
-//        Statement stm = con.createStatement();
-//        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by job_id, can_id  ASC");
-//        list = new ArrayList<>();
-//        while (rs.next()) {
-//            CandidateDTO c = new CandidateDTO();
-//            c.setId(rs.getString("can_id"));
-//            c.setJobId(rs.getString("job_id"));
-//            c.setEmail(rs.getString("email"));
-//            c.setCv(rs.getString("can_cv"));
-//            c.setScore(rs.getInt("score"));
-//            c.setIsStatus(rs.getInt("isStatus"));
-//            list.add(c);
-//        }
-//        con.close();
-//        return list;
-//    }
-//    public List<CandidateDTO> sortByJobDESCInprocess() throws SQLException, ClassNotFoundException {
-//        List<CandidateDTO> list = null;
-//        Connection con = DBUtils.makeConnection();
-//        Statement stm = con.createStatement();
-//        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus > 0 and isStatus < 5 order by job_id DESC , can_id ASC");
-//        list = new ArrayList<>();
-//        while (rs.next()) {
-//            CandidateDTO c = new CandidateDTO();
-//            c.setId(rs.getString("can_id"));
-//            c.setJobId(rs.getString("job_id"));
-//            c.setEmail(rs.getString("email"));
-//            c.setCv(rs.getString("can_cv"));
-//            c.setScore(rs.getInt("score"));
-//            c.setIsStatus(rs.getInt("isStatus"));
-//            list.add(c);
-//        }
-//        con.close();
-//        return list;
-//    }
     // SORT SCORE Inprocess
     public List<CandidateDTO> sortByScoreASCInprocess() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
@@ -838,45 +799,6 @@ public class CandidateDAO {
         return list;
     }
 
-    // SORT JOB_ID RECRUIT
-//    public List<CandidateDTO> sortByJobASCRecruit() throws SQLException, ClassNotFoundException {
-//        List<CandidateDTO> list = null;
-//        Connection con = DBUtils.makeConnection();
-//        Statement stm = con.createStatement();
-//        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by job_id, can_id  ASC");
-//        list = new ArrayList<>();
-//        while (rs.next()) {
-//            CandidateDTO c = new CandidateDTO();
-//            c.setId(rs.getString("can_id"));
-//            c.setJobId(rs.getString("job_id"));
-//            c.setEmail(rs.getString("email"));
-//            c.setCv(rs.getString("can_cv"));
-//            c.setScore(rs.getInt("score"));
-//            c.setIsStatus(rs.getInt("isStatus"));
-//            list.add(c);
-//        }
-//        con.close();
-//        return list;
-//    }
-//    public List<CandidateDTO> sortByJobDESCRecruit() throws SQLException, ClassNotFoundException {
-//        List<CandidateDTO> list = null;
-//        Connection con = DBUtils.makeConnection();
-//        Statement stm = con.createStatement();
-//        ResultSet rs = stm.executeQuery("select can_id,job_id,email,can_cv,score,isStatus from [Candidate] where isStatus = 4 order by job_id DESC , can_id ASC");
-//        list = new ArrayList<>();
-//        while (rs.next()) {
-//            CandidateDTO c = new CandidateDTO();
-//            c.setId(rs.getString("can_id"));
-//            c.setJobId(rs.getString("job_id"));
-//            c.setEmail(rs.getString("email"));
-//            c.setCv(rs.getString("can_cv"));
-//            c.setScore(rs.getInt("score"));
-//            c.setIsStatus(rs.getInt("isStatus"));
-//            list.add(c);
-//        }
-//        con.close();
-//        return list;
-//    }
     // SORT CAN_ID RECRUIT
     public List<CandidateDTO> sortByCanASCRecruit() throws SQLException, ClassNotFoundException {
         List<CandidateDTO> list = null;
@@ -983,29 +905,6 @@ public class CandidateDAO {
         return list;
     }
 
-    /*
-    public static List<CandidateDTO> search_can(String job_name) throws ClassNotFoundException, SQLException {
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select * from [dbo].[Job] where job_name like ? order by [post_date] desc");
-        stm.setString(1, "%" + job_name + "%");
-        ResultSet rs = stm.executeQuery();
-        List<CandidateDTO> list = new ArrayList<>();
-        while (rs.next()) {
-            CandidateDTO r = new CandidateDTO();
-            r.setJob_id(rs.getString("job_id"));
-            r.setJob_name(rs.getString("job_name"));
-            r.setMajor_id(rs.getInt("major_id"));
-            r.setJob_vacancy(rs.getInt("job_vacancy"));
-            r.setJob_description(rs.getString("job_description"));
-            r.setLevel_id(rs.getInt("level_id"));
-            r.setSalary(rs.getInt("salary"));
-            r.setPost_date(rs.getDate("post_date"));
-            list.add(r);
-        }
-        con.close();
-        return list;
-    }
-     */
     // Custom
     public static void deleteCanResult(String email) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
@@ -1116,20 +1015,19 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement(
                 "UPDATE [Candidate] "
-                + "SET [isStatus] = 0 , [apply] = 1 "
+                + "SET [isStatus] = 6 "
                 + "WHERE [email] = ? ; "
                 //===
                 + "UPDATE [Candidate] "
-                + "SET [isStatus] = 1 , [apply] = 1 "
-                + "WHERE [email] = ? AND [can_id]= ? ; "
-        //===
+                + "SET [isStatus] = 1  "
+                + "WHERE [can_id]= ? ; "
+        //===Role: Member => Candidate
         //                + "UPDATE [User] SET role_id = 4"
         //                + " WHERE email = ? "
         );
         stm.setString(1, email);
-        stm.setString(2, email);
-        stm.setString(3, can_id);
-//        stm.setString(4, email);
+        stm.setString(2, can_id);
+//        stm.setString(3, email);
         stm.executeUpdate();
         con.close();
     }
@@ -1142,6 +1040,24 @@ public class CandidateDAO {
         stm.setString(2, email);
         stm.executeUpdate();
         con.close();
+    }
+
+    public List<CandidateDTO> checkExistAccept(String email) throws SQLException, ClassNotFoundException {
+        List<CandidateDTO> list = null;
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement(
+                " SELECT [can_id] FROM Candidate "
+                + "WHERE [isStatus] < 6 AND [isStatus] > 0 AND [email]=?");
+        stm.setString(1, email);
+        ResultSet rs = stm.executeQuery();
+        list = new ArrayList<>();
+        if (rs.next()) {
+            CandidateDTO can = new CandidateDTO();
+            can.setId(rs.getString("can_id"));
+            list.add(can);
+        }
+        con.close();
+        return list;
     }
 
     //Delete
@@ -1171,7 +1087,7 @@ public class CandidateDAO {
                 + "WHERE [can_id] = ? ;"
                 //===
                 + " UPDATE [Candidate] "
-                + " SET  [apply] = 0 "
+                + " SET  [isStatus] = 0 "
                 + " WHERE [email] = ? ; "
         );
         stm.setString(1, can_id);
@@ -1192,7 +1108,7 @@ public class CandidateDAO {
                 + "WHERE [can_id] = ?;"
                 //===
                 + " UPDATE [Candidate] "
-                + " SET  [apply] = 0 "
+                + " SET  [isStatus] = 0 "
                 + " WHERE [email] = ? ; "
         );
         stm.setString(1, can_id);
@@ -1200,24 +1116,6 @@ public class CandidateDAO {
         stm.setString(3, email);
         stm.executeUpdate();
         System.out.println("Deleted(1): " + can_id);
-        con.close();
-    }
-
-    public void rejectFileNewest(String can_id, String email) throws SQLException, ClassNotFoundException {
-        Connection con = DBUtils.makeConnection();
-        System.out.println("Connection done [Delete]");
-        PreparedStatement stm = con.prepareStatement(
-                "DELETE FROM [Candidate] "
-                + "WHERE [can_id] = ? ;"
-                //===
-                + " UPDATE [Candidate] "
-                + " SET  [apply] = 1 "
-                + " WHERE [email] = ? ; "
-        );
-        stm.setString(1, can_id);
-        stm.setString(2, email);
-        stm.executeUpdate();
-        System.out.println("Deleted(Newest): " + can_id);
         con.close();
     }
 

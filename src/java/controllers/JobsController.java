@@ -49,6 +49,8 @@ public class JobsController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding("utf-8");
         try {
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
@@ -105,10 +107,14 @@ public class JobsController extends HttpServlet {
             List<JobsDTO> list = JobsDAO.list_job();
             MajorDAO majorDao = new MajorDAO();
             List<MajorDTO> listMajor = majorDao.listAll();
+            // Validate Applied
             CandidateDAO can = new CandidateDAO();
             List<CandidateDTO> listApplied = can.listCandidateByEmail(email);
-            request.setAttribute("listMajor", listMajor);
             request.setAttribute("listApplied", listApplied);
+            // Check Applied
+            List<CandidateDTO> checkApplied = can.checkExistAccept(email);
+            request.setAttribute("checkApplied", checkApplied);
+            request.setAttribute("listMajor", listMajor);
             request.setAttribute("list", list);
             request.setAttribute("action", "search");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
