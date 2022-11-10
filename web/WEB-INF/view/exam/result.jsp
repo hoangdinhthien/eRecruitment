@@ -30,6 +30,7 @@
             <c:if test="${testInfo!=null}">
                 <h3>Test name: ${testInfo.exam_id}</h3>
                 <h5>Candidate ID: ${canId} | Major: <c:forEach items="${listMajor}" var="major"><c:if test="${major.major_id==testInfo.major_id}">${major.major_name}</c:if></c:forEach></h5><br/>
+                <p>Warning: You need to score at least 4.0 to be interviewed. Otherwise, this application will be rejected.</p>
                 <a href="<c:url value="/exam?op=takeExam&canId=${canId}"/>">
                     <button class=" btn btn-info">Atemp exam</button>
                 </a>
