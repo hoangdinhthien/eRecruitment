@@ -375,3 +375,453 @@ CREATE TABLE [Report_list]
 	[email] NVARCHAR(60) FOREIGN KEY REFERENCES dbo.[User] NOT NULL,
 	[r_id] int FOREIGN KEY REFERENCES dbo.[Report] NOT NULL,
 )
+
+
+-- Data
+
+USE [eRecruitment]
+GO
+/****** Object:  Table [dbo].[Candidate]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Candidate](
+	[can_id] [char](4) NOT NULL,
+	[job_id] [char](4) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+	[can_cv] [nvarchar](200) NOT NULL,
+	[score] [float] NULL,
+	[isStatus] [int] NOT NULL,
+	[apply] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[can_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[job_id] ASC,
+	[email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Candidate_skill]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Candidate_skill](
+	[can_id] [char](4) NOT NULL,
+	[skill_id] [int] NOT NULL,
+UNIQUE NONCLUSTERED 
+(
+	[can_id] ASC,
+	[skill_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Exam]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Exam](
+	[exam_id] [char](3) NOT NULL,
+	[exam_name] [nvarchar](30) NOT NULL,
+	[major_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[exam_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[exam_name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Exam_question]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Exam_question](
+	[exam_id] [char](3) NOT NULL,
+	[q_id] [char](4) NOT NULL,
+UNIQUE NONCLUSTERED 
+(
+	[exam_id] ASC,
+	[q_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Examination]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Examination](
+	[exam_id] [char](3) NOT NULL,
+	[can_id] [char](4) NOT NULL,
+	[status] [bit] NOT NULL,
+UNIQUE NONCLUSTERED 
+(
+	[exam_id] ASC,
+	[can_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Feedback]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Feedback](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+	[subject] [nvarchar](150) NOT NULL,
+	[detail] [nvarchar](400) NOT NULL,
+	[date] [date] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Interviewer]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Interviewer](
+	[inter_id] [char](3) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+	[major_id] [int] NOT NULL,
+	[isAvailable] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[inter_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Interviewing]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Interviewing](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[inter_id] [char](3) NOT NULL,
+	[can_id] [char](4) NOT NULL,
+	[date] [datetime] NOT NULL,
+	[location] [nvarchar](100) NOT NULL,
+	[inter_score] [int] NULL,
+	[inter_comment] [text] NULL,
+	[isStatus] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[inter_id] ASC,
+	[can_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Job]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Job](
+	[job_id] [char](4) NOT NULL,
+	[job_name] [nvarchar](50) NOT NULL,
+	[major_id] [int] NOT NULL,
+	[job_vacancy] [int] NOT NULL,
+	[job_description] [text] NULL,
+	[level_id] [int] NOT NULL,
+	[salary] [float] NOT NULL,
+	[post_date] [date] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[job_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Job_skill]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Job_skill](
+	[skill_id] [int] IDENTITY(1,1) NOT NULL,
+	[job_id] [char](4) NOT NULL,
+	[detail] [nvarchar](200) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[skill_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[job_id] ASC,
+	[skill_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Notification]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Notification](
+	[nId] [int] IDENTITY(1,1) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+	[title] [nvarchar](100) NOT NULL,
+	[content] [text] NOT NULL,
+	[link_title] [nvarchar](100) NULL,
+	[link] [nvarchar](200) NULL,
+	[date] [datetime] NOT NULL,
+	[isRead] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[nId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Option]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Option](
+	[op_id] [int] IDENTITY(1,1) NOT NULL,
+	[q_id] [char](4) NOT NULL,
+	[content] [text] NOT NULL,
+	[isCorrect] [bit] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[op_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Q&A_answer]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Q&A_answer](
+	[aId] [char](5) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+	[qId] [char](4) NOT NULL,
+	[detail] [text] NOT NULL,
+	[datetime] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[aId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Q&A_question]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Q&A_question](
+	[qId] [char](4) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+	[detail] [text] NOT NULL,
+	[datetime] [datetime] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[qId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Question]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Question](
+	[q_id] [char](4) NOT NULL,
+	[questiontxt] [text] NOT NULL,
+	[major_id] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[q_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Report]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Report](
+	[r_id] [int] IDENTITY(1,1) NOT NULL,
+	[reason] [nvarchar](100) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[r_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Report_list]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Report_list](
+	[Q&A_id] [char](5) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+	[r_id] [int] NOT NULL
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Saved_job]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Saved_job](
+	[job_id] [char](4) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+UNIQUE NONCLUSTERED 
+(
+	[job_id] ASC,
+	[email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[User]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[User](
+	[email] [nvarchar](60) NOT NULL,
+	[name] [nvarchar](60) NOT NULL,
+	[role_id] [int] NOT NULL,
+	[phone] [varchar](11) NULL,
+	[address] [nvarchar](200) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[User_cv]    Script Date: 11/11/2022 1:38:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[User_cv](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[email] [nvarchar](60) NOT NULL,
+	[can_cv] [nvarchar](200) NOT NULL,
+	[date] [date] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Candidate] ADD  DEFAULT ((0)) FOR [isStatus]
+GO
+ALTER TABLE [dbo].[Candidate] ADD  DEFAULT ((0)) FOR [apply]
+GO
+ALTER TABLE [dbo].[Examination] ADD  DEFAULT ((0)) FOR [status]
+GO
+ALTER TABLE [dbo].[Interviewer] ADD  DEFAULT ((0)) FOR [isAvailable]
+GO
+ALTER TABLE [dbo].[Interviewing] ADD  DEFAULT ((0)) FOR [isStatus]
+GO
+ALTER TABLE [dbo].[Notification] ADD  DEFAULT ((0)) FOR [isRead]
+GO
+ALTER TABLE [dbo].[Option] ADD  DEFAULT ((0)) FOR [isCorrect]
+GO
+ALTER TABLE [dbo].[User] ADD  DEFAULT ((5)) FOR [role_id]
+GO
+ALTER TABLE [dbo].[Candidate]  WITH CHECK ADD FOREIGN KEY([email])
+REFERENCES [dbo].[User] ([email])
+GO
+ALTER TABLE [dbo].[Candidate]  WITH CHECK ADD FOREIGN KEY([job_id])
+REFERENCES [dbo].[Job] ([job_id])
+GO
+ALTER TABLE [dbo].[Candidate_skill]  WITH CHECK ADD FOREIGN KEY([can_id])
+REFERENCES [dbo].[Candidate] ([can_id])
+GO
+ALTER TABLE [dbo].[Candidate_skill]  WITH CHECK ADD FOREIGN KEY([skill_id])
+REFERENCES [dbo].[Job_skill] ([skill_id])
+GO
+ALTER TABLE [dbo].[Exam]  WITH CHECK ADD FOREIGN KEY([major_id])
+REFERENCES [dbo].[Major] ([major_id])
+GO
+ALTER TABLE [dbo].[Exam_question]  WITH CHECK ADD FOREIGN KEY([exam_id])
+REFERENCES [dbo].[Exam] ([exam_id])
+GO
+ALTER TABLE [dbo].[Exam_question]  WITH CHECK ADD FOREIGN KEY([q_id])
+REFERENCES [dbo].[Question] ([q_id])
+GO
+ALTER TABLE [dbo].[Examination]  WITH CHECK ADD FOREIGN KEY([can_id])
+REFERENCES [dbo].[Candidate] ([can_id])
+GO
+ALTER TABLE [dbo].[Examination]  WITH CHECK ADD FOREIGN KEY([exam_id])
+REFERENCES [dbo].[Exam] ([exam_id])
+GO
+ALTER TABLE [dbo].[Interviewer]  WITH CHECK ADD FOREIGN KEY([email])
+REFERENCES [dbo].[User] ([email])
+GO
+ALTER TABLE [dbo].[Interviewer]  WITH CHECK ADD FOREIGN KEY([major_id])
+REFERENCES [dbo].[Major] ([major_id])
+GO
+ALTER TABLE [dbo].[Interviewing]  WITH CHECK ADD FOREIGN KEY([can_id])
+REFERENCES [dbo].[Candidate] ([can_id])
+GO
+ALTER TABLE [dbo].[Interviewing]  WITH CHECK ADD FOREIGN KEY([inter_id])
+REFERENCES [dbo].[Interviewer] ([inter_id])
+GO
+ALTER TABLE [dbo].[Job]  WITH CHECK ADD FOREIGN KEY([level_id])
+REFERENCES [dbo].[Level] ([level_id])
+GO
+ALTER TABLE [dbo].[Job]  WITH CHECK ADD FOREIGN KEY([major_id])
+REFERENCES [dbo].[Major] ([major_id])
+GO
+ALTER TABLE [dbo].[Job_skill]  WITH CHECK ADD FOREIGN KEY([job_id])
+REFERENCES [dbo].[Job] ([job_id])
+GO
+ALTER TABLE [dbo].[Notification]  WITH CHECK ADD FOREIGN KEY([email])
+REFERENCES [dbo].[User] ([email])
+GO
+ALTER TABLE [dbo].[Option]  WITH CHECK ADD FOREIGN KEY([q_id])
+REFERENCES [dbo].[Question] ([q_id])
+GO
+ALTER TABLE [dbo].[Q&A_answer]  WITH CHECK ADD FOREIGN KEY([email])
+REFERENCES [dbo].[User] ([email])
+GO
+ALTER TABLE [dbo].[Q&A_answer]  WITH CHECK ADD FOREIGN KEY([qId])
+REFERENCES [dbo].[Q&A_question] ([qId])
+GO
+ALTER TABLE [dbo].[Q&A_question]  WITH CHECK ADD FOREIGN KEY([email])
+REFERENCES [dbo].[User] ([email])
+GO
+ALTER TABLE [dbo].[Question]  WITH CHECK ADD FOREIGN KEY([major_id])
+REFERENCES [dbo].[Major] ([major_id])
+GO
+ALTER TABLE [dbo].[Report_list]  WITH CHECK ADD FOREIGN KEY([email])
+REFERENCES [dbo].[User] ([email])
+GO
+ALTER TABLE [dbo].[Report_list]  WITH CHECK ADD FOREIGN KEY([r_id])
+REFERENCES [dbo].[Report] ([r_id])
+GO
+ALTER TABLE [dbo].[Saved_job]  WITH CHECK ADD FOREIGN KEY([email])
+REFERENCES [dbo].[User] ([email])
+GO
+ALTER TABLE [dbo].[Saved_job]  WITH CHECK ADD FOREIGN KEY([job_id])
+REFERENCES [dbo].[Job] ([job_id])
+GO
+ALTER TABLE [dbo].[User]  WITH CHECK ADD FOREIGN KEY([role_id])
+REFERENCES [dbo].[Role] ([role_id])
+GO
+ALTER TABLE [dbo].[User_cv]  WITH CHECK ADD FOREIGN KEY([email])
+REFERENCES [dbo].[User] ([email])
+GO
