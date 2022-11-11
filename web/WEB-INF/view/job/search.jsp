@@ -201,6 +201,7 @@
                                         <!--Validate Applied - Apply-->
                                     </p>
                                 </div>
+<<<<<<< HEAD
                             </div>
 
 
@@ -314,6 +315,197 @@
                             </div>
                         </div>
                     </c:if>
+=======
+                                <p style="text-align: left;">
+                                    Description: ${job.job_description} <br/>
+                                </p>
+                                <div style="text-align: left; width: 100%">
+                                    <p style="display: inline-block; margin-right: 30px">
+                                        Level ID: ${job.level_id} <br/>
+                                    </p>
+                                    <p style="display: inline-block;">
+                                        Salary: ${job.salary}$ <br/>
+                                    </p>
+                                </div>
+                                <p style="text-align: left;">
+                                    Post Date: ${job.post_date} <br/>
+                                </p>
+                                <p style="text-align: right;">
+                                    <!--Validate Applied - Apply-->
+                                    <c:forEach var="app" items="${listApplied}">
+                                        <c:if  test="${app.jobId == job.job_id }">
+                                            <c:set var="check" value="1" />
+                                        </c:if>
+                                    </c:forEach>
+                                    <c:choose>
+                                        <c:when test="${check == 1}">
+                                            <a class="btn btn-success disabled" style="color: #ffffff !important; border-color: #66D7A7;
+                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                               width: 100px" >
+                                                Applied
+                                            </a>
+                                            <c:set var="check" value="0" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <!--Check Accepted CV ?-->
+                                            <c:choose>
+                                                <c:when test="${not empty info && not empty checkApplied}" >
+                                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                       width: 100px" onclick="return confirm('Your CV had accepted. \nDo you want submit another CV on Job: ${job.job_name}?');"
+                                                       <c:choose>
+                                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
+                                                           </c:when>
+                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"
+                                                           </c:otherwise> 
+                                                       </c:choose>>Apply
+                                                    </a>
+                                                    <c:set var="check" value="0" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                       width: 100px" 
+                                                       <c:choose>
+                                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
+                                                           </c:when>
+                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"
+                                                           </c:otherwise> 
+                                                       </c:choose>>Apply
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <!--Check Accepted CV ?-->
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <!--Validate Applied - Apply-->
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6"  style="position: relative">
+                            <c:if test="${loop.count != list.size()}">
+                                <div class="form-popup form-container" id="view_job_detail${loop.count}">
+                                    <div>
+                                        <h3 style="text-align: center; color: black">
+                                            Job Name: ${job.job_name}
+                                        </h3> <br/>
+                                        <div style="text-align: left; width: 100%;">
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Job ID: ${job.job_id} 
+                                            </p>    
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Major ID: ${job.major_id} 
+                                            </p>    
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Vacancy: ${job.job_vacancy} 
+                                            </p>
+                                        </div>
+                                        <p style="text-align: left; color: black">
+                                            Description: ${job.job_description} <br/>
+                                        </p>
+                                        <div style="text-align: left; width: 100%;">
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Level ID: ${job.level_id} <br/>
+                                            </p>
+                                            <p style="display: inline-block; color: black">
+                                                Salary: ${job.salary}$ <br/>
+                                            </p>
+                                        </div>
+                                        <p style="text-align: left;color: black">
+                                            Post Date: ${job.post_date} <br/>
+                                        </p>
+                                        <p style="text-align: right;">
+                                            <!--Validate Applied - Apply-->
+                                    <c:forEach var="app" items="${listApplied}">
+                                        <c:if  test="${app.jobId == job.job_id }">
+                                            <c:set var="check" value="1" />
+                                        </c:if>
+                                    </c:forEach>
+                                    <c:choose>
+                                        <c:when test="${check == 1}">
+                                            <a class="btn btn-success disabled" style="color: #ffffff !important; border-color: #66D7A7;
+                                               background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                               width: 100px" >
+                                                Applied
+                                            </a>
+                                            <c:set var="check" value="0" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <!--Check Accepted CV ?-->
+                                            <c:choose>
+                                                <c:when test="${not empty info && not empty checkApplied}" >
+                                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                       width: 100px" onclick="return confirm('Your CV had accepted. \nDo you want submit another CV on Job: ${job.job_name}?');"
+                                                       <c:choose>
+                                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
+                                                           </c:when>
+                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"
+                                                           </c:otherwise> 
+                                                       </c:choose>>Apply
+                                                    </a>
+                                                    <c:set var="check" value="0" />
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
+                                                       background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
+                                                       width: 100px" 
+                                                       <c:choose>
+                                                           <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
+                                                           </c:when>
+                                                           <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"
+                                                           </c:otherwise> 
+                                                       </c:choose>>Apply
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <!--Check Accepted CV ?-->
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <!--Validate Applied - Apply-->
+                                        </p>
+                                    </div>
+                                </div>
+                            </c:if>
+                            <c:if test="${loop.count == list.size()}">
+                                <div title="lastDiv" class="form-popup form-container" id="view_job_detail${loop.count}" style="background-color: white; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;">
+                                    <div>
+                                        <h3 style="text-align: center; color: black">
+                                            Job Name: ${job.job_name}
+                                        </h3> <br/>
+                                        <div style="text-align: left; width: 100%;">
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Job ID: ${job.job_id} 
+                                            </p>    
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Major ID: ${job.major_id} 
+                                            </p>    
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Vacancy: ${job.job_vacancy} 
+                                            </p>
+                                        </div>
+                                        <p style="text-align: left; color: black">
+                                            Description: ${job.job_description} <br/>
+                                        </p>
+                                        <div style="text-align: left; width: 100%;">
+                                            <p style="display: inline-block; margin-right: 30px; color: black">
+                                                Level ID: ${job.level_id} <br/>
+                                            </p>
+                                            <p style="display: inline-block; color: black">
+                                                Salary: ${job.salary}$ <br/>
+                                            </p>
+                                        </div>
+                                        <p style="text-align: left;color: black">
+                                            Post Date: ${job.post_date} <br/>
+                                        </p>
+                                    </div>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+>>>>>>> origin/Duy
                 </c:forEach>
             </c:if>
         </div>

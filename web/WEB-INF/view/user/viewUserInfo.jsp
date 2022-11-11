@@ -20,31 +20,6 @@
             <h2>User profile</h2>
             <div class="container">
                 <div class="row">
-                    <!-- ben trai  -->
-<!--<<<<<<< HEAD-->
-                    <!--<div class="col-2">-->
-<!--=======-->
-<!--                    <div class="col-2">
->>>>>>> origin/Duy
-                        <figure>
-                            <img src="${info.picture}" class="user-img"/>
-                        </figure>
-
-<<<<<<< HEAD
-                        <!-- user name -->
-                        <!--<h4>User name</h4>-->
-                    <!--</div>-->
-
-                    <!--ben phai-->
-                    <!--<div class="col-10">-->
-<!--=======-->
-                         <!--user name--> 
-                        <h4>User name</h4>
-                    </div>-->
-
-                    <!--ben phai-->
-                    <div class="col-12">
-<!-->>>>>>> origin/Duy-->
                         <div class="user-content">
                             <h5 class="user-content-item">
                                 Email: ${user.email}

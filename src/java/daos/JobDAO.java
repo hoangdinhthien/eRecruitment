@@ -101,6 +101,8 @@ public class JobDAO {
         ResultSet rs = stm.executeQuery();
         List<JobDTO> list = new ArrayList<>();
         while (rs.next()) {
+            CandidateDTO can = new CandidateDTO();
+            can.setJobId(rs.getString("job_id"));
             JobDTO r = new JobDTO();
             r.setJob_id(rs.getString("job_id"));
             r.setJob_name(rs.getString("job_name"));

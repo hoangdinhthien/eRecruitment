@@ -29,21 +29,21 @@
     </head>
     <body>
     <center>
+        <c:if test="${not empty Reject}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Reject}!</strong>
+            </div>
+        </c:if>
+        <c:if test="${not empty Accept}">
+            <div class="alert alert-success alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                <strong>${Accept}!</strong> 
+            </div>
+        </c:if>
         <h1>Inprocess Applications</h1> <br>
         <nav class="header__menu">
             <ul>
-                <li><a href="<c:url value="apply?op=sortByCanASCInprocess"/>"> Sort by Can Id </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByCanASCInprocess">Can Id Ascending</a></li>
-                        <li><a href="apply?op=sortByCanDESCInprocess">Can Id Descending</a></li>
-                    </ul>
-                </li>
-                <li><a href="<c:url value="/apply?op=sortByScoreASCInprocess"/>"> Sort by Exam Score </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByScoreASCInprocess">Score Ascending</a></li>
-                        <li><a href="apply?op=sortByScoreDESCInprocess">Score Descending</a></li>
-                    </ul>
-                </li>
                 <li><a href="<c:url value="apply?op=sortByStatusASCInprocess"/>"> Sort by Status </a>
                     <ul class="header__menu__dropdown">
                         <li><a href="apply?op=sortByStatusASCInprocess">Status Ascending</a></li>
@@ -73,8 +73,20 @@
                             <td>${can.jobname.job_name}</td>
                             <td>${can.email}</td>
                             <td>${can.cv}</td>
-                            <td>${can.score}</td>
-                            <!--<td>${ing.score}</td>-->
+                            <td>
+                                <!--Score-->
+                                <c:choose>
+                                    <c:when test="${can.score != null && can.isStatus >= 2 && can.isStatus <5}">
+                                        ${can.score}
+                                    </c:when>
+                                    <c:when test="${can.isStatus == 1}">
+                                        Not Available 
+                                    </c:when>
+                                    <c:otherwise>
+                                        Error Value
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                             <td><c:choose>
                                     <c:when test="${can.isStatus==1}">
                                         Accepted

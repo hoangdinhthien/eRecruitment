@@ -50,6 +50,8 @@ public class UserController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         session = request.getSession();
+        request.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding("utf-8");
         if (session.getAttribute("info") != null) {
             request.setAttribute("controller", "user");
             response.setContentType("text/html;charset=UTF-8");

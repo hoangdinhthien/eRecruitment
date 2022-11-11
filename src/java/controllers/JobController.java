@@ -6,6 +6,7 @@
 package controllers;
 
 import config.Config;
+import daos.CandidateDAO;
 import daos.JobDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
@@ -48,6 +49,8 @@ public class JobController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("utf-8");
+        response.setCharacterEncoding("utf-8");
         try {
             HttpSession session = request.getSession();
             GoogleDTO google = (GoogleDTO) session.getAttribute("info");
@@ -99,28 +102,27 @@ public class JobController extends HttpServlet {
     protected void list_job(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            try {
-                List<JobDTO> list = JobDAO.list_job();
-                for (JobDTO c : list) {
-                    List<String> obj = JobDAO.list_job_skill(c.getJob_id());
-                    String connec = "";
-                    for (String find : obj) {
-                        connec = connec + "   " + find;
-                    }
-                    c.setJob_skill(connec);
-                }
-                request.setAttribute("list", list);
-                MajorDAO majorDao = new MajorDAO();
-                List<MajorDTO> listMajor = majorDao.listAll();
-                request.setAttribute("listMajor", listMajor);
-                request.setAttribute("action", "search");
-                request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (SQLException ex) {
-                Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        String email = request.getParameter("email");
+        try {
+            List<JobDTO> list = JobDAO.list_job();
+            MajorDAO majorDao = new MajorDAO();
+            List<MajorDTO> listMajor = majorDao.listAll();
+            // Validate Applied
+            CandidateDAO can = new CandidateDAO();
+            List<CandidateDTO> listApplied = can.listCandidateByEmail(email);
+            request.setAttribute("listApplied", listApplied);
+            // Check Applied
+            List<CandidateDTO> checkApplied = can.checkExistAccept(email);
+            request.setAttribute("checkApplied", checkApplied);
+            request.setAttribute("listMajor", listMajor);
+            request.setAttribute("list", list);
+            request.setAttribute("action", "search");
+            request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
+
         }
     }
 
