@@ -114,7 +114,7 @@
                     <div class="input-group mb-3">
                         <a href="add_job.jsp"></a>
                         <span class="input-group-text">Salary($):</span>
-                        <input placeholder="Enter Job Salary" class="form-control" type="number" name="salary" min="0" required="true"/>
+                        <input placeholder="Enter Job Salary" class="form-control" type="number" name="salary" min="1" required="true"/>
                     </div>
                     <button class="btn btn-primary" type="submit" name="op" value="add_job_handler">ADD</button>
                 </form>

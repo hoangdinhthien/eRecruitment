@@ -115,7 +115,7 @@
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text">Salary($):</span>
-                            <input placeholder="Enter Job Salary" class="form-control" type="number" name="salary" min="0" value="${job.salary}"/>
+                            <input placeholder="Enter Job Salary" class="form-control" type="number" name="salary" min="1" value="${job.salary}"/>
                     </div>
                     <button class="btn btn-primary" type="submit" name="op" value="update_job_handler">Change</button>
                 </form>

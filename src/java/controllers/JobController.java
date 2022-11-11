@@ -319,6 +319,7 @@ public class JobController extends HttpServlet {
                 MajorDAO majorDao = new MajorDAO();
                 List<MajorDTO> listMajor = majorDao.listAll();
                 request.setAttribute("listMajor", listMajor);
+                JobDAO.deleteJobResult(job_id);
                 JobDAO.delete_job(job_id);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
