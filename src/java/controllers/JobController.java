@@ -18,7 +18,6 @@ import dtos.NotificationDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -102,14 +101,31 @@ public class JobController extends HttpServlet {
     protected void list_job(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String email = request.getParameter("email");
+        HttpSession session = request.getSession();
+        GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+        String email = null;
+        if (google != null) {
+            email = google.getEmail();
+        }
         try {
             List<JobDTO> list = JobDAO.list_job();
+            for (JobDTO c : list) {
+                    List<String> obj = JobDAO.list_job_skill(c.getJob_id());
+                    String connec = "";
+                    for (String find : obj) {
+                        connec = connec + "   " + find;
+                    }
+                    c.setJob_skill(connec);
+                }
             MajorDAO majorDao = new MajorDAO();
             List<MajorDTO> listMajor = majorDao.listAll();
             // Validate Applied
             CandidateDAO can = new CandidateDAO();
             List<CandidateDTO> listApplied = can.listCandidateByEmail(email);
+            System.out.println(email);
+            for (CandidateDTO c : listApplied) {
+                System.out.println(c.getCv());
+            }
             request.setAttribute("listApplied", listApplied);
             // Check Applied
             List<CandidateDTO> checkApplied = can.checkExistAccept(email);

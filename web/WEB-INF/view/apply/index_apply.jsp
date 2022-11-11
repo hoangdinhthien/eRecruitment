@@ -27,13 +27,10 @@
     <body>
         <div class="container" style="text-align: left">
 
-            <form  action="<c:url value="/apply?op=uploadFile"/>" enctype="multipart/form-data" method="post">
-                <input type="hidden" value="${job_id}" name="job_id">
-                <input type="hidden" value="" name="cv" id="choosenFile">
             <form  action="<c:url value="/apply?op=uploadFile&email=${info.email}"/>" enctype="multipart/form-data" method="post">
                 <input type="hidden" value="${job_id}" name="job_id">
                 <input type="hidden" value="${job_name}" name="job_name">
-                <input type="hidden" value="${cv}" name="cv">
+                <input type="hidden" value="${cv}" name="cv" id="choosenFile">
                 <p>Select Your CV:</p>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" title="choose">
                     Choose a CV in the past.

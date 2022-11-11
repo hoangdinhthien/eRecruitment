@@ -166,7 +166,7 @@ public class CandidateDAO {
 
     public List<CandidateDTO> listCandidateByEmail(String email) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [Candidate]"
+        PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [dbo].[Candidate]"
                 + "WHERE [email]= ?");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();

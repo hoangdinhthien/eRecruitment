@@ -97,10 +97,10 @@
                                                         <img src="${info.picture}" alt="Not Found" class="avatar" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                                                         <ul>
                                                             <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/user?op=info"/>">Info</a>
+                                                                <a class="link" href="<c:url value="/user?op=info"/>" style="text-align: center">Info</a>
                                                             </li>
                                                             <li style="list-style-type:none">
-                                                                <a class="link" href="<c:url value="/login?op=logout"/>">Logout</a>
+                                                                <a class="link" href="<c:url value="/login?op=logout"/>" style="text-align: center">Logout</a>
                                                             </li>
                                                         </ul>
                                                     </li>
@@ -201,7 +201,7 @@
                             <nav class="header__menu">
                                 <ul>
                                     <li class="${empty list?'active':'link'}"><a href="<c:url value='/home?op=index'/>">Home</a></li>
-                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
+                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list&email=${info.email}"/>">Jobs</a></li>
 
                                     <c:if test="${not empty info}" >
                                         <c:if test="${ role == 'Interviewer' || role == 'HR Staff'|| role == 'Admin'}" >

@@ -16,14 +16,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
-                    <div class="login-content">
-                        <h5>
-                            Join a dynamic team of 3HTD professionals at
-                            one of the world’s leading providers of Audit,
-                            Tax and Advisory services.
-                        </h5>
-                    </div>
                     <c:if test="${empty info}">
+                        <div class="login-content">
+                            <h5>
+                                Join a dynamic team of 3HTD professionals at
+                                one of the world’s leading providers of Audit,
+                                Tax and Advisory services.
+                            </h5>
+                        </div>
 
                         <div class="row">
                             <div class="col login">

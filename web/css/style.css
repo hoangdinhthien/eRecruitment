@@ -4141,3 +4141,28 @@ ol {
     margin-bottom: 16px;
     resize: vertical;
 }
+
+
+
+.notification_item{
+    display: block;
+}
+
+.noti_markAll_delete, a{
+    text-align: right;
+    text-decoration: none;
+    color: black;
+}
+
+.noti_markAll_delete, a:hover{
+    color:blue;
+}
+
+.noti_content{
+    text-align: left;
+}
+
+.noti_content_link:hover{
+    color: blue;
+    text-align: left;
+}

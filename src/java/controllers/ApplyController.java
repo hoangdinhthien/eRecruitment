@@ -412,15 +412,17 @@ public class ApplyController extends HttpServlet {
                 } else {
                     if (fileItem.getSize() > 0) {
                         fileName = fileItem.getName();
-                        fileItem.write(new File(getServletContext().getRealPath("/cvs/").replace('\\', '/')+ fileName));
+                        fileItem.write(new File(getServletContext().getRealPath("/cvs/").replace('\\', '/') + fileName));
                     } else {
 //                        fileName = UserDAO.getCandidateCv(google.getEmail());;
-                        fileName = cv;
+
                     }
                 }
             }
 //===============================
-
+            if (!cv.isEmpty()) {
+                fileName = cv;
+            }
             if (google != null) {
                 System.out.println(fileName);
                 if (UserCvDAO.searchCv(google.getEmail(), fileName).isEmpty()) {
@@ -435,7 +437,7 @@ public class ApplyController extends HttpServlet {
                     //DB
                     con = DBUtils.makeConnection();
                     String sql = "insert into candidate(can_id,job_id,email,can_cv,isStatus) "
-                            + "values(?,?,?,?,?,?)";
+                            + "values(?,?,?,?,?)";
                     ps = con.prepareStatement(sql);
                     ps.setString(1, can_id);
                     //1 email - 1 job_id
@@ -462,8 +464,8 @@ public class ApplyController extends HttpServlet {
                         session.setAttribute("fileName", fileName);
                         String msg = null;
                         msg = "Your aplliction to <strong>"
-                            + JobDAO.search_update_job(job_id).getJob_name()
-                            + "</strong> sucessfully! Please wait for the next notification." ;
+                                + JobDAO.search_update_job(job_id).getJob_name()
+                                + "</strong> sucessfully! Please wait for the next notification.";
                         request.setAttribute("msg", msg);
                         List<JobDTO> list = JobDAO.list_job();
                         request.setAttribute("controller", "job");
@@ -482,7 +484,7 @@ public class ApplyController extends HttpServlet {
                     System.out.println("Exception1: " + ex);
                     String msgFailed = "You has applied to <strong>"
                             + JobDAO.search_update_job(job_id).getJob_name()
-                            + "</strong> before!" ;
+                            + "</strong> before!";
                     request.setAttribute("msgFailed", msgFailed);
                     List<JobDTO> list = JobDAO.list_job();
                     request.setAttribute("controller", "job");
@@ -732,22 +734,22 @@ public class ApplyController extends HttpServlet {
             System.out.println("status :" + cd.getIsStatus());
             List<CandidateDTO> list0 = CandidateDAO.hrstatus0();
             //=== Notification + Send Email
-//            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
-//            String to = can.getEmail();
-//            String subject = "3HTD: Your Resume has been accepted";
-//            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
-//                    + "<p>We thank you for applying for the job: <strong>" + job_name + " </strong> of 3HTD.</p>"
-//                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
-//                    + "You have completed the first stage in the recruitment of our company."
-//                    + "<p>This includes <strong> Posting A CV, Taking A Test, Going To An Interview, and Waiting To Receive A Notification Of Matriculation. </strong> </p>"
-//                    + "<p>Have a nice day and don't forget to check your email regularly! We look forward to the opportunity to meet you.</p><br/>"
-//                    + "<p>We look forward to you becoming our member.</p>"
-//                    + "<p>Sincerely</p>"
-//                    + "<p>3HTD</p>";
-//            MailUtils.send(to, subject, body);
-//            NotificationDAO.add(to, "Accepted Resume",
-//                    "<p>Your Resume already accepted.</p>",
-//                    null, null);
+            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            String to = can.getEmail();
+            String subject = "3HTD: Your Resume has been accepted";
+            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                    + "<p>We thank you for applying for the job: <strong>" + job_name + " </strong> of 3HTD.</p>"
+                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+                    + "You have completed the first stage in the recruitment of our company."
+                    + "<p>This includes <strong> Posting A CV, Taking A Test, Going To An Interview, and Waiting To Receive A Notification Of Matriculation. </strong> </p>"
+                    + "<p>Have a nice day and don't forget to check your email regularly! We look forward to the opportunity to meet you.</p><br/>"
+                    + "<p>We look forward to you becoming our member.</p>"
+                    + "<p>Sincerely</p>"
+                    + "<p>3HTD</p>";
+            MailUtils.send(to, subject, body);
+            NotificationDAO.add(to, "Accepted Resume",
+                    "<p>Your Resume already accepted.</p>",
+                    null, null);
             //Cho hiện lại danh sách 
             String Accept = can_id + " have been Accept";
             request.setAttribute("Accept", Accept); //Notify ở list_Newest
