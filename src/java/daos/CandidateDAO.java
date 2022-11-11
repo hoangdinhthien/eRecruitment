@@ -332,12 +332,12 @@ public class CandidateDAO {
         return list;
     }
 
-    public List<CandidateDTO> hrstatus2() throws ClassNotFoundException, SQLException {
+    public static List<CandidateDTO> hrstatus2() throws ClassNotFoundException, SQLException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,c.can_cv,c.score, c.isStatus,j.major_id from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
                     + "where c.isStatus =2");
             list = new ArrayList<>();
@@ -350,6 +350,7 @@ public class CandidateDAO {
                 float score = rs.getInt(5);
                 int isStatus = rs.getInt(6);
                 CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+                join.setMajorId(rs.getByte("major_id"));
                 list.add(join);
             }
             con.close();
