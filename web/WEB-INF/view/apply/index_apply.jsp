@@ -104,6 +104,7 @@
                     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
                 });
             });
+            document.getElementById('submitbutton').disabled = true;
             function validateFileType() {
                 var fileName = document.getElementById("customFile").value;
                 var idxDot = fileName.lastIndexOf(".") + 1;
