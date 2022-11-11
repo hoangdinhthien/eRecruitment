@@ -333,7 +333,7 @@ CREATE TABLE [Feedback]
 	[detail] NVARCHAR(400) NOT NULL,
 	[date] date not null
 )
-
+GO
 CREATE TABLE [Q&A_question]
 (
 	[qId] char(4) PRIMARY KEY NOT NULL,--Q000
@@ -341,7 +341,7 @@ CREATE TABLE [Q&A_question]
 	[detail] text NOT NULL,
 	[datetime] datetime NOT NULL,
 )
-
+GO
 CREATE TABLE [Q&A_answer]
 (
 	[aId] char(5) PRIMARY KEY NOT NULL,--A0000
@@ -350,13 +350,13 @@ CREATE TABLE [Q&A_answer]
 	[detail] text NOT NULL,
 	[datetime] datetime NOT NULL,
 )
-
+GO
 CREATE TABLE [Report]
 (
 	[r_id] int IDENTITY(1,1) PRIMARY KEY NOT NULL,
 	[reason] NVARCHAR(100) NOT NULL,
 )
-
+GO
 INSERT INTO [Report] ([reason])
 VALUES
 ('Unwanted commercial content or spam'),
@@ -376,7 +376,7 @@ CREATE TABLE [Report_list]
 	[r_id] int FOREIGN KEY REFERENCES dbo.[Report] NOT NULL,
 )
 
-
+GO
 -- Data
 
 USE [eRecruitment]
