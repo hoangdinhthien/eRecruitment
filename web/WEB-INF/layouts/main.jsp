@@ -228,18 +228,17 @@
                             </nav>
                         </div>
                         <c:if test="${not empty info}">
+
                             <div class="col-lg-3">
                                 <div class="header__cart">
                                     <ul>
                                         <li>
-                                            <!--id="notification-link"-->
-                                             <!--popup chưa xài được thì để id là--> 
                                             <a id="notification_bell" 
                                                href="<c:url value="/user?op=listNotification"/> "
                                                >
                                                 <i class="fa fa-bell"></i>
                                             </a>
-                                            <c:if test="${count!=0}">
+                                            <c:if test="${count != 0}">
                                                 <span id="notification_count">${count}</span>
                                             </c:if>
 <!--                                            <div id="notification_container">
@@ -266,7 +265,6 @@
                                                     <a href="<c:url value="/user?op=listNotification"/>">See All</a>
                                                 </div>
                                             </div>-->
-
                                         </li>
                                     </ul>
                                 </div>

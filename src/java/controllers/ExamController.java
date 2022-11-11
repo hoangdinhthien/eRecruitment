@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import utils.MailUtils;
 
 /**
  *
@@ -115,13 +116,18 @@ public class ExamController extends HttpServlet {
     protected void questionBank(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            int paging = 0;
+            String page = request.getParameter("page");
+            if (page != null) {
+                paging = Integer.parseInt(page);
+            }
             String major = request.getParameter("major");
-            System.out.println(major);
             QuestionDAO qDao = new QuestionDAO();
             List<QuestionDTO> listQuestion = null;
             if (major != null) {
                 int id = Integer.parseInt(major);
                 listQuestion = qDao.listOneMajor(id);
+                request.setAttribute("viewMajor", id);
             } else {
                 listQuestion = qDao.listAll();
             }
@@ -129,6 +135,8 @@ public class ExamController extends HttpServlet {
             List<OptionDTO> listOption = opDao.listAll();
             request.setAttribute("listQuestion", listQuestion);
             request.setAttribute("listOption", listOption);
+            request.setAttribute("size", (listQuestion.size() - 1) / 20);
+            request.setAttribute("page", paging);
             request.setAttribute("action", "questionBank");
 
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
@@ -366,7 +374,27 @@ public class ExamController extends HttpServlet {
                 System.out.println(correct + " " + count + " " + ((correct / count)));
                 double mark = (double) ((correct / count) * 10);
                 System.out.println("Mark : " + mark);
-                cDao.result(mark, canId);
+                if (mark >= 4) {
+                    cDao.result(mark, canId);
+                } else {
+                    String email = cDao.getEmailByCanId(canId);
+                    NotificationDAO nDao = new NotificationDAO();
+                    nDao.add(email, "Aplication " + canId + " has been rejected",
+                            "Thank you for apply to this jobs. "
+                            + "Unfortunally, you exam score isn't satisfy the job's condition. "
+                            + "Therefore this application has been reject. ",
+                            "Click here to see similar jobs.",
+                            "/job?op=list");
+                    String subject = "3HTD: Aplication " + canId + " has been rejected";
+                    String body = "<p>Thank you for apply to this jobs. "
+                            + "Unfortunally, you exam score isn't satisfy the job's condition. "
+                            + "Therefore this application has been reject. </p></br>"
+                            + "<a  href=\"http://localhost:8084/recruitment-system/job?op=list \" style=\"font-size: 20px; font-weight:bold;\"> Click here to see similar jobs. </a></br>"
+                            + "<p>If this is not you please skip this message!</p>";
+                    MailUtils.send(email, subject, body);
+                    eDao.deleteCanExam(canId);
+                    cDao.delete(canId);
+                }
                 request.setAttribute("mark", mark);
                 request.setAttribute("message", "You have finish the exam. ");
             } else {
@@ -374,6 +402,8 @@ public class ExamController extends HttpServlet {
             }
             request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);
         } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

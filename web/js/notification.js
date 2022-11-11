@@ -31,8 +31,15 @@ $(document).ready(function ()
         });
     }
 
+    for (i = 1; i <= 5; i++) {
+        $("#notification_content-" + i).click(function () {
+            a_href = $(this).attr('href');
+            window.location.href = a_href;
+        });
+    }
+    
 //    popup chưa xài được nên xài cái này
-    $("#notification_bell").click(function () {
+     $("#notification_bell").click(function () {
         window.location.href = '/recruitment-system/user?op=listNotification';
     });
 });

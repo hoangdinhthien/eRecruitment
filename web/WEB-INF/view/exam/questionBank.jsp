@@ -56,6 +56,32 @@
                 padding: 20px;
 
             }
+            .center {
+                text-align: center;
+            }
+
+            .pagination {
+                display: inline-block;
+            }
+
+            .pagination a {
+                color: black;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+                transition: background-color .3s;
+                border: 1px solid #ddd;
+                margin: 0 4px;
+            }
+
+            .pagination a.active {
+                background-color: #4CAF50;
+                color: white;
+                border: 1px solid #4CAF50;
+            }
+
+            .pagination a:hover:not(.active) {background-color: #ddd;}
+
         </style>
     </head>
     <body>
@@ -121,10 +147,11 @@
         </div>
         <div class="container">
             <div class="list-question">
-                <c:forEach items="${listQuestion}" var="question" varStatus="loop">
+                <c:set var="No" value="${20*page+1}"/>
+                <c:forEach items="${listQuestion}" var="question" begin="${20*page}" end="${(page+1)*20-1}">
                     <li style="border: 1px solid blue; padding: 10px; margin: 25px 0; background: #C2C1C5;" >
-                        <span class="question-title">${loop.count}. Question : ${question.questiontxt} </span>
-
+                        <span class="question-title">${No}. Question : ${question.questiontxt} </span>
+                        <c:set var="No" value="${No+1}"/>
                         <span class="question-major">
                             Major : 
                             <c:forEach var="major" items="${listMajor}">
@@ -153,6 +180,36 @@
                         </div>
                     </li>
                 </c:forEach>
+            </div>
+        </div>
+        <div class="center">
+            <div class="pagination">
+                <c:choose>
+                    <c:when test="${viewMajor!=null}">
+                        <c:if test="${page!=0 && page!=1}">
+                            <a href="<c:url value="/exam?op=QuestionBank&major=${viewMajor}&page=${page-1}"/>">&laquo;</a>
+                        </c:if>
+                        <c:if test="${page==1}">
+                            <a href="<c:url value="/exam?op=QuestionBank&major=${viewMajor}"/>">&laquo;</a>
+                        </c:if>
+                        <a  class="active">${page+1}</a>
+                        <c:if test="${page!=size}">
+                            <a href="<c:url value="/exam?op=QuestionBank&major=${viewMajor}&page=${page+1}"/>">&raquo;</a>
+                        </c:if>
+                    </c:when>
+                    <c:otherwise>
+                        <c:if test="${page!=0 && page!=1}">
+                            <a href="<c:url value="/exam?op=QuestionBank&page=${page-1}"/>">&laquo;</a>
+                        </c:if>
+                        <c:if test="${page==1}">
+                            <a href="<c:url value="/exam?op=QuestionBank"/>">&laquo;</a>
+                        </c:if>
+                        <a  class="active">${page+1}</a>
+                        <c:if test="${page!=size}">
+                            <a href="<c:url value="/exam?op=QuestionBank&page=${page+1}"/>">&raquo;</a>
+                        </c:if>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </body>
