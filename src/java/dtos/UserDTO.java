@@ -22,13 +22,13 @@ public class UserDTO {
     private String phone;
     private String address;
     private String can_cv;
-    private JobsDTO userjobid;
+    private JobDTO userjobid;
 
-    public JobsDTO getUserjobid() {
+    public JobDTO getUserjobid() {
         return userjobid;
     }
 
-    public void setUserjobid(JobsDTO userjobid) {
+    public void setUserjobid(JobDTO userjobid) {
         this.userjobid = userjobid;
     }
 

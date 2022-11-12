@@ -7,6 +7,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
          pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,55 +16,103 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+        <!--<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>-->
+
     </head>
     <body>
         <div class="container" style="text-align: left">
 
             <form  action="<c:url value="/apply?op=uploadFile&email=${info.email}"/>" enctype="multipart/form-data" method="post">
-                <input type="" value="${job_id}" name="job_id">
-                <input type="" value="${job_name}" name="job_name">
-                <input type="" value="${cv}" name="cv">
+                <input type="hidden" value="${job_id}" name="job_id">
+                <input type="hidden" value="${job_name}" name="job_name">
+                <input type="hidden" value="${cv}" name="cv" id="choosenFile">
                 <p>Select Your CV:</p>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" title="choose">
+                    Choose a CV in the past.
+                </button>
+                <span style="margin-right: 10px; margin-left: 10px">Or</span>
+                <!-- The Modal -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div style="margin-top: 10px; margin-bottom: 20px; margin-right: 10px">
+                                    <button type="button" class="close" data-dismiss="modal" >&times;</button>
+                                </div>
+                                <c:if test="${not empty cvs}">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>CV</th>
+                                                <th>Upload Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach var="cv" items="${cvs}" varStatus="loop">
+                                                <tr id="cv-${loop.count}" >
+                                                    <td>${loop.count}</td>
+                                                    <td>${cv.can_cv}</td>
+                                                    <td>
+                                                        <fmt:formatDate value="${cv.date}" pattern="yyyy-MM-dd"/>
+                                                    </td>
+                                                </tr>
+                                            <script>
+                                                $(document).ready(function () {
+                                                    $("#cv-" + ${loop.count}).click(function () {
+                                                        $("#myModal").modal("toggle");
+                                                        $(".custom-file-input").siblings(".custom-file-label").addClass("selected").html("${cvs[loop.count-1].can_cv}");
+                                                        $("#choosenFile").val("${cvs[loop.count-1].can_cv}");
+                                                    });
+                                                });
+                                            </script>
+                                        </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </c:if>
+                                <c:if test="${empty cvs}">
+                                    <h4 style="text-align: center; margin-bottom: 50px">You don't have any uploaded cv yet!</h4>
+                                </c:if>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
                 <div class="custom-file mb-3" style="width: 45%">
-                    <input type="file" class="custom-file-input" id="customFile" name="filename" accept="image/*" onchange="validateFileType()">
+                    <input type="file" class="custom-file-input" id="customFile" name="filename" accept=".pdf,.doc,.docx" onchange="validateFileType()">
                     <label class="custom-file-label" for="customFile">Choose file</label>
                 </div>
-                <i>*Only accept image file</i>
+                <p>
+                    <i style="color: red;">*Only accept .pdf, .doc, .docx file</i>
+                </p>
                 <div >
                     <button type="submit" class="btn btn-success" id="submitbutton">Apply CV</button>
                 </div>
             </form>
 
         </div>
-        <c:if test="${not empty cv}">
-            <script>
-                $(".custom-file-input").siblings(".custom-file-label").addClass("selected").html("${cv}");
-            </script>
-        </c:if>
         <script>
 // Add the following code if you want the name of the file appear on select
-//            $(document).ready(function () {
-//                $(".custom-file-input").siblings(".custom-file-label").addClass("selected").html(${cv});
-//            });
-            $(".custom-file-input").on("change", function () {
-                var fileName = $(this).val().split("\\").pop();
-                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            $(document).ready(function () {
+                $(".custom-file-input").on("change", function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+                });
             });
+            document.getElementById('submitbutton').disabled = true;
             function validateFileType() {
-                var fileName = document.getElementById("files").value;
+                var fileName = document.getElementById("customFile").value;
                 var idxDot = fileName.lastIndexOf(".") + 1;
                 var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-                if (extFile == "jpg" || extFile == "jpeg" || extFile == "png"
-                        || extFile == "apng" || extFile == "avif" || extFile == "jfif"
-                        || extFile == "pjpeg" || extFile == "pjp" || extFile == "svg"
-                        || extFile == "webp") {
+                if (extFile === "pdf" || extFile === "doc" || extFile === "docx") {
                     document.getElementById('submitbutton').disabled = false;
                 } else {
-                    alert("Only image files are allowed (except .gif file)!");
+                    alert("Only .pdf, .doc, .docx files are allowed !");
                     document.getElementById('submitbutton').disabled = true;
                 }
             }

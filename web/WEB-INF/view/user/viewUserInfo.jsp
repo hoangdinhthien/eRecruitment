@@ -20,8 +20,6 @@
             <h2>User profile</h2>
             <div class="container">
                 <div class="row">
-                    <!--ben phai-->
-                    <div class="col-12">
                         <div class="user-content">
                             <h5 class="user-content-item">
                                 Email: ${user.email}
@@ -73,7 +71,7 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${can.isStatus <2}">
-                                            Not Available
+                                            Not Yet
                                         </c:when>
                                         <c:when test="${can.score!= null && can.isStatus >= 2}">
                                             ${can.score}
@@ -145,6 +143,5 @@
                 </c:choose>
             </table>
         </div>
-
     </body>
 </html>

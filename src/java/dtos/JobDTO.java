@@ -11,14 +11,51 @@ import java.util.Date;
  *
  * @author DELL
  */
-public class JobsDTO {
-
+public class JobDTO {
     private String job_id;
     private String job_name;
     private int major_id;
+    private String major_name;
     private int job_vacancy;
     private String job_description;
     private int level_id;
+    private String level_name;
+    private String job_skill;
+    private boolean save_job;
+
+    public JobDTO() {
+    }
+    public boolean isSave_job() {
+        return save_job;
+    }
+
+    public void setSave_job(boolean save_job) {
+        this.save_job = save_job;
+    }
+    
+
+    public String getJob_skill() {
+        return job_skill;
+    }
+
+    public void setJob_skill(String job_skill) {
+        this.job_skill = job_skill;
+    }
+    public String getMajor_name() {
+        return major_name;
+    }
+
+    public void setMajor_name(String major_name) {
+        this.major_name = major_name;
+    }
+
+    public String getLevel_name() {
+        return level_name;
+    }
+
+    public void setLevel_name(String level_name) {
+        this.level_name = level_name;
+    }
     private double salary;
     private Date post_date;
     private CandidateDTO jobid;

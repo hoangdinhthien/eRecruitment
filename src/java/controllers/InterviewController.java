@@ -123,8 +123,48 @@ public class InterviewController extends HttpServlet {
     protected void set_schedule_view(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+
             //Lay het major ra de lm combo box filter by major
             List<MajorDTO> listOfMajor = MajorDAO.listAll();
+            //Lay all candidate
+            List<CandidateDTO> listOfCandidate = CandidateDAO.hrstatus2();
+
+            String page = request.getParameter("page");
+            //page hien tai
+            int intpage = 1;
+            //Tong so page
+            int totalpage = 0;
+            //do la int nen khong duoc null
+            if (page != null) {
+                intpage = Integer.parseInt(page);
+            }
+
+            if (listOfCandidate.iterator().hasNext()) {//Kiem tra xem con candidate nao kh?
+                //Tao list con de phan trang
+                List<CandidateDTO> sublist = new LinkedList<>();
+                //Tap hop so cua page
+                List<Integer> pageList = new LinkedList<>();
+                //Bat dau phan trang
+                if (listOfCandidate.size() > 0) {
+                    totalpage = listOfCandidate.size() % 6 == 0 ? listOfCandidate.size() / 6 : (listOfCandidate.size() / 6) + 1;
+                    for (int i = 0; i < totalpage; i++) {
+                        pageList.add(i);
+                    }
+                    int n = (intpage - 1) * 6;
+
+                    if (listOfCandidate.size() >= n + 6) {
+                        sublist = listOfCandidate.subList(n, n + 6);
+                    } else {
+                        sublist = listOfCandidate.subList(n, listOfCandidate.size());
+                    }
+                }
+                //Pagination
+                request.setAttribute("sublist", sublist);
+                request.setAttribute("page", intpage);
+                request.setAttribute("noOfPage", pageList);
+            }
+            //Set lai action de chay view
+            request.setAttribute("action", "set_schedule");
             request.setAttribute("listOfMajor", listOfMajor);
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
         } catch (SQLException ex) {
@@ -137,9 +177,15 @@ public class InterviewController extends HttpServlet {
     protected void set_schedule_filtered(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            int major_id = Integer.parseInt(request.getParameter("major_id"));
-            String page = request.getParameter("page");
+            String major = request.getParameter("major_id");
+            int major_id = 0;
+            if(major.equalsIgnoreCase("All")){
+                set_schedule_view(request, response);
+            }else{
+                major_id = Integer.parseInt(major);
+            }
             String success = request.getParameter("success");
+            String page = request.getParameter("page");
             //page hien tai
             int intpage = 1;
             //Tong so page

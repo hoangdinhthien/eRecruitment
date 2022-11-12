@@ -105,9 +105,9 @@ public class QAController extends HttpServlet {
             }
 //            QADAO.QA_Question(new_job);
         } catch (SQLException ex) {
-            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(JobsController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(JobController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

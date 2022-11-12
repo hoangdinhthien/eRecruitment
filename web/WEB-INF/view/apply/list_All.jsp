@@ -1,24 +1,21 @@
-<%-- 
-    Document   : index
-    Created on : Oct 5, 2022, 4:44:35 PM
-    Author     : ADMIN
---%>
-
-<%@page import="java.sql.PreparedStatement"%>
-<%@page import="java.sql.Statement"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="java.sql.Connection"%>
-<%@page import="utils.DBUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<link href='https://css.gg/software-download.css' rel='stylesheet'>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
+        <style>
+            tr a:hover, tr a:active {
+                background-color: #66F1A1;
+                /*border: 2px solid #66F1A1;*/
+                /*color: white;*/
+            }
+        </style>
     <center>
         <c:if test="${not empty Reject}">
             <div class="alert alert-success alert-dismissible">
@@ -38,13 +35,20 @@
             <nav class="header__menu" >
                 <ul>
                     <li>
-                        <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
-                           background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                           width: 100px"
+                        <!--Thêm Biểu Tượng cho List Status-->
+                        <a class="fas fa-bars" 
+                           style="color: #ffffff !important; 
+                           border-color: #66D7A7;
+                           background: #66D7A7;
+                           border-style: solid;
+                           text-transform: uppercase; 
+                           text-align: center;
+                           /*font-weight: 500;*/
+                           width: 100px;
+                           "
                            href="<c:url value="apply?op=listAll"/>" 
                            type="button"> 
-                            Status 
-                            <span class="arrow_carrot-down"></span>
+                            Status
                         </a>
                         <ul class="header__menu__dropdown">
                             <li><a href="apply?op=filterStatus0All">Waiting</a></li>
@@ -61,7 +65,7 @@
             <form action="<c:url value="apply?op=search"/>" class="d-flex w-50 m-3">
                 <div class="input-group flex-nowrap">
                     <span class="input-group-text" id="addon-wrapping"> <i class="fa fa-search"></i></span>
-                    <input class="form-control me-2"  placeholder="Search Job" type="text" name="search" 
+                    <input class="form-control me-2"  placeholder="Search by Job" type="text" name="search" 
                            value="${search}"/>
                 </div>
                 <button class="btn btn-success" style=" color: #ffffff !important; border-color: #66D7A7;background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500"  
@@ -90,7 +94,6 @@
                             <th>No.</th><th>Can_id</th><th>Job Name</th>
                             <th>Email</th><th>File Upload</th>
                             <th>Exam Score</th>
-                            <!--                    <th>Interview Score</th>-->
                             <th>Status</th><th style="text-align: center">Operation</th>    
                         </tr>
                     </thead>
@@ -98,16 +101,30 @@
                         <c:forEach var="can" items="${listAll}" varStatus="loop">
 
                             <tr>
-                                <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
+                                <!--Format 001 -> 1-->
+                                <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="" /></td>
                                 <td>${can.id}</td>
                                 <td>${can.jobname.job_name}</td>
-                                <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>"> ${can.email} </a></td>
+                                <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>" style="text-decoration: underline #66F1A1;"> ${can.email} </a></td>
                                 <td>${can.cv}</td>
-                                <td>${can.score}</td>
+                                <td>
+                                    <c:choose>
+                                        <%--Hiển thị số điểm, nếu chưa làm Test -> Not Yet--%>
+                                        <c:when test="${can.isStatus <=1 || can.isStatus ==6}" >
+                                            Not Yet
+                                        </c:when>
+                                        <c:when test="${can.isStatus >=2 && can.isStatus <=5}" >
+                                            ${can.score}
+                                        </c:when>
+                                        <c:otherwise>
+                                            Error Value
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td>
                                     <c:choose>
                                         <c:when test="${can.isStatus==0}">
-                                            Hasn't Accepted
+                                            Not Yet
                                         </c:when>
                                         <c:when test="${can.isStatus==1}">
                                             Accepted
@@ -124,10 +141,16 @@
                                         <c:when test="${can.isStatus==5}">
                                             Hired
                                         </c:when>
+                                        <%--isStatus==6(những CV chưa đc chấp nhận) -> Cancel--%>
+                                        <c:otherwise>
+                                            <div style="color: #FF8000">Cancel</div>
+                                        </c:otherwise>
                                     </c:choose>
                                 </td>
-                                <td style="text-align: center">
-                                    <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>
+                                <td  style="text-align: center">
+                                    <a style="text-align: center; margin-top:20px; display:inline-block;" 
+                                       class="gg-software-download" href="apply?op=downloadFile&fileName=${can.cv}">
+                                    </a>
                                 </td>
                             </tr>
 
@@ -142,5 +165,7 @@
         </table><br>
         <br>
     </center>
+    <!--Style của List Status-->  
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

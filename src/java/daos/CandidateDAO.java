@@ -8,7 +8,7 @@ package daos;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
 import dtos.InterviewingDTO;
-import dtos.JobsDTO;
+import dtos.JobDTO;
 import dtos.MajorDTO;
 import dtos.UserDTO;
 import java.sql.Connection;
@@ -41,7 +41,7 @@ public class CandidateDAO {
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString("can_id");
             j.setJob_name(rs.getString("job_name"));
             String cv = rs.getString("can_cv");
@@ -56,7 +56,7 @@ public class CandidateDAO {
 
     public static List<CandidateDTO> search2(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus,c.apply "
+        PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus "
                 + "from [dbo].[Candidate] c inner join [job] j on c.[job_id] = j.[job_id] "
                 + "where [email] like ?  order by [can_id] ASC");
         stm.setString(1, email);
@@ -66,14 +66,13 @@ public class CandidateDAO {
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString("can_id");
             j.setJob_name(rs.getString("job_name"));
             String cv = rs.getString("can_cv");
             float score = rs.getFloat("score");
             int isStatus = rs.getInt("isStatus");
-            int apply = rs.getInt("apply");
-            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus, apply);
+            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus);
             list.add(join);
         }
         con.close();
@@ -90,7 +89,7 @@ public class CandidateDAO {
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString("can_id");
             j.setJob_name(rs.getString("job_name"));
             String cv = rs.getString("can_cv");
@@ -166,7 +165,7 @@ public class CandidateDAO {
 
     public List<CandidateDTO> listCandidateByEmail(String email) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [Candidate]"
+        PreparedStatement stm = con.prepareStatement("SELECT [job_id] FROM [dbo].[Candidate]"
                 + "WHERE [email]= ?");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
@@ -190,7 +189,7 @@ public class CandidateDAO {
         ResultSet rs = stm.executeQuery();
         List<CandidateDTO> list = new LinkedList();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             CandidateDTO c = new CandidateDTO();
             c.setId(rs.getString("can_id"));
             c.setMajorId(rs.getInt("major_id"));
@@ -260,11 +259,11 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
         ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score,isStatus from candidate c "
-                + "inner join job j on c.job_id = j.job_id "
+                + "inner join job j on c.job_id = j.job_id ORDER BY can_id DESC"
         );
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String cv = rs.getString(4);
@@ -285,10 +284,10 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.[isStatus] =0 ");
+                    + "where c.[isStatus] =0 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
-                JobsDTO j = new JobsDTO();
+                JobDTO j = new JobDTO();
                 String id = rs.getString(1);
                 j.setJob_name(rs.getString(2));
                 String cv = rs.getString(4);
@@ -312,10 +311,10 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =1");
+                    + "where c.isStatus =1 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
-                JobsDTO j = new JobsDTO();
+                JobDTO j = new JobDTO();
                 String id = rs.getString(1);
                 j.setJob_name(rs.getString(2));
                 String cv = rs.getString(4);
@@ -332,17 +331,17 @@ public class CandidateDAO {
         return list;
     }
 
-    public List<CandidateDTO> hrstatus2() throws ClassNotFoundException, SQLException {
+    public static List<CandidateDTO> hrstatus2() throws ClassNotFoundException, SQLException {
         List<CandidateDTO> list = null;
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,c.can_cv,c.score, c.isStatus,j.major_id from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =2");
+                    + "where c.isStatus =2 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
-                JobsDTO j = new JobsDTO();
+                JobDTO j = new JobDTO();
                 String id = rs.getString(1);
                 j.setJob_name(rs.getString(2));
                 String cv = rs.getString(4);
@@ -350,6 +349,7 @@ public class CandidateDAO {
                 float score = rs.getInt(5);
                 int isStatus = rs.getInt(6);
                 CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
+                join.setMajorId(rs.getByte("major_id"));
                 list.add(join);
             }
             con.close();
@@ -366,10 +366,10 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =3");
+                    + "where c.isStatus =3 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
-                JobsDTO j = new JobsDTO();
+                JobDTO j = new JobDTO();
                 String id = rs.getString(1);
                 j.setJob_name(rs.getString(2));
                 String cv = rs.getString(4);
@@ -393,10 +393,10 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =5 ");
+                    + "where c.isStatus =5 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
-                JobsDTO j = new JobsDTO();
+                JobDTO j = new JobDTO();
                 String id = rs.getString(1);
                 j.setJob_name(rs.getString(2));
                 String cv = rs.getString(4);
@@ -420,10 +420,10 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus <5 and c.isStatus > 0");
+                    + "where c.isStatus <5 and c.isStatus > 0 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
-                JobsDTO j = new JobsDTO();
+                JobDTO j = new JobDTO();
                 String id = rs.getString(1);
                 j.setJob_name(rs.getString(2));
                 String cv = rs.getString(4);
@@ -448,11 +448,11 @@ public class CandidateDAO {
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus from candidate c "
                     + "inner join interviewing i on c.can_id = i.can_id "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =4 ");
+                    + "where c.isStatus =4 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
                 InterviewingDTO i = new InterviewingDTO();
-                JobsDTO j = new JobsDTO();
+                JobDTO j = new JobDTO();
                 i.setScore(rs.getInt(6));
                 String id = rs.getString(1);
                 j.setJob_name(rs.getString(2));
@@ -480,7 +480,7 @@ public class CandidateDAO {
                 + "order by isStatus ,can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String cv = rs.getString(4);
@@ -503,7 +503,7 @@ public class CandidateDAO {
                 + "order by isStatus DESC,can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String cv = rs.getString(4);
@@ -527,7 +527,7 @@ public class CandidateDAO {
                 + "order by score ,can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String cv = rs.getString(4);
@@ -550,7 +550,7 @@ public class CandidateDAO {
                 + "order by score DESC,can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String cv = rs.getString(4);
@@ -574,7 +574,7 @@ public class CandidateDAO {
                 + "order by  c.can_id  ASC ");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String email = rs.getString(3);
@@ -597,7 +597,7 @@ public class CandidateDAO {
                 + "order by  c.can_id  DESC ");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String email = rs.getString(3);
@@ -621,7 +621,7 @@ public class CandidateDAO {
                 + "where isStatus > 0 and isStatus < 5 order by isStatus, can_id  ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String email = rs.getString(3);
@@ -644,7 +644,7 @@ public class CandidateDAO {
                 + "where isStatus > 0 and isStatus < 5 order by isStatus DESC , can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String email = rs.getString(3);
@@ -668,7 +668,7 @@ public class CandidateDAO {
                 + "where isStatus > 0 and isStatus < 5 order by score, can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String email = rs.getString(3);
@@ -691,7 +691,7 @@ public class CandidateDAO {
                 + "where isStatus > 0 and isStatus < 5 order by score DESC , can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String email = rs.getString(3);
@@ -715,7 +715,7 @@ public class CandidateDAO {
                 + "where isStatus > 0 and isStatus < 5 order by  can_id ASC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String email = rs.getString(3);
@@ -738,7 +738,7 @@ public class CandidateDAO {
                 + "where isStatus > 0 and isStatus < 5 order by  can_id DESC");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String email = rs.getString(3);
@@ -762,7 +762,7 @@ public class CandidateDAO {
                 + " where isStatus =0 order by can_id  ASC ");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String cv = rs.getString(4);
@@ -785,7 +785,7 @@ public class CandidateDAO {
                 + "where isStatus =0 order by can_id  DESC ");
         list = new ArrayList<>();
         while (rs.next()) {
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
             String cv = rs.getString(4);
@@ -811,7 +811,7 @@ public class CandidateDAO {
         list = new ArrayList<>();
         while (rs.next()) {
             InterviewingDTO i = new InterviewingDTO();
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             i.setScore(rs.getInt(6));
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
@@ -837,7 +837,7 @@ public class CandidateDAO {
         list = new ArrayList<>();
         while (rs.next()) {
             InterviewingDTO i = new InterviewingDTO();
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             i.setScore(rs.getInt(6));
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
@@ -864,7 +864,7 @@ public class CandidateDAO {
         list = new ArrayList<>();
         while (rs.next()) {
             InterviewingDTO i = new InterviewingDTO();
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             i.setScore(rs.getInt(6));
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));
@@ -890,7 +890,7 @@ public class CandidateDAO {
         list = new ArrayList<>();
         while (rs.next()) {
             InterviewingDTO i = new InterviewingDTO();
-            JobsDTO j = new JobsDTO();
+            JobDTO j = new JobDTO();
             i.setScore(rs.getInt(6));
             String id = rs.getString(1);
             j.setJob_name(rs.getString(2));

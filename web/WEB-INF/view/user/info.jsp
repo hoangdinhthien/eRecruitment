@@ -7,6 +7,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!--Icon ProVjp-->
+<link href='https://css.gg/software-download.css' rel='stylesheet'>
+<link href='https://css.gg/trash.css' rel='stylesheet'>
 <!DOCTYPE html>
 <html>
     <head>
@@ -23,7 +26,7 @@
                     <!-- ben trai  -->
                     <div class="col-2">
                         <figure>
-                            <img src="${info.picture}" class="user-img"/>
+                            <img src="${info.picture}" alt="Not Found" class="user-img" onerror="this.src='<c:url value="/cvs/default.jpg"/>';"/> 
                         </figure>
 
                         <!-- user name -->
@@ -103,7 +106,7 @@
                                     <!--Score-->
                                     <c:choose>
                                         <c:when test="${can.isStatus <2 || can.isStatus ==6}">
-                                            Not Available
+                                            Not Yet
                                         </c:when>
                                         <c:when test="${can.score!= null && can.isStatus >= 2 && can.isStatus <6}">
                                             ${can.score}
@@ -147,7 +150,10 @@
                                         <td>
                                             <!--Passed-->
                                             <c:choose>
-                                                <c:when test="${can.isStatus==0 || can.isStatus==6}">
+                                                <c:when test="${can.isStatus==6}">
+                                                    Cancel
+                                                </c:when>
+                                                <c:when test="${can.isStatus==0}">
                                                     Hasn't Accepted
                                                 </c:when>
                                                 <c:when test="${can.isStatus==1}">
@@ -170,58 +176,52 @@
                                     </c:otherwise>
                                 </c:choose>
                                 <td>
-                                    <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>
+                                    <a class="gg-software-download" style="margin-top:20px; display:inline-block; color: orange" href="apply?op=downloadFile&fileName=${can.cv}"> </a>
                                     <c:choose>
                                         <c:when test="${can.isStatus==6 || can.isStatus==0}">
                                             <!--Xóa những CV dự phòng (Standby=1) hoặc chưa đc Accepted--> 
-                                            <c:choose>
-                                                <c:when test="${can.score < 4}" >
-                                                    | <a href="apply?op=deleteFile&can_id=${can.id}&stand=info"
-                                                         onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ?')">Delete</a>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    | <a href="apply?op=deleteFile&can_id=${can.id}&stand=info"
-                                                         onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} ')">Delete</a>
-                                                </c:otherwise>
-                                            </c:choose>
+                                            <c:if test="${can.score < 4}" >
+                                                | <a class="gg-trash" style="margin-top:20px; display:inline-block; color: red" href="apply?op=deleteFile&can_id=${can.id}&stand=info"
+                                                     onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ?')"></a>
+                                            </c:if>
                                         </c:when>
                                         <c:when test="${can.isStatus >0 && can.isStatus < 6}">
                                             <!--Xóa CV chính : đã được Accepted trở lên, isStatus2345-->
                                             <c:choose>
                                                 <c:when test="${can.score == null}" >
-                                                    | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}&stand=info"
-                                                         onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ?')">Delete</a>
+                                                    | <a class="gg-trash" style="margin-top:20px; display:inline-block; color: red"  href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}&stand=info"
+                                                         onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ?')"></a>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <c:choose>
                                                         <c:when test="${can.isStatus == 1}">
-                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
-                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nStage [1/5]: Accepted')">Delete</a>
+                                                            | <a class="gg-trash" style="margin-top:20px; display:inline-block; color: red"  href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nStage [1/5]: Accepted')"></a>
                                                         </c:when>
                                                         <c:when test="${can.isStatus == 2}">
-                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
-                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [2/5]: Tested')">Delete</a>
+                                                            | <a class="gg-trash" style="margin-top:20px; display:inline-block; color: red"  href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [2/5]: Tested')"></a>
                                                         </c:when>
                                                         <c:when test="${can.isStatus == 3}">
-                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
-                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [3/5]: Scheduled')">Delete</a>
+                                                            | <a class="gg-trash" style="margin-top:20px; display:inline-block; color: red"  href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [3/5]: Scheduled')"></a>
                                                         </c:when>
                                                         <c:when test="${can.isStatus == 4}">
-                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
-                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [4/5]: Interviewed')">Delete</a>
+                                                            | <a class="gg-trash" style="margin-top:20px; display:inline-block; color: red"  href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [4/5]: Interviewed')"></a>
                                                         </c:when>
                                                         <c:when test="${can.isStatus == 5}">
-                                                            | <a href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
-                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [5/5]: Hired')">Delete</a>
+                                                            | <a class="gg-trash" style="margin-top:20px; display:inline-block; color: red"  href="apply?op=deleteApplied&can_id=${can.id}&email=${info.email}"
+                                                                 onclick="return confirm('Are you sure to delete the Application in ${can.jobname.job_name} ? \nScore: ${can.score} \nStage [5/5]: Hired')"></a>
                                                         </c:when>
                                                     </c:choose>
                                                 </c:otherwise>
-
                                             </c:choose>
                                         </c:when>
                                     </c:choose>
                                     <c:if test="${can.isStatus==1}">
-                                        | <a href="exam?op=confirmExam&canId=${can.id}">Attempt Exam</a>
+                                        <br/>
+                                         <a href="exam?op=confirmExam&canId=${can.id}">Attempt Exam</a>
                                     </c:if> 
                                 </td>
                             </tr>

@@ -6,7 +6,7 @@
 package daos;
 
 import dtos.QADTO;
-import dtos.JobsDTO;
+import dtos.JobDTO;
 import dtos.QADTO;
 import dtos.UserDTO;
 import java.sql.Connection;

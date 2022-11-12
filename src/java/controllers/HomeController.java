@@ -93,7 +93,7 @@ public class HomeController extends HttpServlet {
             FeedbackDAO fDao = new FeedbackDAO();
             fDao.send(email, subject, detail);
             System.out.println("Sended !");
-            request.setAttribute("message", "Your feedback have been sended.");
+            request.setAttribute("message", "Your feedback have been sent.");
             viewFeedback(request, response);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,7 +124,9 @@ public class HomeController extends HttpServlet {
             int id = Integer.parseInt(request.getParameter("id"));
             FeedbackDAO fDao = new FeedbackDAO();
             fDao.delete(id);
-            request.setAttribute("message", "Delete Successfully");
+            if (fDao.check() != 0) {
+                request.setAttribute("message", "Delete Successfully");
+            }
             viewFeedback(request, response);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HomeController.class.getName()).log(Level.SEVERE, null, ex);

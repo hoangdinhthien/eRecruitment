@@ -5,6 +5,8 @@
  */
 package dtos;
 
+import dtos.JobDTO;
+
 /**
  *
  * @author Thien's
@@ -21,23 +23,13 @@ public class CandidateDTO {
     private int isStatus;
     private float score;
     private String status;
-    private int apply;
     private InterviewingDTO interid;
-    private JobsDTO jobname;
+    private JobDTO jobname;
 
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv, float score, int isStatus, int apply) {
-        this.id = id;
-        this.jobname = jobname;
-        this.cv = cv;
-        this.score = score;
-        this.isStatus = isStatus;
-        this.apply = apply;
-    }
-
-    public CandidateDTO(String id, JobsDTO jobname, String cv, float score, int isStatus) {
+    public CandidateDTO(String id, JobDTO jobname, String cv, float score, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
@@ -45,7 +37,7 @@ public class CandidateDTO {
         this.isStatus = isStatus;
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv, String email, float score, int isStatus) {
+    public CandidateDTO(String id, JobDTO jobname, String cv, String email, float score, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
@@ -54,7 +46,7 @@ public class CandidateDTO {
         this.isStatus = isStatus;
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv, String email, float score, InterviewingDTO interid, int isStatus) {
+    public CandidateDTO(String id, JobDTO jobname, String cv, String email, float score, InterviewingDTO interid, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
@@ -64,7 +56,7 @@ public class CandidateDTO {
         this.isStatus = isStatus;
     }
 
-    public CandidateDTO(String id, JobsDTO jobname, String cv, float score, InterviewingDTO interid, int isStatus) {
+    public CandidateDTO(String id, JobDTO jobname, String cv, float score, InterviewingDTO interid, int isStatus) {
         this.id = id;
         this.jobname = jobname;
         this.cv = cv;
@@ -86,14 +78,6 @@ public class CandidateDTO {
         this.status = status;
     }
 
-    public int getApply() {
-        return apply;
-    }
-
-    public void setApply(int apply) {
-        this.apply = apply;
-    }
-
     public InterviewingDTO getInterid() {
         return interid;
     }
@@ -102,11 +86,11 @@ public class CandidateDTO {
         this.interid = interid;
     }
 
-    public JobsDTO getJobname() {
+    public JobDTO getJobname() {
         return jobname;
     }
 
-    public void setJobname(JobsDTO jobname) {
+    public void setJobname(JobDTO jobname) {
         this.jobname = jobname;
     }
 
