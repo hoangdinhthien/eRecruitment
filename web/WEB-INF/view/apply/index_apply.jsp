@@ -105,6 +105,7 @@
                     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
                 });
             });
+            document.getElementById('submitbutton').disabled = true;
             function validateFileType() {
                 var fileName = document.getElementById("customFile").value;
                 var idxDot = fileName.lastIndexOf(".") + 1;
@@ -112,7 +113,7 @@
                 if (extFile === "pdf" || extFile === "doc" || extFile === "docx") {
                     document.getElementById('submitbutton').disabled = false;
                 } else {
-                    alert("Only image files are allowed (except .gif file)!");
+                    alert("Only .pdf, .doc, .docx files are allowed !");
                     document.getElementById('submitbutton').disabled = true;
                 }
             }

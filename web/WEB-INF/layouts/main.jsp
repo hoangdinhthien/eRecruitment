@@ -201,15 +201,22 @@
                             <nav class="header__menu">
                                 <ul>
                                     <li class="${empty list?'active':'link'}"><a href="<c:url value='/home?op=index'/>">Home</a></li>
-                                    <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list&email=${info.email}"/>">Jobs</a></li>
-
+                                    <!--Làm Đẹp cái Link-->
+                                    <c:choose>
+                                        <c:when test="${not empty info}">
+                                            <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list&email=${info.email}"/>">Jobs</a></li>
+                                            </c:when>
+                                            <c:otherwise>
+                                            <li class="${not empty list?'active':'link'}"><a  href="<c:url value="/job?op=list"/>">Jobs</a></li>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    <!--Làm Đẹp cái Link-->
                                     <c:if test="${not empty info}" >
                                         <c:if test="${ role == 'Interviewer' || role == 'HR Staff'|| role == 'Admin'}" >
                                             <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
                                                 <ul class="header__menu__dropdown">
                                                     <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
                                                     <li><a href="<c:url value="/exam?op=confirmExam&canId=C001"/>">Test Exam</a></li>
-                                                    <!--<li><a href="#">Shoping Cart</a></li>-->
                                                 </ul>
                                             </li>
                                         </c:if>
@@ -241,30 +248,6 @@
                                             <c:if test="${count != 0}">
                                                 <span id="notification_count">${count}</span>
                                             </c:if>
-<!--                                            <div id="notification_container">
-                                                <div id="notification_title">
-                                                    Notifications
-                                                </div>
-                                                <div id="notification_body">
-                                                    <c:forEach items="${listNotification}" var="notification" varStatus="loop" step="1" begin="1" end="5">
-                                                        <a id="notification_content-${loop.count}" 
-                                                           <c:if test="${notification.linkTitle != null && notification.link != null}" >
-                                                               href="<c:url value="/user?op=toLink&nId=${notification.nId}"/>" 
-                                                           </c:if>
-                                                           >
-                                                            ${notification.title}
-                                                            <br>
-                                                            (${notification.timeAgo}) 
-                                                            <br/>
-                                                            <hr>
-                                                        </a>
-                                                        <br/>
-                                                    </c:forEach>
-                                                </div>
-                                                <div id="notification_footer">
-                                                    <a href="<c:url value="/user?op=listNotification"/>">See All</a>
-                                                </div>
-                                            </div>-->
                                         </li>
                                     </ul>
                                 </div>

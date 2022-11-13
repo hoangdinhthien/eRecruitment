@@ -2,6 +2,9 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<link href='https://css.gg/software-download.css' rel='stylesheet'>
+<link href='https://css.gg/check-r.css' rel='stylesheet'>
+<link href='https://css.gg/remove-r.css' rel='stylesheet'>
 <!DOCTYPE html>
 <html>
     <head>
@@ -48,20 +51,15 @@
                     </thead>
                     <c:forEach var="can" items="${list0}" varStatus="loop">
                         <tr>
-                            <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
+                            <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="" /></td>
                             <td>${can.id}</td>
                             <td>${can.jobname.job_name}</td>
                             <td>${can.email}</td>
                             <td>${can.cv}</td>
-                            <!--                            <td><c:choose>
-                                <c:when test="${can.isStatus==0}">
-                                    Hasn't Accepted
-                                </c:when>
-                            </c:choose></td>-->
                             <td style="text-align: center">
-                                <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                <a href="apply?op=yesupNewest&can_id=${can.id}&email=${can.email}">Accept</a> |
-                                <a href="apply?op=deleteFile&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}&stand=Newest">Reject</a> 
+                                <a class="gg-software-download" style="margin-top:20px; display:inline-block;"  href="apply?op=downloadFile&fileName=${can.cv}"></a>
+                                | <a class="gg-check-r" style="margin-top:20px; display:inline-block; color: #66D7A7" href="apply?op=yesupNewest&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}"></a>
+                                | <a class="gg-remove-r" style="margin-top:20px; display:inline-block; color: red" href="apply?op=deleteFile&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}&stand=Newest"></a> 
                             </td>
                         </tr>
                     </c:forEach>
@@ -74,8 +72,5 @@
         </table><br>
         <br>
     </center>
-
 </body>
-
-
 </html>

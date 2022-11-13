@@ -1,18 +1,9 @@
-<%-- 
-    Document   : index
-    Created on : Oct 5, 2022, 4:44:35 PM
-    Author     : ADMIN
---%>
-
-<%@page import="java.sql.PreparedStatement"%>
-<%@page import="java.sql.Statement"%>
-<%@page import="java.sql.ResultSet"%>
-<%@page import="java.sql.Connection"%>
-<%@page import="utils.DBUtils"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<link href='https://css.gg/software-download.css' rel='stylesheet'>
+<link href='https://css.gg/remove-r.css' rel='stylesheet'>
 <!DOCTYPE html>
 <html>
     <head>
@@ -68,7 +59,7 @@
                     <c:forEach var="can" items="${listInprocess}" varStatus="loop">
 
                         <tr>
-                            <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="000" /></td>
+                            <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="" /></td>
                             <td>${can.id}</td>
                             <td>${can.jobname.job_name}</td>
                             <td>${can.email}</td>
@@ -106,9 +97,8 @@
                                 </c:choose>
                             </td>
                             <td style="text-align: center">
-                                <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a> |
-                                <a href="apply?op=rejectFileInprocess&can_id=${can.id}&email=${can.email}">Reject</a> 
-
+                                <a class="gg-software-download" style="margin-top:20px; display:inline-block;color: orange" href="apply?op=downloadFile&fileName=${can.cv}"></a> |
+                                <a class="gg-remove-r" style="margin-top:20px; display:inline-block; color: red" href="apply?op=rejectFileInprocess&can_id=${can.id}&email=${can.email}"></a> 
                             </td>
                         </tr>
 

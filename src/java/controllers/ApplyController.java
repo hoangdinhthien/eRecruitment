@@ -504,6 +504,7 @@ public class ApplyController extends HttpServlet {
                         out.println(e);
                     }
                 }
+
             } else {
                 System.out.println("Error when connect to account");
             }
@@ -536,8 +537,12 @@ public class ApplyController extends HttpServlet {
             String downloadPath = applicationPath
                     + UPLOAD_DIR;
             //======
+//            String filePath = "C:\\Users\\ADMIN\\OneDrive\\Máy tính\\Demo_Real\\SWP391-GroupHHHTD-SE1610\\web\\cvs\\" + fileName;
+            System.out.println(fileName);
+            System.out.println(downloadPath + "/" + fileName);
+//            System.out.println(filePath);
 
-            File file = new File(getServletContext().getRealPath("/cvs/").replace('\\', '/') + fileName);
+            File file = new File(downloadPath + "//" + fileName);
             OutputStream outStream = null;
             FileInputStream inputStream = null;
 
@@ -653,23 +658,23 @@ public class ApplyController extends HttpServlet {
             tf.rejectFileInprocess(can_id, email);
             List<CandidateDTO> listInprocess = CandidateDAO.hrstatus14();
 //            //=== Notification + Send Email
-//            String job_name = request.getParameter("job_name"); // lấy job_name
-//            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
-//            String to = can.getEmail();
-//            System.out.println("Data: " + job_name + " " + to);
-//            String subject = "3HTD: Your Resume has been rejected";
-//            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
-//                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
-//                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
-//                    + " Through the review of the profile, we found that there are some points that you do not match our requirements."
-//                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
-//                    + "<p>We look forward to you becoming our member.</p>"
-//                    + "<p>Best regards,</p>"
-//                    + "<p>3HTD</p>";
-//            MailUtils.send(to, subject, body);
-//            NotificationDAO.add(to, "Rejected Resume",
-//                    "<p>Your Resume has been rejected.</p>",
-//                    null, null);
+            String job_name = request.getParameter("job_name"); // lấy job_name
+            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            String to = can.getEmail();
+            System.out.println("Data: " + job_name + " " + to);
+            String subject = "3HTD: Your Resume has been rejected";
+            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
+                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+                    + " Through the review of the profile, we found that there are some points that you do not match our requirements."
+                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
+                    + "<p>We look forward to you becoming our member.</p>"
+                    + "<p>Best regards,</p>"
+                    + "<p>3HTD</p>";
+            MailUtils.send(to, subject, body);
+            NotificationDAO.add(to, "Rejected Resume",
+                    "<p>Your Resume has been rejected.</p>",
+                    null, null);
             //Cho hiện lại danh sách 
             String Reject = can_id + " have been Reject";
             request.setAttribute("Reject", Reject);
@@ -803,6 +808,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -818,6 +824,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -834,6 +841,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -849,6 +857,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_All");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -865,6 +874,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -880,6 +890,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -896,6 +907,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -911,6 +923,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -927,6 +940,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             System.out.println("Inprocess" + sortPen);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -941,6 +955,7 @@ public class ApplyController extends HttpServlet {
             request.setAttribute("listInprocess", sortPen);
             request.setAttribute("action", "list_Inprocess");
             request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+
         } catch (SQLException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
@@ -1142,10 +1157,14 @@ public class ApplyController extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (Exception ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -1166,10 +1185,14 @@ public class ApplyController extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(ApplyController.class
                     .getName()).log(Level.SEVERE, null, ex);
+
         } catch (SQLException ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+
         } catch (Exception ex) {
-            Logger.getLogger(ApplyController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ApplyController.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }
 

@@ -56,7 +56,7 @@ public class CandidateDAO {
 
     public static List<CandidateDTO> search2(String email) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus,c.apply "
+        PreparedStatement stm = con.prepareStatement("Select c.can_id,j.job_name,can_cv,score , c.isStatus "
                 + "from [dbo].[Candidate] c inner join [job] j on c.[job_id] = j.[job_id] "
                 + "where [email] like ?  order by [can_id] ASC");
         stm.setString(1, email);
@@ -72,8 +72,7 @@ public class CandidateDAO {
             String cv = rs.getString("can_cv");
             float score = rs.getFloat("score");
             int isStatus = rs.getInt("isStatus");
-            int apply = rs.getInt("apply");
-            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus, apply);
+            CandidateDTO join = new CandidateDTO(id, j, cv, score, isStatus);
             list.add(join);
         }
         con.close();
@@ -260,7 +259,7 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();
         ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score,isStatus from candidate c "
-                + "inner join job j on c.job_id = j.job_id "
+                + "inner join job j on c.job_id = j.job_id ORDER BY can_id DESC"
         );
         list = new ArrayList<>();
         while (rs.next()) {
@@ -285,7 +284,7 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.[isStatus] =0 ");
+                    + "where c.[isStatus] =0 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
                 JobDTO j = new JobDTO();
@@ -312,7 +311,7 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =1");
+                    + "where c.isStatus =1 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
                 JobDTO j = new JobDTO();
@@ -339,7 +338,7 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,c.can_cv,c.score, c.isStatus,j.major_id from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =2");
+                    + "where c.isStatus =2 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
                 JobDTO j = new JobDTO();
@@ -367,7 +366,7 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =3");
+                    + "where c.isStatus =3 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
                 JobDTO j = new JobDTO();
@@ -394,7 +393,7 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =5 ");
+                    + "where c.isStatus =5 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
                 JobDTO j = new JobDTO();
@@ -421,7 +420,7 @@ public class CandidateDAO {
             Statement stm = con.createStatement();
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score, isStatus from candidate c "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus <5 and c.isStatus > 0");
+                    + "where c.isStatus <5 and c.isStatus > 0 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
                 JobDTO j = new JobDTO();
@@ -449,7 +448,7 @@ public class CandidateDAO {
             ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus from candidate c "
                     + "inner join interviewing i on c.can_id = i.can_id "
                     + "inner join job j on c.job_id = j.job_id "
-                    + "where c.isStatus =4 ");
+                    + "where c.isStatus =4 ORDER BY can_id DESC");
             list = new ArrayList<>();
             while (rs.next()) {
                 InterviewingDTO i = new InterviewingDTO();

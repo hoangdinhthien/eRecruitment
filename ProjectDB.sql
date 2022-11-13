@@ -1700,4 +1700,6 @@ GO
 INSERT [dbo].[Exam_question] ([exam_id], [q_id]) VALUES (N'E01', N'Q017')
 GO
 INSERT [dbo].[Exam_question] ([exam_id], [q_id]) VALUES (N'E01', N'Q020')
+
 GO
+

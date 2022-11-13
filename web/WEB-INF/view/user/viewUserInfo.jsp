@@ -71,7 +71,7 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${can.isStatus <2}">
-                                            Not Available
+                                            Not Yet
                                         </c:when>
                                         <c:when test="${can.score!= null && can.isStatus >= 2}">
                                             ${can.score}

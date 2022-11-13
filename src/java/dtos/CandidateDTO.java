@@ -23,21 +23,12 @@ public class CandidateDTO {
     private int isStatus;
     private float score;
     private String status;
-    private int apply;
     private InterviewingDTO interid;
     private JobDTO jobname;
 
     public CandidateDTO() {
     }
 
-    public CandidateDTO(String id, JobDTO jobname, String cv, float score, int isStatus, int apply) {
-        this.id = id;
-        this.jobname = jobname;
-        this.cv = cv;
-        this.score = score;
-        this.isStatus = isStatus;
-        this.apply = apply;
-    }
 
     public CandidateDTO(String id, JobDTO jobname, String cv, float score, int isStatus) {
         this.id = id;
@@ -86,14 +77,6 @@ public class CandidateDTO {
         this.isStatus = isStatus;
         this.score = score;
         this.status = status;
-    }
-
-    public int getApply() {
-        return apply;
-    }
-
-    public void setApply(int apply) {
-        this.apply = apply;
     }
 
     public InterviewingDTO getInterid() {
