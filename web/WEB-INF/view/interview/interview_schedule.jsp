@@ -41,7 +41,7 @@
                     <nav class="interview-table-content">
                         <c:forEach var="i" items="${sublist}" varStatus="loop">
                             <div style="border-radius: 10px; padding-bottom: 0;margin-bottom: 50px;">
-                                <div class="set-can" style="padding-top: 30px ; padding-bottom: 80px; cursor: pointer" onclick="openForm(${loop.count})">
+                                <div class="set-can interview-information" onclick="openForm(${loop.count})">
                                     <ul class="">
                                         <li style="text-align: left">${i.can_name}</li>
                                         <li><fmt:formatDate value="${i.date}" pattern="dd-MM-yyyy HH:mm"/></li>
@@ -94,7 +94,7 @@
                                 </div>
                                 <c:if test="${i.status=='Hasn\'t Interviewed'}">
                                     <div class="interview-record set-can" style="text-align: left;" id="record-${loop.count}">
-                                        <span style="cursor: pointer; position: absolute; top:2%; right: 2%; font-size: 30px; color: #ff0000" onclick="closeForm(${loop.count})">&times;</span>  
+                                        <span style="" onclick="closeForm(${loop.count})">&times;</span>  
                                         <form action="<c:url value="/interview"/>">
                                             <textarea rows="5" cols="130" name="comment"  placeholder="Enter text here..." required></textarea><br/>
                                             <input type="number" name="score" value="${score}" min='0' max='100' required=""
