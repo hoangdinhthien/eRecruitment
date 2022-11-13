@@ -35,7 +35,6 @@
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" title="choose">
                     Choose a CV in the past.
                 </button>
-                <span style="margin-right: 10px; margin-left: 10px">Or</span>
                 <!-- The Modal -->
                 <div class="modal fade" id="myModal" role="dialog">
                     <div class="modal-dialog modal-dialog-centered">
@@ -68,6 +67,7 @@
                                                         $("#myModal").modal("toggle");
                                                         $(".custom-file-input").siblings(".custom-file-label").addClass("selected").html("${cvs[loop.count-1].can_cv}");
                                                         $("#choosenFile").val("${cvs[loop.count-1].can_cv}");
+                                                        $("#submitbutton").removeAttr("disabled");
                                                     });
                                                 });
                                             </script>
@@ -83,6 +83,7 @@
                         </div>
                     </div>
                 </div>
+                <span style="margin-right: 10px; margin-left: 10px">Or</span>
                 <div class="custom-file mb-3" style="width: 45%">
                     <input type="file" class="custom-file-input" id="customFile" name="filename" accept=".pdf,.doc,.docx" onchange="validateFileType()">
                     <label class="custom-file-label" for="customFile">Choose file</label>
@@ -91,7 +92,7 @@
                     <i style="color: red;">*Only accept .pdf, .doc, .docx file</i>
                 </p>
                 <div >
-                    <button type="submit" class="btn btn-success" id="submitbutton">Apply CV</button>
+                    <button type="submit" class="btn btn-success" id="submitbutton" disabled="true">Apply CV</button>
                 </div>
             </form>
 
@@ -104,7 +105,6 @@
                     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
                 });
             });
-            document.getElementById('submitbutton').disabled = true;
             function validateFileType() {
                 var fileName = document.getElementById("customFile").value;
                 var idxDot = fileName.lastIndexOf(".") + 1;

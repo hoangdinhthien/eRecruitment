@@ -15,8 +15,8 @@
         <!-- Featured Section Begin -->
         <div class="container">
             <div class="row">
-                <div class="col-lg-3">
-                    <c:if test="${empty info}">
+                <c:if test="${empty info}">
+                    <div class="col-lg-3">
                         <div class="login-content">
                             <h5>
                                 Join a dynamic team of 3HTD professionals at
@@ -47,11 +47,16 @@
                                 </button>
                             </div>
                         </div>
-                    </c:if>
-                </div>
-                <div style="border-radius: 10px;" class="hero__item set-bg col-lg-9"
-                     data-setbg="img/banner/recruitment-banner-2.jpg">
-                </div>
+                    </div>
+                    <div style="border-radius: 10px;" class="hero__item set-bg col-lg-9"
+                         data-setbg="img/banner/recruitment-banner-2.jpg">
+                    </div>
+                </c:if>
+                <c:if test="${not empty info}">
+                    <div style="border-radius: 10px;" class="hero__item set-bg col-lg-12"
+                         data-setbg="img/banner/recruitment-banner-2.jpg">
+                    </div>
+                </c:if>
             </div>
             <div class="row">
                 <div class="col-lg-12">

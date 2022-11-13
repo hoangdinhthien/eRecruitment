@@ -88,7 +88,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 .set-can{
     padding: 2% 2% 3% 3%;
     text-align: left;
-    background-color: mistyrose;
+    background-color: #96f5c270;
     border: 10px solid white;
     border-radius: 25px;
     position: relative;
@@ -171,6 +171,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 }
 
 .interview-record{
+    display: none;
     position: relative;
     padding-bottom: 80px
 }

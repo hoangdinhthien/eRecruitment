@@ -37,11 +37,11 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="">
+                <div>
                     <nav class="interview-table-content">
                         <c:forEach var="i" items="${sublist}" varStatus="loop">
-                            <div style="border-radius: 10px;border: 3px solid pink; padding-bottom: 0;margin-bottom: 50px;">
-                                <div class="set-can" style="padding-top: 30px ; padding-bottom: 80px;">
+                            <div style="border-radius: 10px; padding-bottom: 0;margin-bottom: 50px;">
+                                <div class="set-can" style="padding-top: 30px ; padding-bottom: 80px; cursor: pointer" onclick="openForm(${loop.count})">
                                     <ul class="">
                                         <li style="text-align: left">${i.can_name}</li>
                                         <li><fmt:formatDate value="${i.date}" pattern="dd-MM-yyyy HH:mm"/></li>
@@ -50,7 +50,7 @@
                                             <li style="color: #007fff">${i.status}</li>
                                             </c:if>
                                             <c:if test="${i.status=='Hasn\'t Interviewed'}">
-                                            <li style="color: #EDBB0E">${i.status}</li>
+                                            <li style="color: #fa732a">${i.status}</li>
                                             </c:if>
                                     </ul>
                                     <c:if test="${i.status=='Has Interviewed'}">
@@ -91,22 +91,10 @@
                                             </div>
                                         </a>
                                     </div>
-<!--                                    <div class="form-popup-cv form-container-cv" id="myBox${loop.count}">
-            <button type="button" class="btn cancel" onclick="closeForm(${loop.count})"
-                    href="<c:url value="/cvs/${i.can_cv}"/>">Close</button>
-            <img src="<c:url value="/cvs/${i.can_cv}"/>" alt=""
-                 style="    height: 90%; 
-                 width: 90%; 
-                 float: left;
-                 object-fit: fill;
-                 position: absolute;
-                 bottom: 20px;
-                 left: 45px"/>
-        </div>
-                 <a href="apply?op=downloadFile&fileName=${can.cv}">Download</a>-->
                                 </div>
                                 <c:if test="${i.status=='Hasn\'t Interviewed'}">
-                                    <div class="interview-record set-can" style="text-align: left;">
+                                    <div class="interview-record set-can" style="text-align: left;" id="record-${loop.count}">
+                                        <span style="cursor: pointer; position: absolute; top:2%; right: 2%; font-size: 30px; color: #ff0000" onclick="closeForm(${loop.count})">&times;</span>  
                                         <form action="<c:url value="/interview"/>">
                                             <textarea rows="5" cols="130" name="comment"  placeholder="Enter text here..." required></textarea><br/>
                                             <input type="number" name="score" value="${score}" min='0' max='100' required=""
@@ -143,6 +131,14 @@
             </c:if>
         </div>
         <script>
+
+            function openForm(i) {
+                document.getElementById("record-"+i).style.display = "block";
+            }
+
+            function closeForm(i) {
+                document.getElementById("record-"+i).style.display = "none";
+            }
 
             // Get the modal
             var modal = document.getElementById("myModal");

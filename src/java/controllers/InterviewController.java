@@ -433,7 +433,7 @@ public class InterviewController extends HttpServlet {
             String page = request.getParameter("page");
             int intpage = 1;
             int totalpage = 0;
-            int itemsPerPage = 2;
+            int itemsPerPage = 8;
             if (page != null) {
                 intpage = Integer.parseInt(page);
             }

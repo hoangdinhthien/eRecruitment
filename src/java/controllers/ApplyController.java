@@ -536,12 +536,8 @@ public class ApplyController extends HttpServlet {
             String downloadPath = applicationPath
                     + UPLOAD_DIR;
             //======
-            String filePath = "C:\\Users\\ADMIN\\OneDrive\\Máy tính\\final\\SWP391-GroupHHHTD-SE1610\\web\\cvs\\" + fileName;
-            System.out.println(fileName);
-            System.out.println(downloadPath);
-            System.out.println(filePath);
 
-            File file = new File(filePath);
+            File file = new File(getServletContext().getRealPath("/cvs/").replace('\\', '/') + fileName);
             OutputStream outStream = null;
             FileInputStream inputStream = null;
 
