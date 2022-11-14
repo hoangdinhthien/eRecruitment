@@ -258,7 +258,7 @@ GO
 CREATE TABLE [Exam]
 (
 	[exam_id] CHAR(3) PRIMARY KEY NOT NULL, --E00
-	[exam_name] NVARCHAR(30) UNIQUE NOT NULL,
+	[exam_name] NVARCHAR(30) NOT NULL,
 	[major_id] int FOREIGN KEY REFERENCES dbo.[Major] NOT NULL
 )
 GO

@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import utils.DBUtils;
 
@@ -77,7 +78,7 @@ public class UserDAO {
                 + " JOIN [dbo].[Role] r  ON u.role_id = r.role_id WHERE r.[role_name]=?");
         stm.setString(1, role_name);
         ResultSet rs = stm.executeQuery();
-        List<UserDTO> list = null;
+        List<UserDTO> list = new LinkedList();
         while (rs.next()) {
             UserDTO u = new UserDTO();
             u.setEmail(rs.getString("email"));
