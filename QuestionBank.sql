@@ -3,7 +3,28 @@ go
 
 -- Marketing
 
-
+INSERT INTO [Question]
+VALUES
+('Q001','Which of the following statements is correct?',1),
+('Q002','The term marketing refers to:',1),
+('Q003','What is a person who uses business products called?',1),
+('Q004','What activity is geared around understanding and communicating with the customer to help in the design, development, delivery, and determination of the value inherent in the offering?',1),
+('Q005','According to Leone and Shultz (1980), the law-like generalization 1 explains that ___________ has a direct and positive influence on total industry (market) sales.',1),
+('Q006','What is about how the offering''s benefits and features are communicated to the potential buyer?',1),
+('Q007','In relationship marketing firms focus on __________ relationships with __________.',1),
+('Q008','What is about the concern with creating superior value by continuously developing and redeveloping offerings to meet customer needs?',1),
+('Q009','Joint creation of value, in which customers take part in an active dialogue and co-construct personalized experiences, is referred to as:',1),
+('Q010','According to the Charted Institute of Marketing, which of the following is not a professional marketing competency?',1),
+('Q011','Which of the following is not an element of the marketing mix?',1),
+('Q012','The term ''marketing mix'' describes:',1),
+('Q013','Newsletters, catalogues, and invitations to organization-sponsored events are most closely associated with the marketing mix activity of:',1),
+('Q014','The way in which the product is delivered to meet the customers'' needs refers to:',1),
+('Q015','The ______________is concerned with ideas of the ''marketing mix'' and the 4Ps:',1),
+('Q016','In public sector markets, the ____________ is bound by strict legal guidelines for contracts valued over a set amount.',1),
+('Q017','The ____________ delivers to us a wide array of offerings, either directly or indirectly, through business markets, to serve our wants and needs.',1),
+('Q018','A market orientation recognizes that:',1),
+('Q019','Four competing philosophies strongly influence the role of marketing and marketing activities within an organization. Which if the following is not a component of market orientation?',1),
+('Q020','In order for exchange to occur: ',1)
 
 INSERT INTO [Option] ([q_id], [content], [isCorrect])
 VALUES
