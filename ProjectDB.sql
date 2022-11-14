@@ -455,23 +455,23 @@ INSERT [dbo].[Job] ([job_id], [job_name], [major_id], [job_vacancy], [job_descri
 GO
 INSERT [dbo].[Job] ([job_id], [job_name], [major_id], [job_vacancy], [job_description], [level_id], [salary], [post_date]) VALUES (N'C015', N'SQL Developer', 9, 5, N'SQL developers are responsible for all aspects of designing, creating and maintaining databases, including: Building databases and validating their stability and efficiency. Creating program views, functions and stored procedures.', 6, 50000, CAST(N'2022-11-11' AS Date))
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C001', N'C001', N'hoangthse162042@fpt.edu.vn', N'1.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C001', N'C001', N'hoangthse162042@fpt.edu.vn', N'1.pdf', 6, 2)
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C002', N'C001', N'126.thienphuc@gmail.com', N'2.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C002', N'C001', N'126.thienphuc@gmail.com', N'2.pdf', 4, 2)
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C003', N'C001', N'nguyenhuuthien12a2@gmail.com', N'3.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C003', N'C001', N'nguyenhuuthien12a2@gmail.com', N'3.pdf', 9, 2)
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C005', N'C001', N'tuan@gmail.com', N'5.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C005', N'C001', N'tuan@gmail.com', N'5.pdf', 8, 2)
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C006', N'C001', N'nam@gmail.com', N'6.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C006', N'C001', N'nam@gmail.com', N'6.pdf', 7, 2)
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C007', N'C001', N'huy@gmail.com', N'7.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C007', N'C001', N'huy@gmail.com', N'7.pdf', 6, 2)
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C008', N'C001', N'hieu@gmail.com', N'8.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C008', N'C001', N'hieu@gmail.com', N'8.pdf', 4, 2)
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C009', N'C001', N'hoang@gmail.com', N'9.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C009', N'C001', N'hoang@gmail.com', N'9.pdf', 7, 2)
 GO
-INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C010', N'C001', N'duy@gmail.com', N'10.pdf', NULL, 2)
+INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C010', N'C001', N'duy@gmail.com', N'10.pdf', 7, 2)
 GO
 INSERT [dbo].[Candidate] ([can_id], [job_id], [email], [can_cv], [score], [isStatus]) VALUES (N'C012', N'C015', N'thiennhse162041@fpt.edu.vn', N'1.pdf', NULL, 1)
 GO

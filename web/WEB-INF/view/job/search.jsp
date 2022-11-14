@@ -33,6 +33,16 @@
                 width: 95%;
 
             }
+            .job-box-0:hover{
+                cursor: pointer;
+                box-shadow: 1px 1px 2px red, 0 0 25px red, 0 0 5px red;
+                transition-duration: 0.2s;
+            }
+            .job-box:hover{
+                cursor: pointer;
+                box-shadow: 1px 1px 2px #66d7a7, 0 0 25px #66d7a7, 0 0 5px #66d7a7;
+                transition-duration: 0.2s;
+            }
         </style>
         <script>
             let last = null;
@@ -158,8 +168,8 @@
                 <c:forEach var="job" items="${list}" varStatus="loop">
                     <c:if test="${job.job_vacancy>0}">
                         <div class="row">
-                            <div class="col-md-6" onclick="job_detail(${loop.count})">
-                                <div style="background-color: #59c5dc; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;" >
+                            <div class="col-md-6 " onclick="job_detail(${loop.count})">
+                                <div style="background-color: #59c5dc; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;" class="job-box" >
                                     <h4 style="text-align: left;color: black;font-style: italic;">
                                         Job Name: ${job.job_name}
                                     </h4> <br/>
@@ -244,38 +254,6 @@
                                             <p style="text-align: left;color: grey;font-style: italic;">
                                                 Post Date: ${job.post_date} <br/>
                                             </p>
-<<<<<<< HEAD
-                                            <p style="text-align: right; margin-bottom: 0;">
-                                                <!--Validate Applied - Apply-->
-                                                <c:forEach var="app" items="${listApplied}">
-                                                    <c:if  test="${app.jobId == job.job_id }">
-                                                        <c:set var="check" value="1" />
-                                                    </c:if>
-                                                </c:forEach>
-                                                <c:choose>
-                                                    <c:when test="${check == 1}">
-                                                        <a class="btn btn-success disabled" style="color: #ffffff !important; border-color: #66D7A7;
-                                                           background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                                           width: 100px" >
-                                                            Applied
-                                                        </a>
-                                                        <c:set var="check" value="0" />
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
-                                                           background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                                           width: 100px" 
-                                                           <c:choose>
-                                                               <c:when test="${not empty info}"> href="<c:url value="/apply?op=index&job_id=${job.job_id}&job_name=${job.job_name}"/>"
-                                                               </c:when>
-                                                               <c:otherwise>  href="<c:url value="https://accounts.google.com/o/oauth2/auth?scope=email  profile&redirect_uri=http://localhost:8084/recruitment-system/login?op=login&response_type=code&client_id=779040387699-c58vkqmlf6cmvtv3som469pl5k78lgar.apps.googleusercontent.com&approval_prompt=force"/>"</c:otherwise> 
-                                                           </c:choose>>Apply
-                                                        </a>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                                <!--Validate Applied - Apply-->
-                                            </p>
-=======
                                             <!--Check Role != Member / Candidate-->
                                             <c:choose>
                                                 <c:when test="${role == 'Member' ||role == 'Candidate' || empty info}">
@@ -299,11 +277,6 @@
                                                                 <!--Check Accepted CV ?-->
                                                                 <c:choose>
                                                                     <c:when test="${not empty info && not empty checkApplied}" >
-                                                                        <a class="btn btn-success disabled" style="color: #ffffff !important; border-color: #66D7A7;
-                                                                           background: #66D7A7; border-style: solid; text-transform: uppercase; font-weight: 500;
-                                                                           width: 120px"
-                                                                           >Apply
-                                                                        </a>
                                                                     </c:when>
                                                                     <c:otherwise>
                                                                         <a class="btn btn-success" style="color: #ffffff !important; border-color: #66D7A7;
@@ -326,7 +299,6 @@
                                                 </c:when>
                                             </c:choose>
                                             <!--Check Role != Member / Candidate-->
->>>>>>> origin/Duy
                                         </div>
                                     </div>
                                 </c:if>
@@ -424,7 +396,7 @@
                         <c:if test="${job.job_vacancy==0 && not empty job.job_id}">
                             <div class="row">
                                 <div class="col-md-6" onclick="job_detail(${loop.count})">
-                                    <div style="background-color: #EA7F67; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;" >
+                                    <div style="background-color: #EA7F67; border-radius: 10px; margin-bottom: 50px;padding-left: 20px;" class="job-box-0">
                                         <h4 style="text-align: left;color: black;font-style: italic;">
                                             Job Name: ${job.job_name}
                                         </h4> <br/>
