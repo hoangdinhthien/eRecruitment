@@ -29,10 +29,12 @@
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/UserController.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/user/viewUserInfo.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/UserDTO.java</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/apply/list_Inprocess.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/JobDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/dtos/SaveJDTO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/InterviewerDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/UserCvDAO.java</file>
+            <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/home/index.jsp</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/daos/CandidateDAO.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/src/java/controllers/InterviewController.java</file>
             <file>file:/D:/SWP391-GroupHHHTD-SE1610/web/WEB-INF/view/job/update_job.jsp</file>
