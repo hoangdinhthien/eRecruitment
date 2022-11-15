@@ -137,7 +137,7 @@
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">Number Of Question :</span>
-                            <input class="form-control" type="number" name="numOfQuestion" min="1" max="10" required="true"/>
+                            <input class="form-control" type="number" name="numOfQuestion" min="1" max="10" required="true" value="10"/>
                         </div>
                         <button type="submit" class="btn btn-secondary">Update</button>
                         <button onclick="document.querySelector('dialog').close()" class="btn btn-secondary" >Cancel</button>
@@ -165,10 +165,11 @@
                             <c:forEach var="option" items="${listOption}">
                                 <c:if test="${option.q_id == question.q_id}">
                                     <div class="input-group">
-                                        <div class="input-group-text">
-                                            <c:if test="${option.isCorrect}"> <input class="form-check-label" type="radio" checked/> </c:if>
-                                            </div>
-                                            <input type="text" id="disabledTextInput" class="form-control"  value="${option.content}">
+                                        <input type="text" id="disabledTextInput" class="form-control"  value="${option.content}"
+                                               <c:if test="${option.isCorrect}"> 
+                                                   style="color: white; background-color: #58c190; font-style: italic"
+                                               </c:if>
+                                               >
                                     </div>
                                 </c:if>
                             </c:forEach>

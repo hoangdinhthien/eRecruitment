@@ -24,7 +24,7 @@
                 <strong>${Accept}!</strong> 
             </div>
         </c:if>
-        <h1>Newest Applications</h1> <br>
+        <h1>Latest Applications</h1> <br>
         <c:choose>
             <c:when test="${not empty list0  }">
                 <table class="table table-striped" border="1" cellspacing="0" cellpadding="4">

@@ -28,12 +28,20 @@
 
         <div class="container">
             <c:if test="${testInfo!=null}">
-                <h3>Test name: ${testInfo.exam_id}</h3>
-                <h5>Candidate ID: ${canId} | Major: <c:forEach items="${listMajor}" var="major"><c:if test="${major.major_id==testInfo.major_id}">${major.major_name}</c:if></c:forEach></h5><br/>
-                <p>Warning: You need to score at least 4.0 to be interviewed. Otherwise, this application will be rejected.</p>
-                <a href="<c:url value="/exam?op=takeExam&canId=${canId}"/>">
-                    <button class=" btn btn-info">Atemp exam</button>
-                </a>
+                <div style="text-align: center; margin: 100px 50px 0 50px">
+                    <h3>
+                        Test name: ${testInfo.exam_id}
+                    </h3>
+                    <h5>Candidate ID: ${canId} | Major: <c:forEach items="${listMajor}" var="major"><c:if test="${major.major_id==testInfo.major_id}">${major.major_name}</c:if></c:forEach></h5><br/>
+                            <p> 
+                                <b style="color: red">
+                                    Warning: You need to score at least 4.0 to be interviewed. Otherwise, this application will be rejected.
+                                </b>
+                            </p>
+                            <a href="<c:url value="/exam?op=takeExam&canId=${canId}"/>">
+                        <button class=" btn btn-info">Attempt exam</button>
+                    </a>
+                </div>
             </c:if>
             <div class="result">
                 <h2>${message}</h2>
@@ -42,9 +50,12 @@
                 </c:if>
                 <a class="return-home-btn" href="<c:url value="/home?op=index"/>">
                     <button class=" btn btn-info">Return to home page</button>
-                <a class="return-home-btn" href="<c:url value="/user?op=info"/>">
-                    <button class=" btn btn-info">Return to Info page</button>
                 </a>
+                <c:if test="${not empty info}">
+                    <a class="return-home-btn" href="<c:url value="/user?op=info"/>">
+                        <button class=" btn btn-info">Return to Info page</button>
+                    </a>
+                </c:if>
             </div>
         </div>
 

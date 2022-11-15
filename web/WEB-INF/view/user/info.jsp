@@ -122,7 +122,10 @@
                                         <td>
                                             <!--Failed-->
                                             <c:choose>
-                                                <c:when test="${can.isStatus==0 || can.isStatus==6}">
+                                                <c:when test="${can.isStatus==6}">
+                                                    <div style="color: #FF8000">Cancel</div>
+                                                </c:when>
+                                                <c:when test="${can.isStatus==0}">
                                                     Hasn't Accepted
                                                 </c:when>
                                                 <c:when test="${can.isStatus==1}">
@@ -151,7 +154,7 @@
                                             <!--Passed-->
                                             <c:choose>
                                                 <c:when test="${can.isStatus==6}">
-                                                    Cancel
+                                                    <div style="color: #FF8000">Cancel</div>
                                                 </c:when>
                                                 <c:when test="${can.isStatus==0}">
                                                     Hasn't Accepted
@@ -221,7 +224,7 @@
                                     </c:choose>
                                     <c:if test="${can.isStatus==1}">
                                         <br/>
-                                         <a href="exam?op=confirmExam&canId=${can.id}">Attempt Exam</a>
+                                        <a href="exam?op=confirmExam&canId=${can.id}">Attempt Exam</a>
                                     </c:if> 
                                 </td>
                             </tr>

@@ -179,9 +179,9 @@ public class InterviewController extends HttpServlet {
         try {
             String major = request.getParameter("major_id");
             int major_id = 0;
-            if(major.equalsIgnoreCase("All")){
+            if (major.equalsIgnoreCase("All")) {
                 set_schedule_view(request, response);
-            }else{
+            } else {
                 major_id = Integer.parseInt(major);
             }
             String success = request.getParameter("success");
@@ -273,8 +273,8 @@ public class InterviewController extends HttpServlet {
             SimpleDateFormat mailf = new SimpleDateFormat("dd-MM-yyyy");
             time = period.get(time);
             int index = 0;
-            if (!InterviewingDAO.checkInterviewDate(sdf.parse(date + " " + time), 3)) {
-                for (String c : cId) { // Chay vong lay candidate's id
+            for (String c : cId) { // Chay vong lay candidate's id
+                if (!InterviewingDAO.checkInterviewDate(c, 3)) {
                     for (String i : iId) { //Chay vong lap lay interviewer's id 
                         InterviewingDTO ig = new InterviewingDTO();
                         ig.setInter_id(i);
@@ -327,43 +327,43 @@ public class InterviewController extends HttpServlet {
                             + "<strong>3HTD Company</strong>"
                             + "</p>",
                             "Interview process", "/interview?op=interview_process&email=${info.email}");
+                    for (String i : iId) {
+                        InterviewerDTO inter = InterviewerDAO.searchInterviewerById(i);
+                        to = inter.getEmail();
+                        subject = "3HTD: You have got a new interview schedule";
+                        body = "<p>Dear <strong>" + inter.getName() + "</strong>, </p><br/>"
+                                + "<p>There are always potential candidates want to join in our company. So we has set an interview for you and them.</p>"
+                                + "<p>On: <strong>"
+                                + time.substring(0, time.lastIndexOf(":"))
+                                + "</strong>  <strong>"
+                                + mailf.format(sdf.parse(date + " " + time))
+                                + "</strong> - "
+                                + " At: "
+                                + "<strong>3HTD Company</strong>"
+                                + "</p>"
+                                + "<p>Please get it on time.</p><br/>"
+                                + "<p>Sincerely</p>"
+                                + "<p>3HTD</p>";
+                        MailUtils.send(to, subject, body);
+                        NotificationDAO.add(to, "A new interview schedule",
+                                "<p>You have interview schedule</p>"
+                                + "<p>On: <strong>"
+                                + time.substring(0, time.lastIndexOf(":"))
+                                + "</strong>  <strong>"
+                                + mailf.format(sdf.parse(date + " " + time))
+                                + "</strong> - "
+                                + " At: "
+                                + "<strong>3HTD Company</strong>"
+                                + "</p>",
+                                "Interview schedule", "/interview?op=interview_schedule&email=${info.email}");
+                    }
+                    //Add interview thanh cong
+                    request.setAttribute("message", "Set schedule successfully!");
+                    request.getRequestDispatcher("/interview?op=set_schedule_filtered&success=true").forward(request, response);
+                } else {//Neu datetime da ton tai thi tra lai trang va thong bao loi
+                    request.setAttribute("message", "This date has been booked. Please choose another time");
+                    request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
                 }
-                for (String i : iId) {
-                    InterviewerDTO inter = InterviewerDAO.searchInterviewerById(i);
-                    String to = inter.getEmail();
-                    String subject = "3HTD: You have got a new interview schedule";
-                    String body = "<p>Dear <strong>" + inter.getName() + "</strong>, </p><br/>"
-                            + "<p>There are always potential candidates want to join in our company. So we has set an interview for you and them.</p>"
-                            + "<p>On: <strong>"
-                            + time.substring(0, time.lastIndexOf(":"))
-                            + "</strong>  <strong>"
-                            + mailf.format(sdf.parse(date + " " + time))
-                            + "</strong> - "
-                            + " At: "
-                            + "<strong>3HTD Company</strong>"
-                            + "</p>"
-                            + "<p>Please get it on time.</p><br/>"
-                            + "<p>Sincerely</p>"
-                            + "<p>3HTD</p>";
-                    MailUtils.send(to, subject, body);
-                    NotificationDAO.add(to, "A new interview schedule",
-                            "<p>You have interview schedule</p>"
-                            + "<p>On: <strong>"
-                            + time.substring(0, time.lastIndexOf(":"))
-                            + "</strong>  <strong>"
-                            + mailf.format(sdf.parse(date + " " + time))
-                            + "</strong> - "
-                            + " At: "
-                            + "<strong>3HTD Company</strong>"
-                            + "</p>",
-                            "Interview schedule", "/interview?op=interview_schedule&email=${info.email}");
-                }
-                //Add interview thanh cong
-                request.setAttribute("message", "Set schedule successfully!");
-                request.getRequestDispatcher("/interview?op=set_schedule_filtered&success=true").forward(request, response);
-            } else {//Neu datetime da ton tai thi tra lai trang va thong bao loi
-                request.setAttribute("message", "This date has been booked. Please choose another time");
-                request.getRequestDispatcher("/interview?op=set_schedule_filtered").forward(request, response);
             }
         } catch (ParseException ex) {
             Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
@@ -488,7 +488,7 @@ public class InterviewController extends HttpServlet {
             } else { //Update fail
                 request.setAttribute("message", "Adding fail. Please try again!");// Gui thong bao fail
             }
-            if (!InterviewingDAO.checkInterviewDate(date, 3)) { //Neu da xong 1 buoi interview thi thong bao cho hr manager
+            if (!InterviewingDAO.checkInterviewDate(can_id, 3)) { //Neu da xong 1 buoi interview thi thong bao cho hr manager
                 List<UserDTO> users = UserDAO.searchUserByRole("Admin");
                 for (UserDTO u : users) {
                     //Gui thong bao
