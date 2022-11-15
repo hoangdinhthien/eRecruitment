@@ -924,7 +924,7 @@ public class CandidateDAO {
 
     public void deleteSuperfluousCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <=4 ");
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] != 5 ");
         stm.setString(1, jobId);
         ResultSet rs = stm.executeQuery();
         ExamDAO eDao = new ExamDAO();
@@ -932,8 +932,6 @@ public class CandidateDAO {
         while (rs.next()) {
             String canId = rs.getString("can_id");
             String email = rs.getString("email");
-            eDao.deleteCanExam(canId);
-            iDao.deleteInterview(canId);
             NotificationDAO nDao = new NotificationDAO();
             nDao.add(email, "The available job have been filled",
                     "Thank you for apply to this jobs. "
@@ -959,7 +957,7 @@ public class CandidateDAO {
 
     public void deleteJobCan(String jobId) throws SQLException, ClassNotFoundException, Exception {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email],  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] <= 4 ");
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email],  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] != 4 ");
         stm.setString(1, jobId);
         ResultSet rs = stm.executeQuery();
         ExamDAO eDao = new ExamDAO();
@@ -996,20 +994,13 @@ public class CandidateDAO {
         System.out.println("remove unused");
         deleteCanResult(email);
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
+        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] != 5 ");
         stm.setString(1, email);
         stm.executeUpdate();
         con.close();
     }
 
-    public void removeSuperfluousApplication(String email) throws SQLException, ClassNotFoundException {
-        deleteCanResult(email);
-        Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("DELETE FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4");
-        stm.setString(1, email);
-        stm.executeUpdate();
-        con.close();
-    }
+   
 
     public void updateup01(String can_id, String email) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();

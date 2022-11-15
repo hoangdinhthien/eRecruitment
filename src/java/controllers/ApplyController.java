@@ -771,6 +771,8 @@ public class ApplyController extends HttpServlet {
             String job_name = request.getParameter("job_name"); // lấy job_name
             CandidateDAO tf = new CandidateDAO();
             tf.updateup45(can_id, email);
+            JobDAO jDao = new JobDAO();
+            jDao.checkVacancy(tf.getJob(can_id));
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
             List<CandidateDTO> list4 = CandidateDAO.hrstatus4();
@@ -790,6 +792,7 @@ public class ApplyController extends HttpServlet {
                     null, null);
             //Cho hiện lại danh sách 
             String Accept = can_id + " have been Accept";
+            tf.removeUnusedApplication(email);
             request.setAttribute("Accept", Accept);
             request.setAttribute("list4", list4);
             request.setAttribute("action", "list_Recruit");

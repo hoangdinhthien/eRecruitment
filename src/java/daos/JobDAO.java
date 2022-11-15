@@ -252,7 +252,7 @@ public class JobDAO {
         con.close();
     }
 
-    public boolean checkVacancy(String jobId) throws ClassNotFoundException, SQLException {
+    public void checkVacancy(String jobId) throws ClassNotFoundException, SQLException, Exception {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT [job_vacancy] FROM [Job] WHERE [job_id] = ? ");
         stm.setString(1, jobId);
@@ -262,17 +262,15 @@ public class JobDAO {
             vacancy = rs.getInt("job_vacancy");
         }
         con.close();
-        boolean check = true;
         if (vacancy <= 1) {
             if (vacancy == 1) {
                 reduceVacancy(jobId);
             }
-            check = false;
+            CandidateDAO cDao = new CandidateDAO();
+            cDao.deleteSuperfluousCan(jobId);
         } else {
             reduceVacancy(jobId);
-            check = true;
         }
-        return check;
     }
 
     public static boolean update_job(JobDTO j) throws SQLException, ClassNotFoundException {
@@ -309,7 +307,7 @@ public class JobDAO {
     }
 
     public void update(String job_id, String job_skill) throws SQLException, ClassNotFoundException {
-         Connection con = DBUtils.makeConnection();
+        Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("Insert into Job_skill(job_id,detail) values(?,?)");
         stm.setString(1, job_id);
         stm.setString(2, job_skill);
@@ -337,7 +335,7 @@ public class JobDAO {
         return r;
     }
 
-   public static void delete_job(String job_id) throws SQLException, ClassNotFoundException {
+    public static void delete_job(String job_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("DELETE FROM [Job] WHERE [job_id] = ?");
         stm.setString(1, job_id);
@@ -360,7 +358,6 @@ public class JobDAO {
         stm.executeUpdate();
         con.close();
     }
-
 
     public static void deleteJobResult(String job_id) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
