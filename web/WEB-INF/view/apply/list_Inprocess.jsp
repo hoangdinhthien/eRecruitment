@@ -98,7 +98,7 @@
                             </td>
                             <td style="text-align: center">
                                 <a class="gg-software-download" style="margin-top:20px; display:inline-block;color: orange" href="apply?op=downloadFile&fileName=${can.cv}"></a> |
-                                <a class="gg-remove-r" style="margin-top:20px; display:inline-block; color: red" href="apply?op=rejectFileInprocess&can_id=${can.id}&email=${can.email}"></a> 
+                                <a class="gg-remove-r" style="margin-top:20px; display:inline-block; color: red" href="apply?op=rejectFileInprocess&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}"></a> 
                             </td>
                         </tr>
 

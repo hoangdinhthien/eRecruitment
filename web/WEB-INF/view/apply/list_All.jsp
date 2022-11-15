@@ -12,6 +12,7 @@
         <style>
             tr a:hover, tr a:active {
                 background-color: #66F1A1;
+                color: black; 
                 /*border: 2px solid #66F1A1;*/
                 /*color: white;*/
             }
@@ -36,8 +37,9 @@
                 <ul>
                     <li>
                         <!--Thêm Biểu Tượng cho List Status-->
-                        <a class="fas fa-bars" 
+                        <a class="" 
                            style="color: #ffffff !important; 
+                           font-family: 'Cairo', sans-serif;
                            border-color: #66D7A7;
                            background: #66D7A7;
                            border-style: solid;
@@ -48,7 +50,7 @@
                            "
                            href="<c:url value="apply?op=listAll"/>" 
                            type="button"> 
-                            Status
+                            &equiv; Status
                         </a>
                         <ul class="header__menu__dropdown">
                             <li><a href="apply?op=filterStatus0All">Waiting</a></li>
@@ -105,7 +107,7 @@
                                 <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="" /></td>
                                 <td>${can.id}</td>
                                 <td>${can.jobname.job_name}</td>
-                                <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>" style="text-decoration: underline #66F1A1;"> ${can.email} </a></td>
+                                <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>" style="text-decoration: underline black;"> ${can.email} </a></td>
                                 <td>${can.cv}</td>
                                 <td>
                                     <c:choose>
@@ -124,7 +126,7 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${can.isStatus==0}">
-                                            Not Yet
+                                            <div style="color: #05df82">Newest</div>
                                         </c:when>
                                         <c:when test="${can.isStatus==1}">
                                             Accepted
@@ -166,6 +168,5 @@
         <br>
     </center>
     <!--Style của List Status-->  
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

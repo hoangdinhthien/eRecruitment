@@ -305,7 +305,7 @@ public class ExamController extends HttpServlet {
                 request.setAttribute("action", "result");
                 request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
             } else {
-                request.getRequestDispatcher("/result.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);

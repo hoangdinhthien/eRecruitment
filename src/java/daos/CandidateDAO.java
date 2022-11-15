@@ -1022,12 +1022,12 @@ public class CandidateDAO {
                 + "SET [isStatus] = 1  "
                 + "WHERE [can_id]= ? ; "
         //===Role: Member => Candidate
-        //                + "UPDATE [User] SET role_id = 4"
-        //                + " WHERE email = ? "
+                        + "UPDATE [User] SET role_id = 4"
+                        + " WHERE email = ? "
         );
         stm.setString(1, email);
         stm.setString(2, can_id);
-//        stm.setString(3, email);
+        stm.setString(3, email);
         stm.executeUpdate();
         con.close();
     }
@@ -1067,11 +1067,14 @@ public class CandidateDAO {
         PreparedStatement stm = con.prepareStatement(
                 "DELETE FROM [Interviewing] "
                 + "WHERE [can_id] = ? ; "
+                + "DELETE FROM [Examination] "
+                + "WHERE [can_id] = ? ; "
                 + "DELETE FROM [Candidate] "
                 + "WHERE [can_id] = ? "
         );
         stm.setString(1, can_id);
         stm.setString(2, can_id);
+        stm.setString(3, can_id);
         stm.executeUpdate();
         System.out.println("Deleted(1): " + can_id);
         con.close();
@@ -1083,6 +1086,8 @@ public class CandidateDAO {
         PreparedStatement stm = con.prepareStatement(
                 "DELETE FROM [Interviewing] "
                 + "WHERE [can_id] = ? ; "
+                +"DELETE FROM [Examination] "
+                + "WHERE [can_id] = ? ; "
                 + "DELETE FROM [Candidate] "
                 + "WHERE [can_id] = ? ;"
                 //===
@@ -1092,7 +1097,8 @@ public class CandidateDAO {
         );
         stm.setString(1, can_id);
         stm.setString(2, can_id);
-        stm.setString(3, email);
+        stm.setString(3, can_id);
+        stm.setString(4, email);
         stm.executeUpdate();
         System.out.println("Deleted(Applied): " + can_id + email);
         con.close();
@@ -1104,6 +1110,8 @@ public class CandidateDAO {
         PreparedStatement stm = con.prepareStatement(
                 "DELETE FROM [Interviewing] "
                 + "WHERE [can_id] = ? ; "
+                + "DELETE FROM [Examination] "
+                + "WHERE [can_id] = ?;"
                 + "DELETE FROM [Candidate] "
                 + "WHERE [can_id] = ?;"
                 //===
@@ -1113,7 +1121,8 @@ public class CandidateDAO {
         );
         stm.setString(1, can_id);
         stm.setString(2, can_id);
-        stm.setString(3, email);
+        stm.setString(3, can_id);
+        stm.setString(4, email);
         stm.executeUpdate();
         System.out.println("Deleted(1): " + can_id);
         con.close();

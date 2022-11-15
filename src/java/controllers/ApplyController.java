@@ -590,7 +590,6 @@ public class ApplyController extends HttpServlet {
             String can_id = request.getParameter("can_id"); // lấy id
             String email = request.getParameter("email"); // lấy email
             String stand = request.getParameter("stand"); // lấy stand
-            System.out.println(stand);
             CandidateDAO tf = new CandidateDAO();
             CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
             tf.delete(can_id);
@@ -655,12 +654,10 @@ public class ApplyController extends HttpServlet {
             String can_id = request.getParameter("can_id"); // lấy id
             String email = request.getParameter("email"); // lấy id
             CandidateDAO tf = new CandidateDAO();
-            tf.rejectFileInprocess(can_id, email);
-            List<CandidateDTO> listInprocess = CandidateDAO.hrstatus14();
 //            //=== Notification + Send Email
             String job_name = request.getParameter("job_name"); // lấy job_name
             CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
-            String to = can.getEmail();
+            String to = email;
             System.out.println("Data: " + job_name + " " + to);
             String subject = "3HTD: Your Resume has been rejected";
             String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
@@ -675,6 +672,8 @@ public class ApplyController extends HttpServlet {
             NotificationDAO.add(to, "Rejected Resume",
                     "<p>Your Resume has been rejected.</p>",
                     null, null);
+            tf.rejectFileInprocess(can_id, email);
+            List<CandidateDTO> listInprocess = CandidateDAO.hrstatus14();
             //Cho hiện lại danh sách 
             String Reject = can_id + " have been Reject";
             request.setAttribute("Reject", Reject);
@@ -692,26 +691,26 @@ public class ApplyController extends HttpServlet {
             String can_id = request.getParameter("can_id"); // lấy id
             String email = request.getParameter("email");
             CandidateDAO tf = new CandidateDAO();
-            tf.rejectFileInprocess(can_id, email);
             String job_name = request.getParameter("job_name"); // lấy job_name   
-            List<CandidateDTO> list4 = CandidateDAO.hrstatus4();
             //=== Notification + Send Email
-//            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
-//            String to = can.getEmail();
-//            System.out.println("Data Reject Recruit: " + job_name + " " + to + email + can.getName());
-//            String subject = "3HTD: Your Resume has been rejected";
-//            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
-//                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
-//                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
-//                    + " Through the review of the profile and the results of the interview, we found that there are some points that you do not match our requirements."
-//                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
-//                    + "<p>We look forward to you becoming our member.</p>"
-//                    + "<p>Best regards,</p>"
-//                    + "<p>3HTD</p>";
-//            MailUtils.send(email, subject, body);
-//            NotificationDAO.add(email, "Rejected Resume",
-//                    "<p>Your Resume has been rejected.</p>",
-//                    null, null);
+            CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            String to = can.getEmail();
+            System.out.println("Data Reject Recruit: " + job_name + " " + to + email + can.getName());
+            String subject = "3HTD: Your Resume has been rejected";
+            String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
+                    + "<p>We thank you for taking the  time to  apply for the job : <strong> " + job_name + "</strong> of 3HTD.</p>"
+                    + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
+                    + " Through the review of the profile and the results of the interview, we found that there are some points that you do not match our requirements."
+                    + "However, please keep in touch with us because in the future, we still have the need to recruit again.Wishing you the best of luck and success in your job search.</p><br/>"
+                    + "<p>We look forward to you becoming our member.</p>"
+                    + "<p>Best regards,</p>"
+                    + "<p>3HTD</p>";
+            MailUtils.send(email, subject, body);
+            NotificationDAO.add(email, "Rejected Resume",
+                    "<p>Your Resume has been rejected.</p>",
+                    null, null);
+            tf.rejectFileInprocess(can_id, email);
+            List<CandidateDTO> list4 = CandidateDAO.hrstatus4();
             //Cho hiện lại danh sách 
             String Reject = can_id + " have been Reject";
             request.setAttribute("Reject", Reject);
@@ -732,7 +731,8 @@ public class ApplyController extends HttpServlet {
             CandidateDAO tf = new CandidateDAO();
             tf.updateup01(can_id, email);
             CandidateDTO cd = new CandidateDTO();
-            System.out.println("status :" + cd.getIsStatus());
+            ExamDAO eDao = new ExamDAO();
+            eDao.giveExam(can_id, tf.getMajor(can_id));
             List<CandidateDTO> list0 = CandidateDAO.hrstatus0();
             //=== Notification + Send Email
             CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
@@ -742,15 +742,16 @@ public class ApplyController extends HttpServlet {
                     + "<p>We thank you for applying for the job: <strong>" + job_name + " </strong> of 3HTD.</p>"
                     + "We make sure you have taken the time to get to know the job and be confident with your very well-prepared resume."
                     + "You have completed the first stage in the recruitment of our company."
-                    + "<p>This includes <strong> Posting A CV, Taking A Test, Going To An Interview, and Waiting To Receive A Notification Of Matriculation. </strong> </p>"
+                    + "<p>There is an exam that you need to attempt. <a href=\"http://localhost:8084/recruitment-system/exam?op=confirmExam&canId=" + can_id + "\"> Click Here to attempt</a></p>"
                     + "<p>Have a nice day and don't forget to check your email regularly! We look forward to the opportunity to meet you.</p><br/>"
                     + "<p>We look forward to you becoming our member.</p>"
+                    + ""
                     + "<p>Sincerely</p>"
                     + "<p>3HTD</p>";
             MailUtils.send(to, subject, body);
             NotificationDAO.add(to, "Accepted Resume",
                     "<p>Your Resume already accepted.</p>",
-                    null, null);
+                    "Click here to take exam.", "/exam?op=confirmExam&canId=" + can_id);
             //Cho hiện lại danh sách 
             String Accept = can_id + " have been Accept";
             request.setAttribute("Accept", Accept); //Notify ở list_Newest
