@@ -488,7 +488,11 @@ public class InterviewController extends HttpServlet {
             } else { //Update fail
                 request.setAttribute("message", "Adding fail. Please try again!");// Gui thong bao fail
             }
+<<<<<<< HEAD
             if (!InterviewingDAO.checkInterviewDate(can_id, 3)) { //Neu da xong 1 buoi interview thi thong bao cho hr manager
+=======
+            if (!InterviewingDAO.checkCandidateInterview(can_id, 3)) { //Neu da xong 1 buoi interview thi thong bao cho hr manager
+>>>>>>> origin/main
                 List<UserDTO> users = UserDAO.searchUserByRole("Admin");
                 for (UserDTO u : users) {
                     //Gui thong bao

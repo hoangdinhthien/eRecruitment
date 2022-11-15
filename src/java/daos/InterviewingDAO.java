@@ -192,5 +192,17 @@ public class InterviewingDAO {
         con.close();
         return false;
     }
+    public static boolean checkCandidateInterview(String can_id, int isStatus) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT id, inter_id, can_id, date, location, inter_score FROM [dbo].[Interviewing] WHERE can_id=? and isStatus=?");
+        stm.setString(1, can_id);
+        stm.setInt(2, isStatus);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            return true;
+        }
+        con.close();
+        return false;
+    }
     
 }
