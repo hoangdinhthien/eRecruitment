@@ -55,16 +55,16 @@
                                     </ul>
                                     <c:if test="${i.status=='Has Interviewed'}">
                                         <!-- Trigger/Open The Modal -->
-                                        <button id="myBtn" class="btn btn-default" style="position: absolute; bottom: 10px; right: 180px">Modify your record</button>
+                                        <button id="myBtn-${loop.count}" class="btn btn-default" style="position: absolute; bottom: 10px; right: 180px">Modify your record</button>
 
                                         <!-- The Modal -->
-                                        <div id="myModal" class="modal">
+                                        <div id="myModal-${loop.count}" class="modal">
 
                                             <!-- Modal content -->
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h2>Modify your record</h2>
-                                                    <span class="close">&times;</span>
+                                                    <span class="close" id="close-${loop.count}">&times;</span>
                                                 </div>
                                                 <div class="modal-body">
                                                     <form action="<c:url value="/interview"/>">
@@ -79,7 +79,35 @@
                                                     </form>
                                                 </div>
                                             </div>
+                                            <script>
+                                                // Get the modal
+                                                var modal = document.getElementById("myModal-" + ${loop.count});
 
+// Get the button that opens the modal
+                                                var btn = document.getElementById("myBtn-" + ${loop.count});
+
+// Get the <span> element that closes the modal
+                                                var span = document.getElementById("close-"+${loop.count});
+
+// When the user clicks the button, open the modal 
+                                                btn.onclick = function () {
+                                                    modal = document.getElementById("myModal-" + ${loop.count});
+                                                    modal.style.display = "block";
+                                                }
+
+// When the user clicks on <span> (x), close the modal
+                                                span.onclick = function () {
+                                                    modal = document.getElementById("myModal-" + ${loop.count});
+                                                    modal.style.display = "none";
+                                                }
+
+// When the user clicks anywhere outside of the modal, close it
+                                                window.onclick = function (event) {
+                                                    if (event.target === modal) {
+                                                        modal.style.display = "none";
+                                                    }
+                                                }
+                                            </script>
                                         </div>
                                     </c:if> 
                                     <div class="interview-table-content-btn">
@@ -133,38 +161,15 @@
         <script>
 
             function openForm(i) {
-                document.getElementById("record-"+i).style.display = "block";
+                document.getElementById("record-" + i).style.display = "block";
             }
 
             function closeForm(i) {
-                document.getElementById("record-"+i).style.display = "none";
+                document.getElementById("record-" + i).style.display = "none";
             }
 
-            // Get the modal
-            var modal = document.getElementById("myModal");
 
-// Get the button that opens the modal
-            var btn = document.getElementById("myBtn");
 
-// Get the <span> element that closes the modal
-            var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-            btn.onclick = function () {
-                modal.style.display = "block";
-            }
-
-// When the user clicks on <span> (x), close the modal
-            span.onclick = function () {
-                modal.style.display = "none";
-            }
-
-// When the user clicks anywhere outside of the modal, close it
-            window.onclick = function (event) {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            }
         </script>
     </body>
 </html>

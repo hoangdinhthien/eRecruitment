@@ -33,12 +33,6 @@
                         <li><a href="apply?op=sortByCanDESCRecruit">Can Id Descending</a></li>
                     </ul>
                 </li>
-                <li><a href="<c:url value="/apply?op=sortByScoreASCRecruit"/>"> Sort by Exam Score </a>
-                    <ul class="header__menu__dropdown">
-                        <li><a href="apply?op=sortByScoreASCRecruit">Score Ascending</a></li>
-                        <li><a href="apply?op=sortByScoreDESCRecruit">Score Descending</a></li>
-                    </ul>
-                </li>
 
             </ul>
         </nav>
@@ -48,10 +42,10 @@
                 <c:when test="${ not empty list4 }">
                     <thead>
                         <tr>
-                            <th>No.</th><th>Can_id</th><th>Job Name</th>
-                            <th>Email</th><th>File Upload</th>
-                            <th>Exam Score</th>
+                            <th>Can_id</th><th>Job Name</th>
+                            <th>Email</th>
                             <th>Interview Score</th>
+                            <th>Interview Comment</th>
                             <th style="text-align: center">Operations</th>    
                         </tr>
                     </thead>
@@ -60,17 +54,15 @@
                         <c:forEach var="can" items="${list4}" varStatus="loop">
 
                             <tr>
-                                <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="" /></td>
                                 <td>${can.id}</td>
                                 <%--<td>${can.jobId}</td>--%>
                                 <td>${can.jobname.job_name}</td>
                                 <td>${can.email}</td>
-                                <td>${can.cv}</td>
-                                <td>${can.score}</td>
                                 <td>${can.interid.score}</td>
+                                <td>${can.interid.comment}</td>
                                 <td style="text-align: center">
-                                    <a class="gg-software-download" href="apply?op=downloadFile&fileName=${can.cv}"></a>
-                                    <a class="gg-check-r" style="margin-top:20px; display:inline-block; color: #66D7A7" href="apply?op=yesupRecruit&can_id=${can.id}">Accept</a> |
+                                    <a class="gg-software-download" href="apply?op=downloadFile&fileName=${can.cv}" style="margin-top:20px; display:inline-block;"></a>  
+                                    <a class="gg-check-r" style="margin-top:20px; display:inline-block; color: #66D7A7" href="apply?op=yesupRecruit&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}"></a> |
                                     <a class="gg-remove-r" style="margin-top:20px; display:inline-block; color: red" href="apply?op=rejectFileRecruit&can_id=${can.id}&email=${can.email}&job_name=${can.jobname.job_name}"></a>
                                 </td>
 

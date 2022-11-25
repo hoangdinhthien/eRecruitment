@@ -213,11 +213,11 @@
                                     <!--Làm Đẹp cái Link-->
                                     <c:if test="${not empty info}" >
                                         <c:if test="${ role == 'Interviewer' || role == 'HR Staff'|| role == 'Admin'}" >
-                                            <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Exam </a>
-                                                <ul class="header__menu__dropdown">
-                                                    <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>
-                                                    <li><a href="<c:url value="/exam?op=confirmExam&canId=C001"/>">Test Exam</a></li>
-                                                </ul>
+                                            <li ><a href="<c:url value="/exam?op=QuestionBank"/>"> Question Bank </a>
+<!--                                                <ul class="header__menu__dropdown">
+                                                    <li><a href="<c:url value="/exam?op=QuestionBank"/>">Question Bank</a></li>-->
+<!--                                                    <li><a href="<c:url value="/exam?op=confirmExam&canId=C001"/>">Test Exam</a></li>-->
+                                                <!--</ul>-->
                                             </li>
                                         </c:if>
                                     </c:if>

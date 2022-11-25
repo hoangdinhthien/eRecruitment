@@ -28,6 +28,22 @@ import utils.MailUtils;
  */
 public class JobDAO {
 
+    public static JobDTO searchLevelByJob_name(String job_name) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT l.level_name FROM [dbo].[Job] j "
+                + "inner join [Level] l "
+                + "on j.level_id = l.level_id "
+                + " WHERE [job_name]= ?");
+        stm.setString(1, job_name);
+        ResultSet rs = stm.executeQuery();
+        JobDTO c = new JobDTO();
+        if (rs.next()) {
+            c.setLevel_name(rs.getString("level_name"));
+        }
+        con.close();
+        return c;
+    }
+
     public static String newId() throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
         Statement stm = con.createStatement();

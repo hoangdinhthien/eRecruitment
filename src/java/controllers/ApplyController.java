@@ -3,6 +3,7 @@ package controllers;
 import config.Config;
 import daos.CandidateDAO;
 import daos.ExamDAO;
+import daos.InterviewingDAO;
 import daos.JobDAO;
 import daos.MajorDAO;
 import daos.NotificationDAO;
@@ -11,6 +12,7 @@ import daos.UserCvDAO;
 import daos.UserDAO;
 import dtos.CandidateDTO;
 import dtos.GoogleDTO;
+import dtos.InterviewingDTO;
 import dtos.JobDTO;
 import dtos.MajorDTO;
 import dtos.NotificationDTO;
@@ -771,28 +773,42 @@ public class ApplyController extends HttpServlet {
             String job_name = request.getParameter("job_name"); // lấy job_name
             CandidateDAO tf = new CandidateDAO();
             tf.updateup45(can_id, email);
+            
+            InterviewingDTO ig = new InterviewingDTO();
+            ig.setIsStatus(5);
+            ig.setCan_id(can_id);
+            InterviewingDAO.updateInterviewIsStatus(ig);
+            
             JobDAO jDao = new JobDAO();
             jDao.checkVacancy(tf.getJob(can_id));
+            
             CandidateDTO cd = new CandidateDTO();
             System.out.println("status :" + cd.getIsStatus());
             List<CandidateDTO> list4 = CandidateDAO.hrstatus4();
             //=== Notification + Send Email
             CandidateDTO can = CandidateDAO.searchCandidateById(can_id);
+            //=== Update Mail + Noti 15/11
+            JobDTO level = JobDAO.searchLevelByJob_name(job_name);
+            MajorDTO mayor_name = MajorDAO.searchMajorNameByJob_name(job_name);
             String to = can.getEmail();
             String subject = "3HTD: You have been selected";
             String body = "<p>Dear <strong>" + can.getName() + "</strong>, </p><br/>"
-                    + "<p>Congratulations on becoming one of the members with the " + job_name + " of 3HTD company's. "
+                    + "<p>Congratulations on becoming one of the members with the <strong>" + job_name + "</strong> of 3HTD company's. "
+                    + "<p>With Level:<strong> " + level.getLevel_name() + "</strong> and Major: <strong>" + mayor_name.getMajor_name() + "</strong></p>"
                     + "Thank you for choosing our company as your workplace. "
                     + "Wish you success in the future. </p>"
                     + "<p>Sincerely</p>"
                     + "<p>3HTD</p>";
             MailUtils.send(to, subject, body);
             NotificationDAO.add(to, "Congratulations",
-                    "<p>You have been selected.</p>",
-                    null, null);
+                    "<p>You have been hired in Job: <strong>" + job_name + "</strong>.</p>"
+                    + "<p>With Level:<b> " + level.getLevel_name() + "</b> and Major: <strong>" + mayor_name.getMajor_name() + "</strong></p>"
+                    + "<p><b>Warning:</b> All your remaining applications will be removed</p>",
+                    "View Info", "user?op=info");
+            //=== Update Mail + Noti 15/11
             //Cho hiện lại danh sách 
             String Accept = can_id + " have been Accept";
-            tf.removeUnusedApplication(email);
+            tf.removeUnusedApplication(can.getEmail());
             request.setAttribute("Accept", Accept);
             request.setAttribute("list4", list4);
             request.setAttribute("action", "list_Recruit");

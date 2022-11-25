@@ -21,6 +21,22 @@ import utils.DBUtils;
  */
 public class MajorDAO {
 
+    public static MajorDTO searchMajorNameByJob_name(String job_name) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("SELECT j.major_name FROM [dbo].[Major] j "
+                + "inner join [Job] l "
+                + "on j.major_id = l.major_id "
+                + " WHERE [job_name]= ?");
+        stm.setString(1, job_name);
+        ResultSet rs = stm.executeQuery();
+        MajorDTO c = new MajorDTO();
+        if (rs.next()) {
+            c.setMajor_name(rs.getString("major_name"));
+        }
+        con.close();
+        return c;
+    }
+
     public static List<MajorDTO> listAll() throws SQLException, ClassNotFoundException {
         List<MajorDTO> list = null;
         Connection con = DBUtils.makeConnection();

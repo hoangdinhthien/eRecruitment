@@ -336,9 +336,10 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,c.can_cv,c.score, c.isStatus,j.major_id from candidate c "
-                    + "inner join job j on c.job_id = j.job_id "
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,c.can_cv,c.score, c.isStatus,j.major_id, u.[name], u.[phone] from candidate c "
+                    + "inner join job j on c.job_id = j.job_id JOIN [dbo].[User] u on c.[email] = u.[email] "
                     + "where c.isStatus =2 ORDER BY can_id DESC");
+            
             list = new ArrayList<>();
             while (rs.next()) {
                 JobDTO j = new JobDTO();
@@ -350,6 +351,8 @@ public class CandidateDAO {
                 int isStatus = rs.getInt(6);
                 CandidateDTO join = new CandidateDTO(id, j, cv, email, score, isStatus);
                 join.setMajorId(rs.getByte("major_id"));
+                join.setName(rs.getString("name"));
+                join.setPhone(rs.getString("phone"));
                 list.add(join);
             }
             con.close();
@@ -445,7 +448,7 @@ public class CandidateDAO {
         Connection con = DBUtils.makeConnection();
         try {
             Statement stm = con.createStatement();
-            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus from candidate c "
+            ResultSet rs = stm.executeQuery("select c.can_id,j.job_name,c.email,can_cv,score , i.inter_score, c.isStatus, i.inter_comment from candidate c "
                     + "inner join interviewing i on c.can_id = i.can_id "
                     + "inner join job j on c.job_id = j.job_id "
                     + "where c.isStatus =4 ORDER BY can_id DESC");
@@ -460,7 +463,10 @@ public class CandidateDAO {
                 String email = rs.getString(3);
                 float score = rs.getInt(5);
                 int isStatus = rs.getInt(7);
+                i.setComment(rs.getString(8));
+                
                 CandidateDTO join = new CandidateDTO(id, j, cv, email, score, i, isStatus);
+                
                 list.add(join);
             }
             con.close();
@@ -908,15 +914,14 @@ public class CandidateDAO {
     // Custom
     public static void deleteCanResult(String email) throws SQLException, ClassNotFoundException {
         Connection con = DBUtils.makeConnection();
-        PreparedStatement stm = con.prepareStatement("SELECT [can_id] FROM [Candidate] WHERE [email] = ? AND [isStatus] <= 4 ");
+        PreparedStatement stm = con.prepareStatement("SELECT [can_id] FROM [Candidate] WHERE [email] = ? AND [isStatus] != 5 ");
         stm.setString(1, email);
         ResultSet rs = stm.executeQuery();
         ExamDAO eDao = new ExamDAO();
-        InterviewingDAO iDao = new InterviewingDAO();
-        if (rs.next()) {
+        while (rs.next()) {
             String canId = rs.getString("can_id");
             eDao.deleteCanExam(canId);
-            iDao.deleteInterview(canId);
+            InterviewingDAO.deleteInterview(canId);
             //remove candidate skill
         }
         con.close();
@@ -927,8 +932,6 @@ public class CandidateDAO {
         PreparedStatement stm = con.prepareStatement("SELECT [can_id], [email]  FROM [Candidate] WHERE [job_id] = ? AND [isStatus] != 5 ");
         stm.setString(1, jobId);
         ResultSet rs = stm.executeQuery();
-        ExamDAO eDao = new ExamDAO();
-        InterviewingDAO iDao = new InterviewingDAO();
         while (rs.next()) {
             String canId = rs.getString("can_id");
             String email = rs.getString("email");

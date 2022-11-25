@@ -353,6 +353,7 @@ public class ExamController extends HttpServlet {
         try {
             String canId = request.getParameter("canId");
             CandidateDAO cDao = new CandidateDAO();
+            String email = cDao.getEmailByCanId(canId);
             boolean check = cDao.check(canId);
             if (!check) {
                 ExamDAO eDao = new ExamDAO();
@@ -377,7 +378,6 @@ public class ExamController extends HttpServlet {
                 if (mark >= 4) {
                     cDao.result(mark, canId);
                 } else {
-                    String email = cDao.getEmailByCanId(canId);
                     NotificationDAO nDao = new NotificationDAO();
                     nDao.add(email, "Aplication " + canId + " has been rejected",
                             "Thank you for apply to this jobs. "
@@ -400,7 +400,16 @@ public class ExamController extends HttpServlet {
             } else {
                 request.setAttribute("message", "You have taken this exam. ");
             }
+            HttpSession session = request.getSession();
+            GoogleDTO google = (GoogleDTO) session.getAttribute("info");
+            if (google != null) {
+                if (google.getEmail().equals(email)) {
+                    request.setAttribute("action", "result");
+                    request.getRequestDispatcher(Config.LAYOUT).forward(request, response);
+                }
+            }
             request.getRequestDispatcher("/WEB-INF/view/exam/result.jsp").forward(request, response);
+
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ExamController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {

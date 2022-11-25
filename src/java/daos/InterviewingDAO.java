@@ -54,7 +54,7 @@ public class InterviewingDAO {
     public static List<InterviewingDTO> searchInterviewByInterviewerId(String id) throws ClassNotFoundException, SQLException {
         Connection con = DBUtils.makeConnection();
         PreparedStatement stm = con.prepareStatement("SELECT  i.id, i.inter_id, i.can_id, i.[date], i.[location], i.[inter_score], i.[inter_comment], i.isStatus, c.[can_cv]"
-                + " FROM [dbo].[Interviewing] i JOIN  [dbo].[Candidate] c ON i.[can_id]=c.[can_id] WHERE inter_id=? ORDER BY i.isStatus ASC");
+                + " FROM [dbo].[Interviewing] i JOIN  [dbo].[Candidate] c ON i.[can_id]=c.[can_id] WHERE inter_id=? and  i.isStatus>2 and  i.isStatus<5  ORDER BY i.isStatus ASC");
         stm.setString(1, id);
         ResultSet rs = stm.executeQuery();
         List<InterviewingDTO> list = new LinkedList();
@@ -157,6 +157,16 @@ public class InterviewingDAO {
         stm.setString(2, ig.getComment());
         stm.setInt(3, ig.getIsStatus());
         stm.setInt(4, ig.getId());
+        int rs = stm.executeUpdate();
+        con.close();
+        return rs != 0;
+    }
+    
+        public static boolean updateInterviewIsStatus(InterviewingDTO ig) throws ClassNotFoundException, SQLException {
+        Connection con = DBUtils.makeConnection();
+        PreparedStatement stm = con.prepareStatement("UPDATE [dbo].[Interviewing] SET [isStatus]=? WHERE can_id= ?");
+        stm.setInt(1, ig.getIsStatus());
+        stm.setString(2, ig.getCan_id());
         int rs = stm.executeUpdate();
         con.close();
         return rs != 0;

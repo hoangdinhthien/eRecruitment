@@ -11,8 +11,7 @@
     <body>
         <style>
             tr a:hover, tr a:active {
-                background-color: #66F1A1;
-                color: black; 
+                color: #66F1A1;
                 /*border: 2px solid #66F1A1;*/
                 /*color: white;*/
             }
@@ -107,7 +106,7 @@
                                 <td style="text-align: left;"><fmt:formatNumber value="${loop.count}" pattern="" /></td>
                                 <td>${can.id}</td>
                                 <td>${can.jobname.job_name}</td>
-                                <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>" style="text-decoration: underline black;"> ${can.email} </a></td>
+                                <td><a href="<c:url value="apply?op=viewUserApplication&email=${can.email}"/>" style="text-decoration: underline #66F1A1;"> ${can.email} </a></td>
                                 <td>${can.cv}</td>
                                 <td>
                                     <c:choose>
